@@ -42,6 +42,13 @@ a.navbar-brand:hover {
   background-position: center center;
   background-repeat: no-repeat;
 }
+#TOC::after {
+  content: "Materiales del tutorial Datos espaciales a lo tidy para useR!2021";
+  font-size: 13px;
+  display: block;
+  height: 100px;
+  margin: 2em 20px 40px 20px;
+}
 
 .tocify {
   position: -webkit-sticky;

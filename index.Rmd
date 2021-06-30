@@ -1,10 +1,66 @@
 ---
-title: "Datos espaciales"
-author: "Elio Campitelli"
+title: "Datos espaciales a lo tidy"
 output: html_document
 ---
 
-En esta página vas a encontrar los materiales del tutorial Datos espaciales a lo tidy, 
-dictado durante useR!2021.
+En este tutorial vas a aprender a descargar, leer, analizar y visualizar datos espaciales grillados en R usando datos tidy. Va a ser un tutorial participativo con programación en vivo y ejercicios, bajo la idea de que puedas usar los datos para responder tus propias preguntas, escribiendo tu propio código. 
 
-[Priero](preparacion.html)
+Al final del taller vas a haber aprendido como: 
+
+- descargar datos meteorológicos y climáticos programáticamente desde R, 
+- leerlos en un formato tidy, 
+- computar estadísicas espaciales y temporales, 
+- graficar los resultados usando ggplot2 y extensiones.
+
+## Antes del tutorial 
+
+Durante el tutorial les propondremos ejercicios para que resuelvan en sus computadoras. Si bien esto no es obligatorio, les sugerimos que sigan las indicaciones para instalar paquetes y generar las credenciales necesarias que usaremos ese día. 
+
+[**Instrucciones a seguir antes del tutorial**](preparacion.html)
+
+## Agenda
+
+Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés revisar el horario en tu país en el [programa de tutoriales](https://user2021.r-project.org/program/tutorials/)). Haremos todo lo posible por respetar el horario de las pausas para que puedar organizarte mejor. 
+
+|Minutos </br> desde el comienzo |Contenidos|
+|:---|----------|
+|10  |Introducción |
+|40  |Tema 1 |
+|5   |Pausa `r emo::ji("coffee")` |
+|50  | Tema 2 |
+|5   |Pausa `r emo::ji("coffee")`  |
+|30  | Tema 3 |
+|20 | Preguntas y cierre |
+
+Los materiales del tutorial estarán disponibles en esta misma página muy pronto.
+
+## Sobre nosotros
+
+**Elio Campitelli**
+
+<img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/> Elio es Licenciado en Ciencias de la Atmósfera y actualmente está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación atmosférica del hemisferio sur influye en las condiciones meteorológicas de Sudamérica. 
+
+Mantiene varios paquetes de R, como metR (paquete para manejo de datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar varias escalas de color en un gráfico). Es profesor de Introducción a la Programación en la Diplomatura en análisis de datos aplicados al desarrollo de políticas públicas de la Universidad Nacional Guillermo Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. 
+Es miembro fundador de [MetaDocencia](http://metadocencia.org/) e instructor de [The Carpentries](https://carpentries.org/).
+
+[eliocamp.github.io](https://eliocamp.github.io/) | [\@d_olivaw](https://twitter.com/d_olivaw)
+
+
+
+
+**Pao Corrales**
+
+<img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Pao es Licenciada en Ciencias de la Atmósfera y actualmente está realizando su doctorado en el Centro de Investigaciones del Mar y la Atmósfera, UBA-CONICET aplicando técnicas de asimilación de datos para mejorar pronósticos de eventos severos a corto plazo. Desde 2011 forma parte de Expedición Ciencia, una asociación civil dedicada a generar proyectos que permita a personas de todas las edades desarrollen el pensamiento científico, el placer por la exploración y la curiosidad permanente. En Expedición Ciencia lidera proyectos educativos como campamentos científicos y talleres para estudiantes y docentes.
+
+Desde 2017 forma parte de distintas comunidades de usuarios y usuarias de R (por ejemplo, R-Ladies Buenos Aires y LatinR) en las que genera actividades presenciales y virtuales. Paola también es instructora y entrenadora de instructores certificada por [The Carpentries](https://carpentries.org/), instructora certificada por [RStudio](https://education.rstudio.com/trainers/people/corrales+paola/) y co-fundadora de [MetaDocencia](http://metadocencia.org/).
+
+[paobcorrales.github.io](https://github.com/paocorrales) | [\@paobcorrales](https://twitter.com/PaobCorrales)
+
+___
+
+### Licencia de uso
+
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+Todos los materiales de este curso se encuentran bajo la licencia <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
+

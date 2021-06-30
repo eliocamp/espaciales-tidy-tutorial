@@ -2,26 +2,28 @@
 title: "Antes del tutorial"
 ---
 
+En el tutorial les propondremos hacer ejercicios en sus propias computadoras, por eso te pedimos que sigas las siguientes instrucciones para tener todo listo ese día.
 
 # Paquetes:
 
-Lo primero es tener instalados algunos paquetes. Corré esto para instalarlos:
+Durante este tutorial usaremos una serie de paquetes. Es posible que ya tengas algunos instalados, pero es importante que te asegures de tenerlos todos. Te sugerimos que corras las siguientes líneas de código y luego pruebes cargas las librerías.
 
 ``` {.r}
 paquetes <- c("metR", "ecmwfr", "ggplot2", "data.table", "ggperiodic", "ggnewscale")
 install.packages(paquetes)
 ```
 
-Para leer archivos NetCDF4 hay que instalar los paquetes ncdf4 y udunits2 
-En linux, estos paquetes dependen de las librería de sistema netcdf y udunits-2 respectivamente. 
-En Ubuntu y derivados , se pueden instalar con:
+Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes {ncdf4} y {udunits2}. 
 
+En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar con:
 
 ```{·bash}
 sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev
 ```
 
-Luego, hay que instalar los paquetes de R con:
+En windowns no es necesario que instales ningún programa o librería extra. 
+
+Finalmente, podrás instalar los paquetes de R con:
 
 ``` {.r}
 install.packages(c("udunits2", "ncdf4"))
@@ -30,7 +32,7 @@ install.packages(c("udunits2", "ncdf4"))
 # Cuentas
 
 Vamos a usar el paquete [ecmwfr](https://bluegreen-labs.github.io/ecmwfr/) para descargar datos climáticos. 
-El mismo permite hacer pedidos de datos a varios servicios, pero en este tutorial vamos a usar el Climate Data Store. 
+El mismo permite hacer pedidos de datos a varios servicios, en este tutorial vamos a usar el Climate Data Store. 
 
 Para descargar datos climáticos del Climate Data Store primero hay que tener una cuenta. 
 Si no tenés una, creala en <https://cds.climate.copernicus.eu/user/register>.
@@ -40,7 +42,7 @@ Si no tenés una, creala en <https://cds.climate.copernicus.eu/user/register>.
 Una vez que tengas tu usuario y contraseña, hay que setear las credenciales en R.
 Andá a [tu perfil de usuario](https://cds.climate.copernicus.eu/user/login?destination=user) y abajo de todo vas a ver una sección con título "API Key" con dos valores: tu UID (User ID) y tu API Key. 
 
-![Captura de pantalla de ](img/api-key.png)
+![Captura de pantalla de la sección API Key en la página del Climate Data Store](img/api-key.png)
 
 Ahora corré este código en R, reemplazando `<UID>` por tu UID y `<API Key>` con tu APi Key:
 
@@ -48,13 +50,13 @@ Ahora corré este código en R, reemplazando `<UID>` por tu UID y `<API Key>` co
 ecmwfr::wf_set_key(service = "cds", user = "<UID>", key = "<API Key>")
 ```
 
-Si sale todo bien, la función va a devolver un mensaje como este:
+Si todo sale bien, la función va a devolver un mensaje como este:
 
 ```
 User <UID> for cds service added successfully in keychain
 ```
 
-# Prueba de que todo anda bien
+# ¿Funcionó?
 
 Finalmente, para probar que todo se instaló correctamente, corré este pequeño "Hello, world!"
 
@@ -80,7 +82,6 @@ metR::ReadNetCDF(data, vars = "t2m")
 
 Primero deberías ver algo como esto:
 
-
 ```
 Requesting data to the webapi service with username <your_email>
 - staging data transfer at url endpoint or request id:
@@ -100,7 +101,7 @@ Downloading file
 - request purged from queue!
 ```
 
-Y luego de que se descargue, la última línea lee los datos y tenés que ver esto:
+Y luego de que los datos se descarguen, la última línea leerá los datos y como resultado verás:
 
 ```
          time latitude longitude      t2m
@@ -120,5 +121,4 @@ Si salió todo bien, ¡ya está todo listo para el tutorial!
 
 # Plan B
 
-Si no podés hacer que funcione, podés usar [este proyecto de RStudio Cloud](https://rstudio.cloud/project/2679681), el cual tiene todos paquetes instalados. 
-Vas a tener que setear tus cuentas. 
+Si no lográs que funcione o preferís no instalar los paquetes en tu computadora, podés usar [este proyecto de RStudio Cloud](https://rstudio.cloud/project/2679681), donde dejamos todos los paquetes instalados. Tené encuenta que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene sus limitaciones pero debería ser suficiente para el tutorial). Además deberás crear una cuenta en Climate Data Store y seguir los pasos de configuración en R.

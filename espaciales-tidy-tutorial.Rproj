@@ -15,5 +15,3 @@ LaTeX: pdfLaTeX
 AutoAppendNewline: Yes
 
 BuildType: Website
-
-SpellingDictionary: es_ES

@@ -13,7 +13,6 @@
 
 <title>Antes del tutorial</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -340,36 +339,39 @@ div.tocify {
 </div>
 
 
+<p>En el tutorial les propondremos hacer ejercicios en sus propias computadoras, por eso te pedimos que sigas las siguientes instrucciones para tener todo listo ese día.</p>
 <div id="paquetes" class="section level1">
 <h1>Paquetes:</h1>
-<p>Lo primero es tener instalados algunos paquetes. Corré esto para instalarlos:</p>
+<p>Durante este tutorial usaremos una serie de paquetes. Es posible que ya tengas algunos instalados, pero es importante que te asegures de tenerlos todos. Te sugerimos que corras las siguientes líneas de código y luego pruebes cargas las librerías.</p>
 <pre class="r"><code>paquetes &lt;- c(&quot;metR&quot;, &quot;ecmwfr&quot;, &quot;ggplot2&quot;, &quot;data.table&quot;, &quot;ggperiodic&quot;, &quot;ggnewscale&quot;)
 install.packages(paquetes)</code></pre>
-<p>Para leer archivos NetCDF4 hay que instalar los paquetes ncdf4 y udunits2 En linux, estos paquetes dependen de las librería de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados , se pueden instalar con:</p>
+<p>Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes {ncdf4} y {udunits2}.</p>
+<p>En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar con:</p>
 <pre class="{·bash}"><code>sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev</code></pre>
-<p>Luego, hay que instalar los paquetes de R con:</p>
+<p>En windowns no es necesario que instales ningún programa o librería extra.</p>
+<p>Finalmente, podrás instalar los paquetes de R con:</p>
 <pre class="r"><code>install.packages(c(&quot;udunits2&quot;, &quot;ncdf4&quot;))</code></pre>
 </div>
 <div id="cuentas" class="section level1">
 <h1>Cuentas</h1>
-<p>Vamos a usar el paquete <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a> para descargar datos climáticos. El mismo permite hacer pedidos de datos a varios servicios, pero en este tutorial vamos a usar el Climate Data Store.</p>
+<p>Vamos a usar el paquete <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a> para descargar datos climáticos. El mismo permite hacer pedidos de datos a varios servicios, en este tutorial vamos a usar el Climate Data Store.</p>
 <p>Para descargar datos climáticos del Climate Data Store primero hay que tener una cuenta. Si no tenés una, creala en <a href="https://cds.climate.copernicus.eu/user/register" class="uri">https://cds.climate.copernicus.eu/user/register</a>.</p>
 <div class="figure">
-<img src="img/registro.png" alt="" />
+<img src="img/registro.png" alt="Captura de pantalla del formulario de registro de Climate Data Store." />
 <p class="caption">Captura de pantalla del formulario de registro de Climate Data Store.</p>
 </div>
 <p>Una vez que tengas tu usuario y contraseña, hay que setear las credenciales en R. Andá a <a href="https://cds.climate.copernicus.eu/user/login?destination=user">tu perfil de usuario</a> y abajo de todo vas a ver una sección con título “API Key” con dos valores: tu UID (User ID) y tu API Key.</p>
 <div class="figure">
-<img src="img/api-key.png" alt="" />
-<p class="caption">Captura de pantalla de</p>
+<img src="img/api-key.png" alt="Captura de pantalla de la sección API Key en la página del Climate Data Store" />
+<p class="caption">Captura de pantalla de la sección API Key en la página del Climate Data Store</p>
 </div>
 <p>Ahora corré este código en R, reemplazando <code>&lt;UID&gt;</code> por tu UID y <code>&lt;API Key&gt;</code> con tu APi Key:</p>
 <pre class="r"><code>ecmwfr::wf_set_key(service = &quot;cds&quot;, user = &quot;&lt;UID&gt;&quot;, key = &quot;&lt;API Key&gt;&quot;)</code></pre>
-<p>Si sale todo bien, la función va a devolver un mensaje como este:</p>
+<p>Si todo sale bien, la función va a devolver un mensaje como este:</p>
 <pre><code>User &lt;UID&gt; for cds service added successfully in keychain</code></pre>
 </div>
-<div id="prueba-de-que-todo-anda-bien" class="section level1">
-<h1>Prueba de que todo anda bien</h1>
+<div id="funcionó" class="section level1">
+<h1>¿Funcionó?</h1>
 <p>Finalmente, para probar que todo se instaló correctamente, corré este pequeño “Hello, world!”</p>
 <pre class="{·r}"><code>request &lt;- list(stream = &quot;oper&quot;,
    levtype = &quot;sfc&quot;,
@@ -399,7 +401,7 @@ metR::ReadNetCDF(data, vars = &quot;t2m&quot;)</code></pre>
   |===========================================================| 100%
 - file not copied and removed (path == tempdir())
 - request purged from queue!</code></pre>
-<p>Y luego de que se descargue, la última línea lee los datos y tenés que ver esto:</p>
+<p>Y luego de que los datos se descarguen, la última línea leerá los datos y como resultado verás:</p>
 <pre><code>         time latitude longitude      t2m
 1: 2014-07-01    50.75     10.00 282.4616
 2: 2014-07-01    50.75     10.75 282.2275
@@ -409,6 +411,11 @@ metR::ReadNetCDF(data, vars = &quot;t2m&quot;)</code></pre>
 6: 2014-07-02    50.75     10.75 281.8115
 7: 2014-07-02    50.00     10.00 284.0701
 8: 2014-07-02    50.00     10.75 283.1466</code></pre>
+<p>Si salió todo bien, ¡ya está todo listo para el tutorial!</p>
+</div>
+<div id="plan-b" class="section level1">
+<h1>Plan B</h1>
+<p>Si no lográs que funcione o preferís no instalar los paquetes en tu computadora, podés usar <a href="https://rstudio.cloud/project/2679681">este proyecto de RStudio Cloud</a>, donde dejamos todos los paquetes instalados. Tené encuenta que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene sus limitaciones pero debería ser suficiente para el tutorial). Además deberás crear una cuenta en Climate Data Store y seguir los pasos de configuración en R.</p>
 </div>
 
 
