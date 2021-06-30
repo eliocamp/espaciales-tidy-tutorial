@@ -1,5 +1,5 @@
 navbar:
-  title: "Datos espaciales tidy"
+  title: "Datos espaciales a lo tidy"
   left: 
     - text: Preparación
       href: preparacion.html

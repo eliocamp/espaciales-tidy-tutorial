@@ -29,6 +29,21 @@ Finalmente, podrás instalar los paquetes de R con:
 install.packages(c("udunits2", "ncdf4"))
 ```
 
+Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete {proj4}, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:
+
+```{·bash}
+sudo apt install proj-bin
+```
+
+(Instrucciones para otros sistemas operativos [en la página del proyecto](https://proj.org/install.html))
+
+Y luego instalar el paquete de R con:
+
+``` {.r}
+install.packages("proj4")
+```
+
+
 # Cuentas
 
 Vamos a usar el paquete [ecmwfr](https://bluegreen-labs.github.io/ecmwfr/) para descargar datos climáticos. 

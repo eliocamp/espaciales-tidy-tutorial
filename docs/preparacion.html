@@ -13,6 +13,7 @@
 
 <title>Antes del tutorial</title>
 
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -313,7 +314,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Datos espaciales tidy</a>
+      <a class="navbar-brand" href="index.html">Datos espaciales a lo tidy</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -351,18 +352,23 @@ install.packages(paquetes)</code></pre>
 <p>En windowns no es necesario que instales ningún programa o librería extra.</p>
 <p>Finalmente, podrás instalar los paquetes de R con:</p>
 <pre class="r"><code>install.packages(c(&quot;udunits2&quot;, &quot;ncdf4&quot;))</code></pre>
+<p>Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete {proj4}, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:</p>
+<pre class="{·bash}"><code>sudo apt install proj-bin</code></pre>
+<p>(Instrucciones para otros sistemas operativos <a href="https://proj.org/install.html">en la página del proyecto</a>)</p>
+<p>Y luego instalar el paquete de R con:</p>
+<pre class="r"><code>install.packages(&quot;proj4&quot;)</code></pre>
 </div>
 <div id="cuentas" class="section level1">
 <h1>Cuentas</h1>
 <p>Vamos a usar el paquete <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a> para descargar datos climáticos. El mismo permite hacer pedidos de datos a varios servicios, en este tutorial vamos a usar el Climate Data Store.</p>
 <p>Para descargar datos climáticos del Climate Data Store primero hay que tener una cuenta. Si no tenés una, creala en <a href="https://cds.climate.copernicus.eu/user/register" class="uri">https://cds.climate.copernicus.eu/user/register</a>.</p>
 <div class="figure">
-<img src="img/registro.png" alt="Captura de pantalla del formulario de registro de Climate Data Store." />
+<img src="img/registro.png" alt="" />
 <p class="caption">Captura de pantalla del formulario de registro de Climate Data Store.</p>
 </div>
 <p>Una vez que tengas tu usuario y contraseña, hay que setear las credenciales en R. Andá a <a href="https://cds.climate.copernicus.eu/user/login?destination=user">tu perfil de usuario</a> y abajo de todo vas a ver una sección con título “API Key” con dos valores: tu UID (User ID) y tu API Key.</p>
 <div class="figure">
-<img src="img/api-key.png" alt="Captura de pantalla de la sección API Key en la página del Climate Data Store" />
+<img src="img/api-key.png" alt="" />
 <p class="caption">Captura de pantalla de la sección API Key en la página del Climate Data Store</p>
 </div>
 <p>Ahora corré este código en R, reemplazando <code>&lt;UID&gt;</code> por tu UID y <code>&lt;API Key&gt;</code> con tu APi Key:</p>
