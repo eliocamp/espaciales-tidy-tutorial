@@ -1,7 +1,10 @@
 navbar:
   title: "Datos espaciales tidy"
+  left: 
+    - text: Preparación
+      href: preparacion.html
   right:
-    - icon: "img/R-Ladies_Argentina_hex.png"
+    - text: Repositorio
       href: https://github.com/eliocamp/espaciales-tidy-tutorial/
 output_dir: "docs"
 output:

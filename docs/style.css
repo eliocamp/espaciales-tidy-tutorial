@@ -1,23 +1,23 @@
 
 /*----------------NAVBAR ---------------*/
 .navbar-default {
-    background-color: #562457;
+    background-color: #0e9a83;
 }
 
 .navbar-default .navbar-nav>.open>a, 
 .navbar-default .navbar-nav>.active>a, 
 a.dropdown-toggle:hover {
-  background-color: #88398A !important;
+  background-color: #007367 !important;
 }
 
 /* Dropdown menu color */
 .navbar-default .dropdown-menu {
-  background-color: #88398A;
+  background-color: #007367;
 }
 
 /* Dropdown menu hover color */
   .navbar-default .dropdown-menu>li>a:hover {
-    background-color: #88398Af2;
+    background-color: #007367f2;
   }
 
 /* Navbar Links when hovered*/
@@ -27,7 +27,7 @@ a.dropdown-toggle:hover {
 .navbar-default .navbar-nav>li>a:hover, 
 a.navbar-brand:hover {
   color: #ffffffab !important;
-  background-color: #88398A;
+  background-color: #007367;
 }
 
 /*----------LOGO above TOC---------*/
@@ -37,7 +37,7 @@ a.navbar-brand:hover {
   display: block;
   height: 200px;
   margin: 2em 20px 40px 20px;
-  background-image: url("img/R-Ladies_Argentina_hex.png");
+  background-image: url("img/logo-sam.png");
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
@@ -54,13 +54,13 @@ a.navbar-brand:hover {
    /* TOC links */
 
 .list-group-item {
-    color: #562457;
+    color: #007367;
     font-size: 16px;
 }
 
 .list-group-item.active {
     color: white;
-    background-color: #562457;
+    background-color: #007367;
     border: none;
 }
 
@@ -72,7 +72,7 @@ a.navbar-brand:hover {
 
 /* links */
 a { 
-  color: #562457;
+  color: #007367;
 }
 
 a:hover {

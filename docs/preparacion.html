@@ -11,7 +11,7 @@
 
 
 
-<title>Before the tutorial</title>
+<title>Antes del tutorial</title>
 
 <script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -318,14 +318,13 @@ div.tocify {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
+        <li>
+  <a href="preparacion.html">Preparación</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">
-    <span class="img/R img/R-Ladies_Argentina_hex.png"></span>
-     
-  </a>
+  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">Repositorio</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -336,35 +335,80 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Before the tutorial</h1>
+<h1 class="title toc-ignore">Antes del tutorial</h1>
 
 </div>
 
 
 <div id="paquetes" class="section level1">
 <h1>Paquetes:</h1>
-<p>Vamos a usar algunos</p>
+<p>Lo primero es tener instalados algunos paquetes. Corré esto para instalarlos:</p>
 <pre class="r"><code>paquetes &lt;- c(&quot;metR&quot;, &quot;ecmwfr&quot;, &quot;ggplot2&quot;, &quot;data.table&quot;, &quot;ggperiodic&quot;, &quot;ggnewscale&quot;)
 install.packages(paquetes)</code></pre>
-<pre><code>sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev</code></pre>
+<p>Para leer archivos NetCDF4 hay que instalar los paquetes ncdf4 y udunits2 En linux, estos paquetes dependen de las librería de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados , se pueden instalar con:</p>
+<pre class="{·bash}"><code>sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev</code></pre>
+<p>Luego, hay que instalar los paquetes de R con:</p>
 <pre class="r"><code>install.packages(c(&quot;udunits2&quot;, &quot;ncdf4&quot;))</code></pre>
 </div>
 <div id="cuentas" class="section level1">
 <h1>Cuentas</h1>
-<p>Crearse una cuenta en Climate Data Store</p>
-<p><a href="https://cds.climate.copernicus.eu/cdsapp#!/home" class="uri">https://cds.climate.copernicus.eu/cdsapp#!/home</a></p>
-<p>Setear las credenciales. Correr esto en la consola:</p>
-<pre class="r"><code>ecmwfr::wf_set_key(service = &quot;cds&quot;)</code></pre>
-<p>Se va a abrir la página web de Climate Data Store donde vas a tener que logearte:</p>
-<p><img src="img/log-in.png" /></p>
-<p>Y luego te va a llevar a tu perfil de usuario. Abajo de todo están los datos de tu UID y tu API Key.</p>
-<p><img src="img/api-key.png" /></p>
-<p>El UID tenés que escribirlo en la consola:</p>
-<pre><code>&gt; ecmwfr::wf_set_key(service = &quot;cds&quot;) 
-Login or register to get a key 
-User ID / email: &lt;UID&gt;</code></pre>
-<p>Y luego la API Key hay que ponerla en el diálogo que aparece luego (si no estás en RStudio, va a aparecer en la siguiente línea)</p>
-<p><img src="img/password.png" /></p>
+<p>Vamos a usar el paquete <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a> para descargar datos climáticos. El mismo permite hacer pedidos de datos a varios servicios, pero en este tutorial vamos a usar el Climate Data Store.</p>
+<p>Para descargar datos climáticos del Climate Data Store primero hay que tener una cuenta. Si no tenés una, creala en <a href="https://cds.climate.copernicus.eu/user/register" class="uri">https://cds.climate.copernicus.eu/user/register</a>.</p>
+<div class="figure">
+<img src="img/registro.png" alt="" />
+<p class="caption">Captura de pantalla del formulario de registro de Climate Data Store.</p>
+</div>
+<p>Una vez que tengas tu usuario y contraseña, hay que setear las credenciales en R. Andá a <a href="https://cds.climate.copernicus.eu/user/login?destination=user">tu perfil de usuario</a> y abajo de todo vas a ver una sección con título “API Key” con dos valores: tu UID (User ID) y tu API Key.</p>
+<div class="figure">
+<img src="img/api-key.png" alt="" />
+<p class="caption">Captura de pantalla de</p>
+</div>
+<p>Ahora corré este código en R, reemplazando <code>&lt;UID&gt;</code> por tu UID y <code>&lt;API Key&gt;</code> con tu APi Key:</p>
+<pre class="r"><code>ecmwfr::wf_set_key(service = &quot;cds&quot;, user = &quot;&lt;UID&gt;&quot;, key = &quot;&lt;API Key&gt;&quot;)</code></pre>
+<p>Si sale todo bien, la función va a devolver un mensaje como este:</p>
+<pre><code>User &lt;UID&gt; for cds service added successfully in keychain</code></pre>
+</div>
+<div id="prueba-de-que-todo-anda-bien" class="section level1">
+<h1>Prueba de que todo anda bien</h1>
+<p>Finalmente, para probar que todo se instaló correctamente, corré este pequeño “Hello, world!”</p>
+<pre class="{·r}"><code>request &lt;- list(stream = &quot;oper&quot;,
+   levtype = &quot;sfc&quot;,
+   param = &quot;167.128&quot;,
+   dataset = &quot;interim&quot;,
+   step = &quot;0&quot;,
+   grid = &quot;0.75/0.75&quot;,
+   time = &quot;00&quot;,
+   date = &quot;2014-07-01/to/2014-07-02&quot;,
+   type = &quot;an&quot;,
+   class = &quot;ei&quot;,
+   area = &quot;50/10/51/11&quot;,
+   format = &quot;netcdf&quot;,
+   target = &quot;tmp.nc&quot;)
+
+data &lt;- ecmwfr::wf_request(request)
+metR::ReadNetCDF(data, vars = &quot;t2m&quot;)</code></pre>
+<p>Primero deberías ver algo como esto:</p>
+<pre><code>Requesting data to the webapi service with username &lt;your_email&gt;
+- staging data transfer at url endpoint or request id:
+  https://api.ecmwf.int/v1/datasets/interim/requests/xxxxxxxXXXXxxxxXXXxxx
+
+- timeout set to 1.0 hours
+| polling server for a data transfer</code></pre>
+<p>Esto indica que el pedido de datos se envió al servicio y éste lo está procesando. Luego de unos segundos, va a empezar a descargar:</p>
+<pre><code>Downloading file
+  |===========================================================| 100%
+- file not copied and removed (path == tempdir())
+- request purged from queue!</code></pre>
+<p>Y luego de que se descargue, la última línea lee los datos y tenés que ver esto:</p>
+<pre><code>         time latitude longitude      t2m
+1: 2014-07-01    50.75     10.00 282.4616
+2: 2014-07-01    50.75     10.75 282.2275
+3: 2014-07-01    50.00     10.00 282.9887
+4: 2014-07-01    50.00     10.75 282.9998
+5: 2014-07-02    50.75     10.00 282.1887
+6: 2014-07-02    50.75     10.75 281.8115
+7: 2014-07-02    50.00     10.00 284.0701
+8: 2014-07-02    50.00     10.75 283.1466</code></pre>
 </div>
 
 

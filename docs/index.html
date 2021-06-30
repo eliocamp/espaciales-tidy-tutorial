@@ -319,14 +319,13 @@ div.tocify {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
+        <li>
+  <a href="preparacion.html">Preparación</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">
-    <span class="img/R img/R-Ladies_Argentina_hex.png"></span>
-     
-  </a>
+  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">Repositorio</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -343,31 +342,8 @@ div.tocify {
 </div>
 
 
-<div id="paquetes" class="section level1">
-<h1>Paquetes:</h1>
-<p>Vamos a usar algunos</p>
-<pre class="r"><code>paquetes &lt;- c(&quot;metR&quot;, &quot;ecmwfr&quot;, &quot;ggplot2&quot;, &quot;data.table&quot;, &quot;ggperiodic&quot;, &quot;ggnewscale&quot;)
-install.packages(paquetes)</code></pre>
-<pre><code>sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev</code></pre>
-<pre class="r"><code>install.packages(c(&quot;udunits2&quot;, &quot;ncdf4&quot;))</code></pre>
-</div>
-<div id="cuentas" class="section level1">
-<h1>Cuentas</h1>
-<p>Crearse una cuenta en Climate Data Store</p>
-<p><a href="https://cds.climate.copernicus.eu/cdsapp#!/home" class="uri">https://cds.climate.copernicus.eu/cdsapp#!/home</a></p>
-<p>Setear las credenciales. Correr esto en la consola:</p>
-<pre class="r"><code>ecmwfr::wf_set_key(service = &quot;cds&quot;)</code></pre>
-<p>Se va a abrir la página web de Climate Data Store donde vas a tener que logearte:</p>
-<p><img src="img/log-in.png" /></p>
-<p>Y luego te va a llevar a tu perfil de usuario. Abajo de todo están los datos de tu UID y tu API Key.</p>
-<p><img src="img/api-key.png" /></p>
-<p>El UID tenés que escribirlo en la consola:</p>
-<pre><code>&gt; ecmwfr::wf_set_key(service = &quot;cds&quot;) 
-Login or register to get a key 
-User ID / email: &lt;UID&gt;</code></pre>
-<p>Y luego la API Key hay que ponerla en el diálogo que aparece luego (si no estás en RStudio, va a aparecer en la siguiente línea)</p>
-<p><img src="img/password.png" /></p>
-</div>
+<p>En esta página vas a encontrar los materiales del tutorial Datos espaciales a lo tidy, dictado durante useR!2021.</p>
+<p><a href="preparacion.html">Priero</a></p>
 
 
 
