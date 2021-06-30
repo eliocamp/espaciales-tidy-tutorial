@@ -1,3 +1,7 @@
+---
+title: blabla
+---
+
 Tutorial title
 R Spatial without frameworks 
 
