@@ -1,0 +1,14 @@
+navbar:
+  title: "Datos espaciales tidy"
+  right:
+    - icon: "img/R-Ladies_Argentina_hex.png"
+      href: https://github.com/eliocamp/espaciales-tidy-tutorial/
+output_dir: "docs"
+output:
+  html_document:
+    # includes:
+    #   in_header: header.html
+    toc: true
+    toc_float: true
+    theme: cosmo
+    css: style.css

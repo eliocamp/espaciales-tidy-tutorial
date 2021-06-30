@@ -1,3 +1,9 @@
+---
+title: "Datos espaciales"
+author: "Elio Campitelli"
+output: html_document
+---
+
 # Paquetes:
 
 Vamos a usar algunos
