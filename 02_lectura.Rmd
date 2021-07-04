@@ -1,0 +1,17 @@
+---
+title: "Lectura de datos"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Datos en .csv, .txt, etc
+
+Si de casualidad los datos que vas a usar están en un formato de texto o excel, podés usar cualquier función para leerlos que te resulte cómoda. Cómo siempre es imporante tener presente el tipo de dato de cada columna, sobre todo si son datos desconocidos. ¿Tiene columnas con lagitudes y longitudeS? ¿Están en formato decimal o en grados y minutos? ¿R leyó estas columnas como número o texto? 
+
+De alguna manera este es un punto en contra para este tipo de formatos, no tienen metadatos asociados o al menos *no vienen con el archivo*. En la próxima sección presentaremos un tipo de archivo que si cumple con estas cosas. 
+
+##  Datos en netCDF
+
