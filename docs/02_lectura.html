@@ -314,7 +314,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Datos espaciales tidy</a>
+      <a class="navbar-brand" href="index.html">Datos espaciales a lo tidy</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -401,8 +401,197 @@ temperatura</code></pre>
 </div>
 <div id="consiguiendo-datos" class="section level2">
 <h2>Consiguiendo datos</h2>
-<p>Ok, pero estos datos son una muestra gratis, ¿cómo hacemos para conseguir más datos?</p>
-<p><img src="img/cds-homepage.png" /></p>
+<p>Ok, pero estos datos son una muestra gratis, ¿cómo hacemos para conseguir más datos? Hoy vamos a usar una plataforma maravillosa para acceder a una enorme cantidad de datos climáticos y meteorológicos: el <a href="https://cds.climate.copernicus.eu/cdsapp#!/home">Climate Data Store</a>.</p>
+<div class="figure">
+<img src="img/cds-homepage.png" alt="" />
+<p class="caption">Página principal de Cliamte Data Store que dice: Welcome to the Climate Data Store. Dive into this wealth of information about the Earth’s past, present and future climate.</p>
+</div>
+<p>En la <a href="preparacion.html">parte preparatoria</a> ya te creaste una cuenta y seteaste R para pedir datos (y si no, es un buen momento para hacerlo). Si hacés click en <a href="https://cds.climate.copernicus.eu/cdsapp#!/search?type=dataset">Datasets</a> vas a ver todas las bases de datos disponibles.</p>
+<div class="figure">
+<img src="img/cds-datasets.png" alt="" />
+<p class="caption">Sección de Datasets de Climate Data Store</p>
+</div>
+<p>Es posible que la mayoría no te suene ni de nombre, y la verdad que a mí tampoco. Como ejemplo entonces vamos a descargar datos de <a href="https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5">ERA5</a>, el Reanálisis del Centro Europeo de Previsiones Meteorológicas a Plazo Medio.</p>
+<div class="alert alert-info">
+<p><strong>¿Qué es un reanálisis?</strong> Los reanálisis combinan previsiones meteorológicas a corto plazo con observaciones mediante la asimilación de datos. Es una mezcla de observaciones y resultados de modelos meteorológicos que es físicamente consistente y en una grilla regular global. (Más <a href="https://www.ecmwf.int/en/about/media-centre/focus/2020/fact-sheet-reanalysis">acá</a>)</p>
+</div>
+<p>En particular, vamos a usar los <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form">datos mensuales 2D entre desde 1979</a> y vamos a descargar datos de temperatura de la superficie del mar (Sea Surface Temperature en inglés).</p>
+<p>Para descargar los datos de manera programática y reproducible, vamos a usar el paquete de R <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a>. Lo primero que necesitamos es un ‘request’ válido. Podemos escribirlo a mano pero es mucho más fácil y menos sujeto a errores si lo nos ayudamos con la página de CDS.</p>
+<p>Lo primero que hay que hacer es ir a la página y seleccionar los datos y el período que queremos:</p>
+<p><img src="img/descarga-sst.png" /></p>
+<p>En este caso:</p>
+<ul>
+<li><p>Product type: Monthly averaged reanalysis</p></li>
+<li><p>Variable: Mean sea level pressure, Total precipitation y 2m temperature</p></li>
+<li><p>Year: Todos menos 2021.</p></li>
+<li><p>Month: “select all”</p></li>
+<li><p>Time: 00:00 (como son datos mensuales, no tienen tiempo en realidad)</p></li>
+<li><p>Geographical area: Whole available region</p></li>
+<li><p>Format: NetCDF</p></li>
+</ul>
+<p>Con esto poríamos hacer click en “Submit Form” y descargar los datos manualmente, pero vamos a hacer click en “Show API request”, lo que nos va a mostrar un código (de PYTHON 😱!) que descarga los datos.</p>
+<p><img src="img/cds-request.png" /></p>
+<p>Lo que vamos a hacer es copiar la parte que empieza con <code>c.retrieve(</code>, pegarla en nuestro script y seleccionarla:</p>
+<pre class="{.{.{.{·python}}}}"><code>c.retrieve(
+    &#39;reanalysis-era5-single-levels-monthly-means&#39;,
+    {
+        &#39;format&#39;: &#39;netcdf&#39;,
+        &#39;product_type&#39;: &#39;monthly_averaged_reanalysis&#39;,
+        &#39;variable&#39;: [
+            &#39;mean_sea_level_pressure&#39;, &#39;sea_surface_temperature&#39;, &#39;total_precipitation&#39;,
+        ],
+        &#39;year&#39;: [
+            &#39;1979&#39;, &#39;1980&#39;, &#39;1981&#39;,
+            &#39;1982&#39;, &#39;1983&#39;, &#39;1984&#39;,
+            &#39;1985&#39;, &#39;1986&#39;, &#39;1987&#39;,
+            &#39;1988&#39;, &#39;1989&#39;, &#39;1990&#39;,
+            &#39;1991&#39;, &#39;1992&#39;, &#39;1993&#39;,
+            &#39;1994&#39;, &#39;1995&#39;, &#39;1996&#39;,
+            &#39;1997&#39;, &#39;1998&#39;, &#39;1999&#39;,
+            &#39;2000&#39;, &#39;2001&#39;, &#39;2002&#39;,
+            &#39;2003&#39;, &#39;2004&#39;, &#39;2005&#39;,
+            &#39;2006&#39;, &#39;2007&#39;, &#39;2008&#39;,
+            &#39;2009&#39;, &#39;2010&#39;, &#39;2011&#39;,
+            &#39;2012&#39;, &#39;2013&#39;, &#39;2014&#39;,
+            &#39;2015&#39;, &#39;2016&#39;, &#39;2017&#39;,
+            &#39;2018&#39;, &#39;2019&#39;, &#39;2020&#39;,
+        ],
+        &#39;month&#39;: [
+            &#39;01&#39;, &#39;02&#39;, &#39;03&#39;,
+            &#39;04&#39;, &#39;05&#39;, &#39;06&#39;,
+            &#39;07&#39;, &#39;08&#39;, &#39;09&#39;,
+            &#39;10&#39;, &#39;11&#39;, &#39;12&#39;,
+        ],
+        &#39;time&#39;: &#39;00:00&#39;,
+    },
+    &#39;download.nc&#39;)</code></pre>
+<p>Finalmente, hacer click en Addins y luego en Python to list</p>
+<p><img src="img/parse-request.png" /></p>
+<p>Automágicamente todo ese código del malvado Python se va a convertir en una lista de R que es un request válido para bajar los datos:</p>
+<pre class="r"><code>request &lt;- list(
+  format = &quot;netcdf&quot;,
+  product_type = &quot;monthly_averaged_reanalysis&quot;,
+  variable = c(&quot;mean_sea_level_pressure&quot;, &quot;sea_surface_temperature&quot;, &quot;total_precipitation&quot;),
+  year = c(&quot;1979&quot;, &quot;1980&quot;, &quot;1981&quot;, &quot;1982&quot;, &quot;1983&quot;, &quot;1984&quot;, &quot;1985&quot;, &quot;1986&quot;, &quot;1987&quot;, &quot;1988&quot;, &quot;1989&quot;, &quot;1990&quot;, &quot;1991&quot;, &quot;1992&quot;, &quot;1993&quot;, &quot;1994&quot;, &quot;1995&quot;, &quot;1996&quot;, &quot;1997&quot;, &quot;1998&quot;, &quot;1999&quot;, &quot;2000&quot;, &quot;2001&quot;, &quot;2002&quot;, &quot;2003&quot;, &quot;2004&quot;, &quot;2005&quot;, &quot;2006&quot;, &quot;2007&quot;, &quot;2008&quot;, &quot;2009&quot;, &quot;2010&quot;, &quot;2011&quot;, &quot;2012&quot;, &quot;2013&quot;, &quot;2014&quot;, &quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;, &quot;2020&quot;),
+  month = c(&quot;01&quot;, &quot;02&quot;, &quot;03&quot;, &quot;04&quot;, &quot;05&quot;, &quot;06&quot;, &quot;07&quot;, &quot;08&quot;, &quot;09&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;),
+  time = &quot;00:00&quot;,
+  dataset_short_name = &quot;reanalysis-era5-single-levels-monthly-means&quot;,
+  target = &quot;download.nc&quot;
+)</code></pre>
+<p>Esto se puede usar así como está pero hay dos cosas que conviene cambiar.</p>
+<ul>
+<li><p>Primero, el campo “target” tiene el nombre del archivo final que por defecto es un genérico <code>"download.nc"</code>. Mejor cambiarlo por algo descriptivo como <code>"temperatura_mar.nc"</code>. Luego, la resolución de este campo es de 0.5x0.5 grados, que para ver patrones globales de gran escala es mucho más que lo necesario.</p></li>
+<li><p>Segundo, para tener un archivo mucho más liviano y fácil de manejar, podemos reducir esa resolución a algo como 2.5x2.5 agregando el campo “grid” y seteándolo a `“2.5/2.5”. Mirando el formato del request, pueden imaginarse que cambios hacer si quieren bajar menos años, o sólo algunos meses, etc…</p></li>
+</ul>
+<pre class="r"><code>request &lt;- list(
+  format = &quot;netcdf&quot;,
+  product_type = &quot;monthly_averaged_reanalysis&quot;,
+  variable = c(&quot;mean_sea_level_pressure&quot;, &quot;sea_surface_temperature&quot;, &quot;total_precipitation&quot;),
+  year = c(&quot;1979&quot;, &quot;1980&quot;, &quot;1981&quot;, &quot;1982&quot;, &quot;1983&quot;, &quot;1984&quot;, &quot;1985&quot;, &quot;1986&quot;, &quot;1987&quot;, &quot;1988&quot;, &quot;1989&quot;, &quot;1990&quot;, &quot;1991&quot;, &quot;1992&quot;, &quot;1993&quot;, &quot;1994&quot;, &quot;1995&quot;, &quot;1996&quot;, &quot;1997&quot;, &quot;1998&quot;, &quot;1999&quot;, &quot;2000&quot;, &quot;2001&quot;, &quot;2002&quot;, &quot;2003&quot;, &quot;2004&quot;, &quot;2005&quot;, &quot;2006&quot;, &quot;2007&quot;, &quot;2008&quot;, &quot;2009&quot;, &quot;2010&quot;, &quot;2011&quot;, &quot;2012&quot;, &quot;2013&quot;, &quot;2014&quot;, &quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;, &quot;2020&quot;),
+  month = c(&quot;01&quot;, &quot;02&quot;, &quot;03&quot;, &quot;04&quot;, &quot;05&quot;, &quot;06&quot;, &quot;07&quot;, &quot;08&quot;, &quot;09&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;),
+  time = &quot;00:00&quot;,
+  dataset_short_name = &quot;reanalysis-era5-single-levels-monthly-means&quot;,
+  grid = &quot;2.5/2.5&quot;,               # Bajar datos en menor resolución que la default
+  target = &quot;temperatura_mar.nc&quot;   # Cambiar el nombre de archivo. 
+)</code></pre>
+<p>Una vez que tenemos el request bien formateado, finalmente es momento de descargar los datos. Esto se hace con la función <code>wf_request()</code>, a la que también le tenemos que decir en qué carpeta guardar el archivo.</p>
+<pre class="r"><code>archivo &lt;- ecmwfr::wf_request(request, path = &quot;datos&quot;)</code></pre>
+<p>Esto va a empezar a correr y vas a ver esto:</p>
+<pre><code>Requesting data to the cds service with username xxxxxx
+- staging data transfer at url endpoint or request id:
+xxxxx-xxxxx-xxxxx-xxxxx-xxxxxxx
+
+- timeout set to 1.0 hours
+\ polling server for a data transfer</code></pre>
+<p>Eso significa que R ya le hizo el pedido de datos a CDS, el cual lo va a procesar. <code>wf_request()</code> va a esperar hasta 1 hora hasta que se complete el pedido de datos (para pedidos muy grandes eso se puede cambiar con el argumento <code>time_out</code>).</p>
+<p>Podés ver tus pedidos de datos en <a href="https://cds.climate.copernicus.eu/cdsapp#!/yourrequests">la sección “Your requests”</a> del CDS.</p>
+<p>Cuando los datos estén listos, vas a ver una barrita de proceso y cuando ésta llegue al 100%, este mensaje:</p>
+<pre><code>- moved temporary file to -&gt; datos/temperatura_mar.nc
+- request purged from queue!</code></pre>
+<p>Y listo! Los datos ahora están en <code>datos/temperatura_mar.nc</code>.</p>
+<p>Veamos que todo está bien haciendo un glance al archivo:</p>
+<pre class="r"><code>GlanceNetCDF(archivo)</code></pre>
+<pre><code>## ----- Variables ----- 
+## msl:
+##     Mean sea level pressure in Pa
+##     Dimensions: longitude by latitude by time
+##     (Scaled)
+## sst:
+##     Sea surface temperature in K
+##     Dimensions: longitude by latitude by time
+##     (Scaled)
+## tp:
+##     Total precipitation in m
+##     Dimensions: longitude by latitude by time
+##     (Scaled)
+## 
+## 
+## ----- Dimensions ----- 
+##   longitude: 144 values from 0 to 357.5 degrees_east
+##   latitude: 73 values from -90 to 90 degrees_north
+##   time: 504 values from 1979-01-01 to 2020-12-01</code></pre>
+</div>
+<div id="leyendo-variables" class="section level2">
+<h2>Leyendo variables</h2>
+<p>Y ahora podemos leer sin problemas. <code>ReadNetCDF()</code> por default trata de leer todas las variables, una en cada columna. Eso no siempre es posible o deseable, porque distintas variables pueden tener distintas dimensiones; como por ejemplo, si hay variables definidias en 2D mezcladas con variables definidas en 3D. Entonces lo que se puede hacer es elegir qué variables leer con el argumento <code>vars</code>.</p>
+<p>Leamos primero la temperatura de la superficie del mar:</p>
+<pre class="r"><code>sst &lt;- ReadNetCDF(archivo, vars = &quot;sst&quot;)
+head(sst)</code></pre>
+<pre><code>##          time latitude longitude      sst
+## 1: 1979-01-01       90       0.0 271.4601
+## 2: 1979-01-01       90       2.5 271.4601
+## 3: 1979-01-01       90       5.0 271.4601
+## 4: 1979-01-01       90       7.5 271.4601
+## 5: 1979-01-01       90      10.0 271.4601
+## 6: 1979-01-01       90      12.5 271.4601</code></pre>
+<p>Lo primero que a mí me gusta hacer cuando leo los datos es mirar el primer campo o un par de campos. Va a haber más sobre los detalles para visualizar estos datos con ggplot2 más adelante, pero por ahora usemos el viejo y confiable <code>geom_raster()</code>.</p>
+<pre class="r"><code># Además, cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)</code></pre>
+</div>
+<div id="section" class="section level2 tabset">
+<h2 class="tabset"></h2>
+<div id="data.table" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>sst %&gt;% 
+  .[time == time[1]] %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_raster(aes(fill = sst)) </code></pre>
+<p><img src="02_lectura_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="dplyr" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>sst %&gt;% 
+  filter(time == time[1]) %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_raster(aes(fill = sst)) </code></pre>
+<p><img src="02_lectura_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
+<div id="section-1" class="section level2">
+<h2></h2>
+<p>En este gráfico y ase ven varias cosas. Se ve que hay una clara estructura de mayores temperaturas cerca del ecuador, lo cual no debería sorprender a nadie. También se ve que, como lo que estamos leyendo es la temperatura de la superficie del mar, tenemos datos faltantes sobre los continentes. Esto puede molestar un poco para algunas operaciones, ¡pero nos viene bárbaro para tener el contorno de los continentes gratis! Finalmente, notar que como las longitudes van de 0º a 360º (en vez de -180º a 180º), el mapa sale centrado en el Océano Pacífico. Esto va a haber que tenerlo en cuenta cuando sea la hora de graficar los continentes con algo mejor que bloques grises.</p>
+</div>
+<div id="leyendo-regiones" class="section level2">
+<h2>Leyendo regiones</h2>
+<p>Es muy común tener muchos datos en unos pocos archivos netCDF pero necesitar sólo una parte. Por ejemplo, me voy a poner en los zapatos de un investigador neozelandés que le interese estudiar la temperatura de la superficie del mar cerca de Nueva Zelanda y sus islas cercanas. En este caso, podría leer sólo una región acotada usando el argumento <code>subset</code> :</p>
+<pre class="r"><code>ReadNetCDF(archivo, vars = &quot;sst&quot;, 
+           subset = list(longitude = c(100, 200),
+                         latitude = c(0, -90))) %&gt;% 
+  .[time == time[1]] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_raster(aes(fill = sst)) </code></pre>
+<p><img src="02_lectura_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>El argumento <code>subset</code> tiene que ser una lista cuyos elementos tienen los nombres de las dimensiones a usar para filtrar y cada elemento es un vector cuyo rango define el bloque de datos a leer.</p>
+<p>En el código anterior subset es:</p>
+<pre class="r"><code>list(longitude = c(100, 200),
+     latitude = c(0, -90))</code></pre>
+<p>Lo que significa que se van a leer los datos con latitud entre -90º y 0º, y con longitud entre 100º y 200º.</p>
+<div class="alert alert-info">
+<p>El argumento <code>subset</code> de <code>ReadNetCDF()</code> tiene otros aces bajo la manga, como usar <code>NA</code> para referirse al mínimo o al máximo o leer regiones discontinuas de datos. Todo eso se puede leer en la ayuda: <code>?ReadNetCDF()</code>.</p>
+</div>
 </div>
 
 

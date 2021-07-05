@@ -3,6 +3,7 @@ navbar:
   left: 
     - text: Preparación
       href: preparacion.html
+    
   right:
     - text: Repositorio
       href: https://github.com/eliocamp/espaciales-tidy-tutorial/
