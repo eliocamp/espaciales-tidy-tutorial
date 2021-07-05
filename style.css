@@ -112,3 +112,11 @@ a:hover {
   margin-right: auto;
   width: 50%;
 }
+
+
+.alert-info {
+    background-color: #0e9a83;
+    border-color: #007367;
+    color: #ffffff;
+    font-weight: 900;
+}

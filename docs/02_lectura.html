@@ -11,8 +11,9 @@
 
 
 
-<title>Introducción</title>
+<title>Lectura de datos</title>
 
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -334,45 +335,74 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Introducción</h1>
+<h1 class="title toc-ignore">Lectura de datos</h1>
 
 </div>
 
 
-<div id="qué-sí-y-qué-no-incluye-este-tutorial" class="section level2">
-<h2>Qué sí y qué no incluye este tutorial</h2>
-<p>Es muy común trabajar con datos espaciales (datos asociados a una latitud y longitud, sobre la superficie o a veces en un nivel en la atmósfera o determinada profundidad en el océano) organizados en arrays u poligonos. En este tutorial les proponemos trabajar con datos grillados organizados en tablas. Estas tablas podrían ser data.frames, tibbles o data.tables según la sintaxis y librerías de R que uses normalmente.</p>
-<p>Por supuesto ambos enfoques tienen sus pros y sus contras y dependerá de la tarea que se quiere realizar y los datos disponibles en el momento. Para tener en cuenta:</p>
-<table>
-<colgroup>
-<col width="26%" />
-<col width="36%" />
-<col width="36%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"></th>
-<th align="left">Arrays / Polígonos</th>
-<th align="left">Tablas</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">Pros</td>
-<td align="left">* Uso eficiente de la memoria</br> * Enfoque muy difundido</br> * Hay muchas herramientas disponibles</td>
-<td align="left">* Permite trabajar los datos como cualquier otros aprovechando librerías conocidas</td>
-</tr>
-<tr class="even">
-<td align="center">Cons</td>
-<td align="left">* Es necesario aprender a usar herramientas específicas</td>
-<td align="left">* Los data.frames puede ocupan mucha memoria </br> * Algunos cálculos puede tomar mucho tiempo, es necesario optimizarlos</td>
-</tr>
-</tbody>
-</table>
-<p>Sí algún día se te ocurre leer un data.frame con varios millones de filas, es posible que {dplyr} no funcione muy bien, uno de los problemas es que esta librería hace copias de los objetos y si estos ocupan mucha memoría puede ser un problema. Una posible solución es usar la librería {data.table}, que tiene una sitaxis distinta o {dtplyr} que mantiene la sitaxis de {dplyr} con las ventajas de {data.table}. Pero no te preocupes, los datos que usaremos en el tutorial son aptos para cualquier computadora.</p>
-<div id="porqué-usar-datos-tidy" class="section level3">
-<h3>¿Porqué usar datos tidy?</h3>
+<div id="datos-en-.csv-.txt-etc" class="section level2">
+<h2>Datos en .csv, .txt, etc</h2>
+<p>Si de casualidad los datos que vas a usar están en un formato de texto o excel, podés usar cualquier función para leerlos que te resulte cómoda. Cómo siempre es importante tener presente el tipo de dato de cada columna, sobre todo si son datos desconocidos. ¿Tiene columnas con latitudes y longitudes? ¿Están en formato decimal o en grados y minutos? ¿R leyó estas columnas como número o texto?</p>
+<p>De alguna manera este es un punto en contra para este tipo de formatos, no tienen metadatos asociados o al menos <em>no vienen con el archivo</em>. En la próxima sección presentaremos un tipo de archivo que si cumple con estas cosas.</p>
 </div>
+<div id="datos-en-netcdf" class="section level2">
+<h2>Datos en netCDF</h2>
+<p>Uno de estos tipos de formatos muy utilizado en ciencias para guardar datos atmosféricos grillados es el netCDF. La página web de unidata describe al formato netCDF como:</p>
+<ul>
+<li><p>Auto-descriptivo: Un netCDF contiene información sobre los datos que contiene</p></li>
+<li><p>Portable: Un archivo netCDF puede ser accedido por computadoras que almacenan enteros, caracteres y números de punto flotante de forma diferente.</p></li>
+<li><p>Escalable: Se puede acceder eficientemente a pequeños subsets de grandes bases de datos, incluso desde servidores remotos.</p></li>
+<li><p>Anexable: Se pueden añadir nuevos datos pueden añadirse a un archivo netCDF correctamente estructurado sin copiar el conjunto de datos ni redefinir su estructura.</p></li>
+<li><p>Compartible. Un escritor y varios lectores pueden acceder simultáneamente al mismo archivo netCDF.</p></li>
+<li><p>Archivable. El acceso a todas las formas anteriores de datos netCDF será compatible con las versiones actuales y futuras del software.</p></li>
+</ul>
+<p>Todo ese márketing lo que significa en la práctica es que los datos en netCDF son muy cómodos porque tienen los metadatos incluídos y porque es muy fácil leer sólo las partes necesarias. Existen muchos paquetes de R para leer (y escribir) archivos en este formato. En este tutorial vamos a usar {metR}.</p>
+<p>Los datos en archivos NetCDF puede ser bastante grandes y destruir tu sesión de R si tratás de leerlos enteros en memoria. Por eso, siempre es bueno primero fijarse qué tiene un archivo nuevo. Para eso, {metR} tiene la función GlanceNetCDF que muestra un vistazo de los metadatos del archivo. Vamos a trabajar con un archivo en este formato que contiene datos de reanálisis del NCEP.</p>
+<pre class="r"><code>library(metR)
+# Archivo que viene con metR
+archivo &lt;- system.file(&quot;extdata&quot;, &quot;temperature.nc&quot;, package = &quot;metR&quot;)
+
+metR::GlanceNetCDF(archivo)</code></pre>
+<pre><code>## ----- Variables ----- 
+## air:
+##     mean Daily Air temperature in degK
+##     Dimensions: lon by lat by level by time
+## 
+## 
+## ----- Dimensions ----- 
+##   time: 1 values from 2010-07-09 to 2010-07-09 
+##   level: 17 values from 10 to 1000 millibar
+##   lat: 73 values from -90 to 90 degrees_north
+##   lon: 144 values from 0 to 357.5 degrees_east</code></pre>
+<p>La salida de esta función muestra las variables que tiene el archivo y sus dimensiones.</p>
+<div class="alert alert-info">
+<p>¿Qué información podés deducir sobre el contenido del archivo a partir de esto?</p>
+</div>
+<p>En este caso, el archivo tiene una sola variable, llamada <code>air</code> que es la temperatura media en Kelvin (un archivo netCDF puede tener muchas variables y no todas en la misma grilla). De las dimensiones del archivo, se ve que tiene dimensiones de tiempo, nivel, longitud y latitud. La latitud va de -90 a 90 y la longitud de 0 a 357.5, por lo que es un campo global. <code>level</code> es la coordenada vertical, que va de 1000 milibares (básicamente la superficie) a 10 millibares (la estratósfera media).</p>
+<p>Podemos hacer la cuenta de cuántas observaciones tiene este archivo:</p>
+<pre class="r"><code>1*17*73*144</code></pre>
+<pre><code>## [1] 178704</code></pre>
+<p>Que puede leerse sin problema.</p>
+<p>Para leer los datos, se usa <code>ReadNetCDF()</code>.</p>
+<pre class="r"><code>temperatura &lt;- ReadNetCDF(archivo)
+temperatura</code></pre>
+<pre><code>##               time level lat   lon    air
+##      1: 2010-07-09  1000  90   0.0 274.87
+##      2: 2010-07-09  1000  90   2.5 274.87
+##      3: 2010-07-09  1000  90   5.0 274.87
+##      4: 2010-07-09  1000  90   7.5 274.87
+##      5: 2010-07-09  1000  90  10.0 274.87
+##     ---                                  
+## 178700: 2010-07-09    10 -90 347.5 188.25
+## 178701: 2010-07-09    10 -90 350.0 188.25
+## 178702: 2010-07-09    10 -90 352.5 188.25
+## 178703: 2010-07-09    10 -90 355.0 188.25
+## 178704: 2010-07-09    10 -90 357.5 188.25</code></pre>
+</div>
+<div id="consiguiendo-datos" class="section level2">
+<h2>Consiguiendo datos</h2>
+<p>Ok, pero estos datos son una muestra gratis, ¿cómo hacemos para conseguir más datos?</p>
+<p><img src="img/cds-homepage.png" /></p>
 </div>
 
 
