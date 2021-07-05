@@ -24,11 +24,11 @@ Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés re
 
 |Duración (minutos) |Contenidos|
 |:---|----------|
-|10  |Introducción |
-|40  |Tema 1 |
-|5   |Pausa `r emo::ji("coffee")` |
+|10  | [Introducción](01_intro.html) |
+|40  | [Descarga y lectura de datos](02_lectura.html) |
+|5   | Pausa `r emo::ji("coffee")` |
 |50  | Tema 2 |
-|5   |Pausa `r emo::ji("coffee")`  |
+|5   | Pausa `r emo::ji("coffee")`  |
 |30  | Tema 3 |
 |20 | Preguntas y cierre |
 
