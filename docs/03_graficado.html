@@ -11,7 +11,7 @@
 
 
 
-<title>Datos espaciales a lo tidy</title>
+<title>Graficando</title>
 
 <script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -335,82 +335,124 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Datos espaciales a lo tidy</h1>
+<h1 class="title toc-ignore">Graficando</h1>
 
 </div>
 
 
-<p>En este tutorial vas a aprender a descargar, leer, analizar y visualizar datos espaciales grillados en R usando datos tidy. Va a ser un tutorial participativo con programación en vivo y ejercicios, bajo la idea de que puedas usar los datos para responder tus propias preguntas, escribiendo tu propio código.</p>
-<p>Al final del taller vas a haber aprendido como:</p>
-<ul>
-<li>descargar datos meteorológicos y climáticos programáticamente desde R,</li>
-<li>leerlos en un formato tidy,</li>
-<li>computar estadísicas espaciales y temporales,</li>
-<li>graficar los resultados usando ggplot2 y extensiones.</li>
-</ul>
-<div id="antes-del-tutorial" class="section level2">
-<h2>Antes del tutorial</h2>
-<p>Durante el tutorial les propondremos ejercicios para que resuelvan en sus computadoras. Si bien esto no es obligatorio, les sugerimos que sigan las indicaciones para instalar paquetes y generar las credenciales necesarias que usaremos ese día.</p>
-<p><a href="preparacion.html"><strong>Instrucciones a seguir antes del tutorial</strong></a></p>
-</div>
-<div id="agenda" class="section level2">
-<h2>Agenda</h2>
-<p>Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés revisar el horario en tu país en el <a href="https://user2021.r-project.org/program/tutorials/">programa de tutoriales</a> o en <a href="https://arewemeetingyet.com/UTC/2021-07-07/18:15/Datos%20espaciales%20a%20lo%20tidy#eyJ1cmwiOiJodHRwczovL2VsaW9jYW1wLmdpdGh1Yi5pby9lc3BhY2lhbGVzLXRpZHktdHV0b3JpYWwvIn0=">este link</a>). Haremos todo lo posible por respetar el horario de las pausas para que puedan organizarte mejor.</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Duración (minutos)</th>
-<th>Contenidos</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">10</td>
-<td><a href="01_intro.html">Introducción</a></td>
-</tr>
-<tr class="even">
-<td align="left">40</td>
-<td><a href="02_lectura.html">Descarga y lectura de datos</a></td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td>Pausa ☕</td>
-</tr>
-<tr class="even">
-<td align="left">50</td>
-<td><a href="03_graficado.html">Gráficos</a></td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td>Pausa ☕</td>
-</tr>
-<tr class="even">
-<td align="left">30</td>
-<td>Tema 3</td>
-</tr>
-<tr class="odd">
-<td align="left">20</td>
-<td>Preguntas y cierre</td>
-</tr>
-</tbody>
-</table>
-<p>Los materiales del tutorial estarán disponibles en esta misma página muy pronto.</p>
-</div>
-<div id="sobre-nosotros" class="section level2">
-<h2>Sobre nosotros</h2>
-<p><strong>Elio Campitelli</strong></p>
-<p><img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/> Elio es Licenciado en Ciencias de la Atmósfera y actualmente está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación atmosférica del hemisferio sur influye en las condiciones meteorológicas de Sudamérica.</p>
-<p>Mantiene varios paquetes de R, como metR (paquete para manejo de datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar varias escalas de color en un gráfico). Es profesor de Introducción a la Programación en la Diplomatura en análisis de datos aplicados al desarrollo de políticas públicas de la Universidad Nacional Guillermo Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. Es miembro fundador de <a href="http://metadocencia.org/">MetaDocencia</a> e instructor de <a href="https://carpentries.org/">The Carpentries</a>.</p>
-<p><a href="https://eliocamp.github.io/">eliocamp.github.io</a> | <a href="https://twitter.com/d_olivaw">@d_olivaw</a></p>
-<p><strong>Pao Corrales</strong></p>
-<p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Pao es Licenciada en Ciencias de la Atmósfera y actualmente está realizando su doctorado en el Centro de Investigaciones del Mar y la Atmósfera, UBA-CONICET aplicando técnicas de asimilación de datos para mejorar pronósticos de eventos severos a corto plazo. Desde 2011 forma parte de Expedición Ciencia, una asociación civil dedicada a generar proyectos que permita a personas de todas las edades desarrollen el pensamiento científico, el placer por la exploración y la curiosidad permanente. En Expedición Ciencia lidera proyectos educativos como campamentos científicos y talleres para estudiantes y docentes.</p>
-<p>Desde 2017 forma parte de distintas comunidades de usuarios y usuarias de R (por ejemplo, R-Ladies Buenos Aires y LatinR) en las que genera actividades presenciales y virtuales. Paola también es instructora y entrenadora de instructores certificada por <a href="https://carpentries.org/">The Carpentries</a>, instructora certificada por <a href="https://education.rstudio.com/trainers/people/corrales+paola/">RStudio</a> y co-fundadora de <a href="http://metadocencia.org/">MetaDocencia</a>.</p>
-<p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> | <a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
-<hr />
-<div id="licencia-de-uso" class="section level3">
-<h3>Licencia de uso</h3>
-<p><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /> Todos los materiales de este curso se encuentran bajo la licencia <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
-</div>
+<p>Ahora que tenés los datos en forma de tabla, todo lo que queda es usar las mismas herramientas que usarías para trabajar con cualquier otro tipo de dato.</p>
+<pre class="r"><code># Cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(metR)
+
+# Leo los datos
+# 
+sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot;)
+
+# Me quedo con un solo campo, para graficar
+sst1 &lt;- sst[time == time[1]]</code></pre>
+<p>Ya vimos una forma simple de graficar este tipo de datos usando <code>geom_raster()</code>:</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_raster(aes(fill = sst)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
+<p>Con <code>geom_raster()</code>, cada punto de grilla es representado como un rectángulo cuyo color de relleno se mapea al valor de la variable; extremadamente simple.</p>
+<p>Otra forma de mostrar este tipo de campos es usando contornos con <code>geom_contour()</code>. A mí me gusta usar <code>metR::geom_contour2()</code> porque usa contornos negros por default y tiene otras funcionalidades.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour2(aes(z = sst)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
+<p>El problema es que ahora perdemos los contienentes gratis y no sabemos los valores. Podemos obtener un resultado intermedio usando contornos llenos con <code>metR::geom_contour_fill()</code> (de nuevo, ggplot2 tiene un <code>geom_contour_filled()</code> pero yo prefiero los defaults y otras funcionalidades de <code>geom_contour_fill()</code>).</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+<p>En este punto estaría bueno tener no tener los continentes pixelados. El paquete <code>rnaturalearth</code> tiene datos de costas y países, pero para no tener que instalar otro paquete extra, vamos a usar la función <code>map_data()</code> de ggplot2.</p>
+<pre class="r"><code>ggplot() +
+  geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
+               fill = &quot;white&quot;)</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p>Ahora podemos poner eso encima del gráfico anterior.</p>
+<pre class="r"><code>mapa &lt;- geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
+               fill = &quot;white&quot;, inherit.aes = FALSE)</code></pre>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst)) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
+<p>El problema es que todavía tenemos las costas pixeladas. Una forma de resolver esto es rellenando esos pixels con un valor razonable. <code>metR::geom_contour_fill()</code> tiene el argumento <code>na.fill</code> que si es <code>TRUE</code>, interpola los datos faltantes:</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-8-1.png" width="480" /></p>
+<p>Sabemos que los datos bien adentro de los continentes no tienen sentido, pero si lo que vamos a hacer es taparlos con el mapa, ¿a quién le importa?</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-9-1.png" width="480" /> ## Usando proyecciones</p>
+<p>Hasta ahora usamos datos grillados en una grilla regular en longitud y latitude, pero no todos los datos son así. Por ejemplo el dataset de ejemplo <code>surface</code> tiene datos de altura del centro de Argentina.</p>
+<pre class="r"><code>head(surface)</code></pre>
+<pre><code>##          lon       lat   height       x        y
+## 1: -74.83386 -40.91083   0.0000 -960000 -1160000
+## 2: -74.36743 -40.94587   0.0000 -920000 -1160000
+## 3: -73.90057 -40.97941 276.4575 -880000 -1160000
+## 4: -73.43341 -41.01149 182.4261 -840000 -1160000
+## 5: -72.96585 -41.04207 123.7324 -800000 -1160000
+## 6: -72.49799 -41.07118 770.1770 -760000 -1160000</code></pre>
+<p>Vemos que tiene datos de altura en longitud y latitud. Vamos a ver qué pinta tienen:</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(lon, lat)) +
+  geom_point(aes(colour = height))</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
+<p>Claramente esto no es un cuadrado, pero si se fijan bien, hay una cierta regularidad en la ubicación de los puntos. Es porque la grilla sí es regular, pero en otra proyección:</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(x, y)) +
+  geom_raster(aes(fill = height))</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-12-1.png" width="480" /></p>
+<p>En esta grilla regular podemos calcular contornos sin dolor.</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(x, y)) +
+  geom_contour_fill(aes(z = height))</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-13-1.png" width="480" /></p>
+<p>Una forma de definir esa proyección es con una “proj-string”; un texto que define de qué proyección se trata y cuáles son sus parámetros. (Aunque notar que este paradigma <a href="https://inbo.github.io/tutorials/tutorials/spatial_crs_coding/">ya se quedó viejo</a>) ¿De donde sale esta string? ¡De los metadatos! Si tu archivo netCDF está bien hecho, parte de sus metadatos va a ser la proyección. En este caso, el “metadato” es este documento y la proj-string es la siguiente:</p>
+<pre class="r"><code>proj_string &lt;- paste0(&quot;+proj=lcc +lat_1=-30.9659996032715 +lat_2=-30.9659996032715 +lat_0=-30.9660034179688 +lon_0=296.432998657227 +a=6370000 +b=6370000 +over&quot;)</code></pre>
+<p>Si metemos esto directamente al argumento <code>proj</code> de <code>geom_contour_fill()</code> podemos pasar de las coordenadas proyectadas x/y a lon/lat.</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(x, y)) +
+  geom_contour_fill(aes(z = height), proj = proj_string)</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-15-1.png" width="480" /></p>
+<p>Y ahora se puede superponer estos datos de topografía a los datos de temperatura de la superficie del mar:</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-16-1.png" width="480" /> Pero ahí hay un problema, que es que estamos graficando dos variables muy distintas usando la misma escala de colores. Una forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete <a href="https://eliocamp.github.io/ggnewscale/">ggnewscale</a>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa +
+  ggnewscale::new_scale_fill() +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
+  scale_fill_continuous(low = &quot;gray20&quot;, high = &quot;white&quot;, guide = &quot;none&quot;) +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-17-1.png" width="480" /></p>
+<div id="contornos-iluminados" class="section level2">
+<h2>Contornos iluminados</h2>
+<p>Sólo porque amo los contornos iluminados, no puedo dejar de mencionar <code>geom_contour_tanaka()</code>, que agrega un efecto de relieve hermoso en los contornos.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  geom_contour_tanaka(aes(z = sst), na.fill = TRUE) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
 </div>
 
 
