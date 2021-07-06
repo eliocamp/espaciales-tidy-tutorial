@@ -20,15 +20,15 @@ Durante el tutorial les propondremos ejercicios para que resuelvan en sus comput
 
 ## Agenda
 
-Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés revisar el horario en tu país en el [programa de tutoriales](https://user2021.r-project.org/program/tutorials/)). Haremos todo lo posible por respetar el horario de las pausas para que puedar organizarte mejor. 
+Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés revisar el horario en tu país en el [programa de tutoriales](https://user2021.r-project.org/program/tutorials/) o en [este link](https://arewemeetingyet.com/UTC/2021-07-07/18:15/Datos%20espaciales%20a%20lo%20tidy#eyJ1cmwiOiJodHRwczovL2VsaW9jYW1wLmdpdGh1Yi5pby9lc3BhY2lhbGVzLXRpZHktdHV0b3JpYWwvIn0=)). Haremos todo lo posible por respetar el horario de las pausas para que puedan organizarte mejor. 
 
-|Minutos </br> desde el comienzo |Contenidos|
+|Duración (minutos) |Contenidos|
 |:---|----------|
-|10  |Introducción |
-|40  |Tema 1 |
-|5   |Pausa `r emo::ji("coffee")` |
-|50  | Tema 2 |
-|5   |Pausa `r emo::ji("coffee")`  |
+|10  | [Introducción](01_intro.html) |
+|40  | [Descarga y lectura de datos](02_lectura.html) |
+|5   | Pausa `r emo::ji("coffee")` |
+|50  | [Gráficos](03_graficado.html) |
+|5   | Pausa `r emo::ji("coffee")`  |
 |30  | Tema 3 |
 |20 | Preguntas y cierre |
 

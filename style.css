@@ -42,6 +42,7 @@ a.navbar-brand:hover {
   background-position: center center;
   background-repeat: no-repeat;
 }
+/*
 #TOC::after {
   content: "Materiales del tutorial Datos espaciales a lo tidy para useR!2021";
   font-size: 13px;
@@ -49,11 +50,14 @@ a.navbar-brand:hover {
   height: 100px;
   margin: 2em 20px 40px 20px;
 }
-
+*/
 .tocify {
+/*  
   position: -webkit-sticky;
   position: sticky; 
-  top: 120px; /*Controls where TOC stops when sticky */
+  top: 60px; 
+*/
+
   width: 100% !important;
   border: none;
 }
@@ -107,4 +111,12 @@ a:hover {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+
+.alert-info {
+    background-color: #0e9a83;
+    border-color: #007367;
+    color: #ffffff;
+    font-weight: 900;
 }

@@ -29,6 +29,21 @@ Finalmente, podrás instalar los paquetes de R con:
 install.packages(c("udunits2", "ncdf4"))
 ```
 
+Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete {proj4}, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:
+
+```{·bash}
+sudo apt install proj-bin
+```
+
+(Instrucciones para otros sistemas operativos [en la página del proyecto](https://proj.org/install.html))
+
+Y luego instalar el paquete de R con:
+
+``` {.r}
+install.packages("proj4")
+```
+
+
 # Cuentas
 
 Vamos a usar el paquete [ecmwfr](https://bluegreen-labs.github.io/ecmwfr/) para descargar datos climáticos. 
@@ -56,36 +71,37 @@ Si todo sale bien, la función va a devolver un mensaje como este:
 User <UID> for cds service added successfully in keychain
 ```
 
+Finalmente, hay que aceptar los términos y condiciones de uso del servicio. 
+Entrá a [este link](https://cds.climate.copernicus.eu/cdsapp/#!/terms/licence-to-use-copernicus-products) y poné aceptar abajo de todo. 
+
 # ¿Funcionó?
 
 Finalmente, para probar que todo se instaló correctamente, corré este pequeño "Hello, world!"
 
 
 ```{·r}
-request <- list(stream = "oper",
-   levtype = "sfc",
-   param = "167.128",
-   dataset = "interim",
-   step = "0",
-   grid = "0.75/0.75",
-   time = "00",
-   date = "2014-07-01/to/2014-07-02",
-   type = "an",
-   class = "ei",
-   area = "50/10/51/11",
-   format = "netcdf",
-   target = "tmp.nc")
+request <- list(
+  format = "netcdf",
+  product_type = "monthly_averaged_reanalysis",
+  variable = "temperature",
+  pressure_level = "500",
+  year = "2021",
+  month = "01",
+  time = "00:00",
+  dataset_short_name = "reanalysis-era5-pressure-levels-monthly-means",
+  target = "download.nc"
+)
 
 data <- ecmwfr::wf_request(request)
-metR::ReadNetCDF(data, vars = "t2m")
+metR::ReadNetCDF(data, vars = "t")
 ```
 
 Primero deberías ver algo como esto:
 
 ```
-Requesting data to the webapi service with username <your_email>
+Requesting data to the cds service with username 11343
 - staging data transfer at url endpoint or request id:
-  https://api.ecmwf.int/v1/datasets/interim/requests/xxxxxxxXXXXxxxxXXXxxx
+  xxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxx
 
 - timeout set to 1.0 hours
 | polling server for a data transfer
@@ -104,15 +120,18 @@ Downloading file
 Y luego de que los datos se descarguen, la última línea leerá los datos y como resultado verás:
 
 ```
-         time latitude longitude      t2m
-1: 2014-07-01    50.75     10.00 282.4616
-2: 2014-07-01    50.75     10.75 282.2275
-3: 2014-07-01    50.00     10.00 282.9887
-4: 2014-07-01    50.00     10.75 282.9998
-5: 2014-07-02    50.75     10.00 282.1887
-6: 2014-07-02    50.75     10.75 281.8115
-7: 2014-07-02    50.00     10.00 284.0701
-8: 2014-07-02    50.00     10.75 283.1466
+               time latitude longitude        t
+      1: 2021-01-01       90      0.00 233.5851
+      2: 2021-01-01       90      0.25 233.5851
+      3: 2021-01-01       90      0.50 233.5851
+      4: 2021-01-01       90      0.75 233.5851
+      5: 2021-01-01       90      1.00 233.5851
+     ---                                       
+1038236: 2021-01-01      -90    358.75 237.5989
+1038237: 2021-01-01      -90    359.00 237.5989
+1038238: 2021-01-01      -90    359.25 237.5989
+1038239: 2021-01-01      -90    359.50 237.5989
+1038240: 2021-01-01      -90    359.75 237.5989
 ```
 
 
