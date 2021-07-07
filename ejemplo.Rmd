@@ -1,0 +1,152 @@
+---
+title: "Relación entre presión a nivel del mar y ENSO"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+
+
+```{r}
+# Cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(metR)
+```
+
+Voy leer los datos de temperatura de la superficie del mar y de presión a nivel del mar.
+
+```{r}
+datos <- ReadNetCDF("datos/temperatura_mar.nc", vars = c("sst", presion = "msl"))
+```
+
+Y también voy a armarme una función para plotear un mapa
+
+```{r}
+mapa <- function(fill = "white", colour = NA) {
+  geom_polygon(data = map_data("world2"), aes(long, lat, group = group), 
+               fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
+}
+```
+
+Primero, calculo anomalías mensuales de temperatura de superficie del mar. 
+
+## {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+datos[, c("sst_a", "presion_a") := list(sst - mean(sst), 
+                                        presion - mean(presion)),
+      by = .(longitude, latitude, month(time))]
+```
+
+
+### dplyr
+
+```{r, eval = FALSE}
+datos <- datos %>% 
+  group_by(longitude, latitude, mes = month(time)) %>% 
+  mutate(sst_a = sst - mean(sst), 
+         presion_a = presion - mean(presion)) %>% 
+  ungroup() %>% 
+  select(-mes)
+```
+
+##
+
+Con esto, defino el índice ENSO como la anomalía media en una caja entre 170ºE y 120ºE y 5ºS y 5ºN. 
+
+## {.tabset .unlisted .unnumbered}
+
+
+### data.table
+
+```{r}
+enso <- datos %>% 
+  .[abs(latitude) < 5 & ConvertLongitude(longitude) %between% c(-170, -120)] %>% 
+  .[, .(enso34 = mean(sst_a)), by = time]
+```
+
+### dplyr
+
+```{r, eval = FALSE}
+enso <- datos %>% 
+  filter(abs(latitude) < 5 & between(ConvertLongitude(longitude), -170, -120)) %>% 
+  group_by(time) %>% 
+  summarise(enso34 = mean(sst_a)) %>% 
+  ungroup()
+```
+
+
+## 
+
+¿Cómo evolucionó este índice a lo largo del tiempo?
+
+```{r}
+ggplot(enso, aes(time, enso34)) +
+  geom_line() +
+  geom_hline(yintercept = c(-0.5, 0.5)) + 
+  annotate("label", y = c(0.5, -0.5), x = lubridate::as_datetime("1979-01-01"),
+           label = c("NIÑO", "NIÑA"), vjust = c(-0.2, 1.2), label.size = grid::unit(0,"lines")) +
+  scale_x_datetime(name = NULL) +
+  scale_y_continuous(name = NULL) +
+  labs(title = "Índice ENSO34", 
+       caption = "Fuente: ERA5 (1979–2020)") +
+  theme_minimal()
+```
+
+
+¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel global?
+
+## {.tabset .unlisted .unnumbered}
+
+
+### data.table
+
+```{r}
+enso_regresion <- datos %>% 
+  .[enso, on = "time"] %>% 
+  .[, FitLm(presion_a, enso34), by = .(longitude, latitude)] %>% 
+  .[term != "(Intercept)"] 
+```
+
+### dplyr
+
+```{r, eval = FALSE}
+enso_regresion <- sst %>% 
+  right_join(enso, by = "time") %>% 
+  group_by(latitude, longitude) %>% 
+  summarise(as.data.frame(FitLm(presion_a, enso34))) %>% 
+  ungroup() %>% 
+  filter(term != "(Intercept)") 
+```
+
+## 
+
+```{r}
+enso_regresion %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = estimate, fill = ..level..), na.fill = 0, 
+                    breaks = AnchorBreaks(binwidth = 25, exclude = 0)) +
+  geom_contour_tanaka(aes(z = estimate), na.fill = 0, 
+                      breaks = AnchorBreaks(binwidth = 25, exclude = 0)) +
+  mapa(fill = NA, colour = "black")  +
+  scale_fill_divergent_discretised(name = "hPa") +
+  scale_x_longitude() +
+  scale_y_latitude() +
+  coord_quickmap() +
+  theme_minimal() +
+  labs(title = "Regresíon presión a nivel del mar con ENSO", 
+       caption = "Fuente: ERA5 (1979–2020)")
+```
+

@@ -321,6 +321,9 @@ div.tocify {
         <li>
   <a href="preparacion.html">Preparación</a>
 </li>
+<li>
+  <a href="ejemplo.html">Relación ENSO - Presión a nivel del mar</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -576,7 +579,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 </div>
 <div id="dplyr-7" class="section level3">
 <h3>dplyr</h3>
-<pre class="r"><code>campos_cor &lt;- datos %&gt;%
+<pre class="r"><code>cor_pp &lt;- datos %&gt;%
   group_by(longitude, latitude, month(time)) %&gt;% 
   mutate(pp_a = pp - mean(pp)) %&gt;% 
   left_join(enso, by = &quot;time&quot;) %&gt;% 
@@ -596,7 +599,8 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
 <pre class="r"><code>cor_pp %&gt;% 
   ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
+  geom_contour_fill(aes(z = correlacion), 
+                    breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
   mapa(fill = NA, colour = &quot;black&quot;) +
   scale_x_longitude(limits = c(270, 330)) +
   scale_y_latitude(limits = c(-60, -10)) +
@@ -604,6 +608,42 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   coord_quickmap() +
   facet_wrap(~season, ncol = 2)</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-26-1.png" width="480" /></p>
+</div>
+<div id="section-14" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-8" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>cor_msl &lt;- datos %&gt;% 
+  .[, msl_a := msl - mean(msl), by = .(longitude, latitude, month(time))] %&gt;% 
+  .[enso, on = &quot;time&quot;] %&gt;% 
+  .[, .(correlacion = cor(msl_a, enso34)), by = .(latitude, longitude, season(time))]</code></pre>
+</div>
+<div id="dplyr-8" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>cor_pp &lt;- datos %&gt;%
+  group_by(longitude, latitude, month(time)) %&gt;% 
+  mutate(msl_a = msl - mean(msl)) %&gt;% 
+  left_join(enso, by = &quot;time&quot;) %&gt;% 
+  group_by(latitude, longitude, season(time)) %&gt;% 
+  summarise(correlacion = cor(msl_a, enso34)) %&gt;% 
+  ungroup()</code></pre>
+</div>
+</div>
+<div id="section-15" class="section level2">
+<h2></h2>
+<pre class="r"><code>cor_msl %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(exclude = 0)) +
+  scale_fill_divergent() +
+  mapa(fill = NA, colour = &quot;black&quot;) +
+  
+  scale_x_longitude() +
+  scale_y_latitude() +
+  coord_quickmap() +
+  facet_wrap(~season, ncol = 2) +
+  
+  metR:::theme_field() </code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-29-1.png" width="480" /></p>
 </div>
 
 

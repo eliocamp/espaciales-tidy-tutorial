@@ -59,9 +59,16 @@ Andá a [tu perfil de usuario](https://cds.climate.copernicus.eu/user/login?dest
 
 ![Captura de pantalla de la sección API Key en la página del Climate Data Store](img/api-key.png)
 
+Si estás trabajando en una cuenta de **RStudio Cloud**, antes de lo que viene corré esta línea:
+
+
+```{.r}
+options(keyring_backend = "env")
+```
+
 Ahora corré este código en R, reemplazando `<UID>` por tu UID y `<API Key>` con tu APi Key:
 
-``` {.r}
+```{.r}
 ecmwfr::wf_set_key(service = "cds", user = "<UID>", key = "<API Key>")
 ```
 

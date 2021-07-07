@@ -6,11 +6,11 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   cache = TRUE,
-	echo = TRUE,
-	fig.height = 3,
-	fig.width = 5,
-	message = FALSE,
-	warning = FALSE
+  echo = TRUE,
+  fig.height = 3,
+  fig.width = 5,
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
@@ -277,7 +277,7 @@ cor_pp <- datos %>%
 ### dplyr 
 
 ```{r, eval=FALSE}
-campos_cor <- datos %>%
+cor_pp <- datos %>%
   group_by(longitude, latitude, month(time)) %>% 
   mutate(pp_a = pp - mean(pp)) %>% 
   left_join(enso, by = "time") %>% 
@@ -302,7 +302,8 @@ cor_pp %>%
 ```{r}
 cor_pp %>% 
   ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
+  geom_contour_fill(aes(z = correlacion), 
+                    breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
   mapa(fill = NA, colour = "black") +
   scale_x_longitude(limits = c(270, 330)) +
   scale_y_latitude(limits = c(-60, -10)) +
@@ -311,3 +312,45 @@ cor_pp %>%
   facet_wrap(~season, ncol = 2)
 ```
 
+
+## {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+cor_msl <- datos %>% 
+  .[, msl_a := msl - mean(msl), by = .(longitude, latitude, month(time))] %>% 
+  .[enso, on = "time"] %>% 
+  .[, .(correlacion = cor(msl_a, enso34)), by = .(latitude, longitude, season(time))]
+```
+
+
+### dplyr 
+
+```{r, eval=FALSE}
+cor_pp <- datos %>%
+  group_by(longitude, latitude, month(time)) %>% 
+  mutate(msl_a = msl - mean(msl)) %>% 
+  left_join(enso, by = "time") %>% 
+  group_by(latitude, longitude, season(time)) %>% 
+  summarise(correlacion = cor(msl_a, enso34)) %>% 
+  ungroup()
+```
+
+## 
+
+
+```{r}
+cor_msl %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(exclude = 0)) +
+  scale_fill_divergent() +
+  mapa(fill = NA, colour = "black") +
+  
+  scale_x_longitude() +
+  scale_y_latitude() +
+  coord_quickmap() +
+  facet_wrap(~season, ncol = 2) +
+  
+  metR:::theme_field() 
+```
