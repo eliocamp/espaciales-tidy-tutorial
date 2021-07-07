@@ -5,11 +5,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-	echo = TRUE,
-	fig.height = 3,
-	fig.width = 5,
-	message = FALSE,
-	warning = FALSE
+  echo = TRUE,
+  fig.height = 3,
+  fig.width = 5,
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
@@ -75,7 +75,7 @@ Ahora podemos poner eso encima del gráfico anterior.
 
 ```{r}
 mapa <- geom_polygon(data = map_data("world2"), aes(long, lat, group = group), 
-               fill = "white", inherit.aes = FALSE)
+                     fill = "white", inherit.aes = FALSE)
 ```
 
 ```{r}
@@ -173,6 +173,7 @@ sst1 %>%
   geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
   coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
 ```
+
 Pero ahí hay un problema, que es que estamos graficando dos variables muy distintas usando la misma escala de colores. 
 Una forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete [ggnewscale](https://eliocamp.github.io/ggnewscale/). 
 
@@ -184,20 +185,120 @@ sst1 %>%
   geom_contour_fill(aes(z = sst), na.fill = TRUE) +
   mapa +
   ggnewscale::new_scale_fill() +
-  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
-  scale_fill_continuous(low = "gray20", high = "white", guide = "none") +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
+                    breaks = seq(1, 6000, by = 500)) +
+  scale_fill_gradientn(colours = terrain.colors(4), guide = "none") +
   coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
 ```
 
+
+## Guía discretizada
+
+Un último truco que hace ayuda a interpretar los contornos llenos es cambiar la guía de colores. 
+`geom_contour_fill()` por defecto usa una escala continua para el aes fill, por lo que la guía de colores es un degradé continuo. 
+El problema de eso es que no respeta necesariamente la idea de que `geom_contour_fill()` en cierta forma está discretizando los datos. 
+
+Una primera solución es usar una variable discreta.
+Para esto hay que cambiar el aes fill a `..level..`, que es la variable "level" computada por el geom. 
+Esta es una versión discreta de la variable usada por default (`..level_mid..`), lo cual fuerz a gplot2 a elegir una escala discreta junto con su guía.
+
+
+```{r}
+sst1 %>%  
+  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
+```
+El problema con esta escala es que no reconoce que si bien los datos ahora son discretos, ¡éstos representan números continuos!
+Para ilustrar el problema, veamos qué pasa si usamos breaks que no son equidistantes.
+
+
+```{r}
+sst1 %>%  
+  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE, 
+                    breaks= c(272, 275, 280, 295, 300)) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
+```
+
+
+Como la escala es discreta, no tiene forma de interpretar que el "ancho" de la región entre 272 y 275 es muy distinto que el ancho entre 280 y 295. 
+Esto se puede remediar usando una escala discretizada. 
+
+Cualquier escala contínua se puede convertir en una escala discretizada agregando `super = metR::ScaleDiscretised` (el `metR::` no es necesario si tenés metR cargado, pero está acá para indicar en de qué paquete sale). 
+Además, hay que usar la escala colorsteps de ggplot2 con el argumento `even.steps = FALSE`.
+
+```{r}
+sst1 %>%  
+  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE, 
+                    breaks= c(272, 275, 280, 295, 300)) + 
+  scale_fill_viridis_c(option = "B", super = metR::ScaleDiscretised,
+                       guide = guide_colorsteps(even.steps = FALSE)) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
+```
+
+
+Volviendo a agregar todo, queda una escala que es continua y discreta a la vez. 
+
+```{r}
+sst1 %>%  
+  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  as.discretised_scale(scale_fill_viridis_c)(option = "B") +
+  mapa +
+  ggnewscale::new_scale_fill() +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
+                    breaks = seq(1, 6000, by = 500)) +
+  scale_fill_gradientn(colours = terrain.colors(4), guide = "none") +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
+```
+
+
 ## Contornos iluminados
 
-Sólo porque amo los contornos iluminados, no puedo dejar de mencionar `geom_contour_tanaka()`, que agrega un efecto de relieve hermoso en los contornos. 
+Muchas veces los datos tienen un punto medio lógico y interesa ver las desviaciones con respecto a ese punto medio. 
+En ese caso, es muy útil usar una escala de colores divergente. 
+Para esto se puede usar `scale_fill_gradient2()` o `metR::scale_fill_divergent()` (que es lo mismo pero con el default razonable de que valores mayores al punto medio están en rojo y valores menores se pintan de azul), o la versión discretizada `metR::scale_fill_divergent_discretised()`.
 
 ```{r}
 sst1 %>%  
   ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
-  geom_contour_tanaka(aes(z = sst), na.fill = TRUE) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  scale_fill_divergent_discretised(midpoint =  290) +
   mapa
+```
+
+¿Pero qué pasa si este gráfico alguien lo veo imprime en blanco y negro?
+Lo que pasa es que los valores mayores al punto medio se ven iguales que los valores menores al punto medio.
+
+```{r}
+colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %>% 
+  cowplot::plot_grid()
+```
+
+Una posible solución es agregarle un efecto de relieve a los contornos usando `metR::geom_contour_tanaka()`. 
+
+```{r}
+sst1 %>%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  geom_contour_tanaka(aes(z = sst), na.fill = TRUE) + 
+  scale_fill_divergent_discretised(midpoint =  290) +
+  mapa
+```
+
+Además de quedar bonitos, ahora es muy fácil saber si un detarminado valor es una anomalía positiva o negativa aún en blanco y negro
+
+```{r}
+colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %>% 
+  cowplot::plot_grid()
 ```
 
