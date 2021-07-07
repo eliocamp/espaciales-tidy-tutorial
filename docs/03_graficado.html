@@ -321,6 +321,9 @@ div.tocify {
         <li>
   <a href="preparacion.html">Preparación</a>
 </li>
+<li>
+  <a href="ejemplo.html">Relación ENSO - Presión a nivel del mar</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -377,7 +380,7 @@ sst1 &lt;- sst[time == time[1]]</code></pre>
 <p><img src="03_graficado_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
 <p>Ahora podemos poner eso encima del gráfico anterior.</p>
 <pre class="r"><code>mapa &lt;- geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
-               fill = &quot;white&quot;, inherit.aes = FALSE)</code></pre>
+                     fill = &quot;white&quot;, inherit.aes = FALSE)</code></pre>
 <pre class="r"><code>sst1 %&gt;%  
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst)) +
@@ -433,26 +436,89 @@ sst1 &lt;- sst[time == time[1]]</code></pre>
   mapa +
   geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
   coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
-<p><img src="03_graficado_files/figure-html/unnamed-chunk-16-1.png" width="480" /> Pero ahí hay un problema, que es que estamos graficando dos variables muy distintas usando la misma escala de colores. Una forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete <a href="https://eliocamp.github.io/ggnewscale/">ggnewscale</a>.</p>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
+<p>Pero ahí hay un problema, que es que estamos graficando dos variables muy distintas usando la misma escala de colores. Una forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete <a href="https://eliocamp.github.io/ggnewscale/">ggnewscale</a>.</p>
 <pre class="r"><code>sst1 %&gt;%  
   .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst), na.fill = TRUE) +
   mapa +
   ggnewscale::new_scale_fill() +
-  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
-  scale_fill_continuous(low = &quot;gray20&quot;, high = &quot;white&quot;, guide = &quot;none&quot;) +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
+                    breaks = seq(1, 6000, by = 500)) +
+  scale_fill_gradientn(colours = terrain.colors(4), guide = &quot;none&quot;) +
   coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
 <p><img src="03_graficado_files/figure-html/unnamed-chunk-17-1.png" width="480" /></p>
+<div id="guía-discretizada" class="section level2">
+<h2>Guía discretizada</h2>
+<p>Un último truco que hace ayuda a interpretar los contornos llenos es cambiar la guía de colores. <code>geom_contour_fill()</code> por defecto usa una escala continua para el aes fill, por lo que la guía de colores es un degradé continuo. El problema de eso es que no respeta necesariamente la idea de que <code>geom_contour_fill()</code> en cierta forma está discretizando los datos.</p>
+<p>Una primera solución es usar una variable discreta. Para esto hay que cambiar el aes fill a <code>..level..</code>, que es la variable “level” computada por el geom. Esta es una versión discreta de la variable usada por default (<code>..level_mid..</code>), lo cual fuerz a gplot2 a elegir una escala discreta junto con su guía.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-18-1.png" width="480" /> El problema con esta escala es que no reconoce que si bien los datos ahora son discretos, ¡éstos representan números continuos! Para ilustrar el problema, veamos qué pasa si usamos breaks que no son equidistantes.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE, 
+                    breaks= c(272, 275, 280, 295, 300)) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+<p>Como la escala es discreta, no tiene forma de interpretar que el “ancho” de la región entre 272 y 275 es muy distinto que el ancho entre 280 y 295. Esto se puede remediar usando una escala discretizada.</p>
+<p>Cualquier escala contínua se puede convertir en una escala discretizada agregando <code>super = metR::ScaleDiscretised</code> (el <code>metR::</code> no es necesario si tenés metR cargado, pero está acá para indicar en de qué paquete sale). Además, hay que usar la escala colorsteps de ggplot2 con el argumento <code>even.steps = FALSE</code>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE, 
+                    breaks= c(272, 275, 280, 295, 300)) + 
+  scale_fill_viridis_c(option = &quot;B&quot;, super = metR::ScaleDiscretised,
+                       guide = guide_colorsteps(even.steps = FALSE)) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
+<p>Volviendo a agregar todo, queda una escala que es continua y discreta a la vez.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  as.discretised_scale(scale_fill_viridis_c)(option = &quot;B&quot;) +
+  mapa +
+  ggnewscale::new_scale_fill() +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
+                    breaks = seq(1, 6000, by = 500)) +
+  scale_fill_gradientn(colours = terrain.colors(4), guide = &quot;none&quot;) +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
+</div>
 <div id="contornos-iluminados" class="section level2">
 <h2>Contornos iluminados</h2>
-<p>Sólo porque amo los contornos iluminados, no puedo dejar de mencionar <code>geom_contour_tanaka()</code>, que agrega un efecto de relieve hermoso en los contornos.</p>
+<p>Muchas veces los datos tienen un punto medio lógico y interesa ver las desviaciones con respecto a ese punto medio. En ese caso, es muy útil usar una escala de colores divergente. Para esto se puede usar <code>scale_fill_gradient2()</code> o <code>metR::scale_fill_divergent()</code> (que es lo mismo pero con el default razonable de que valores mayores al punto medio están en rojo y valores menores se pintan de azul), o la versión discretizada <code>metR::scale_fill_divergent_discretised()</code>.</p>
 <pre class="r"><code>sst1 %&gt;%  
   ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
-  geom_contour_tanaka(aes(z = sst), na.fill = TRUE) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  scale_fill_divergent_discretised(midpoint =  290) +
   mapa</code></pre>
-<p><img src="03_graficado_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-22-1.png" width="480" /></p>
+<p>¿Pero qué pasa si este gráfico alguien lo veo imprime en blanco y negro? Lo que pasa es que los valores mayores al punto medio se ven iguales que los valores menores al punto medio.</p>
+<pre class="r"><code>colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %&gt;% 
+  cowplot::plot_grid()</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-23-1.png" width="480" /></p>
+<p>Una posible solución es agregarle un efecto de relieve a los contornos usando <code>metR::geom_contour_tanaka()</code>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  geom_contour_tanaka(aes(z = sst), na.fill = TRUE) + 
+  scale_fill_divergent_discretised(midpoint =  290) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
+<p>Además de quedar bonitos, ahora es muy fácil saber si un detarminado valor es una anomalía positiva o negativa aún en blanco y negro</p>
+<pre class="r"><code>colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %&gt;% 
+  cowplot::plot_grid()</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
 </div>
 
 
