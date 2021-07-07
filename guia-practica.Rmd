@@ -23,7 +23,11 @@ Si tenés tiempo, podés probar con otras variables.
 
 ### Segunda parte
 
-s dfsdfsd
+Ahora es el turno de graficar, podés seguir el paso a pasdo de los gráficos que ya hicimos [acá](03_graficado.html) pero también chequear el [ejemplo](ejemplo.html). Por supuesto, siempre podés explorar un poco más y hacer otras pruebas!
+
+### Tercera parte
+
+La propuesta es que repliques los cálculos y estadística que charlamos. Si no te resultan familiares, elegí una para concentrarte en eso y tener tiempo de hacer las cuentas, revisar el resultado y hacer un gráfico para ver que pinta tiene.
 
 ## Opción 2
 
@@ -51,8 +55,31 @@ Pregunta 3
 
 ### Segunda parte
 
-s dfsdfsd
+Pregunta 1
 
+: Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la temperatura en uno o más puntos a lo largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?
+
+Pregunta 2
+
+: Nuestra sugerencia es que grafiques campos de las variables para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar las variables en uno o más puntos a lo largo del tiempo. ¿Ves alguan relación entre ellas?
+
+Pregunta 3
+
+: Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la variable en uno o más puntos a lo largo del tiempo.
+
+### Tercera parte
+
+Pregunta 1
+
+: Para responder esta pregunta, la media y las anomalías te van a venir muy bien.
+
+Pregunta 2
+
+: Para esta pregunta, te sugerimos calcular correlaciones!
+
+Pregunta 3
+
+: Para responder esta pregunta, la media y las anomalías te van a venir muy bien. Tené en cuenta la variable temporal para poder responder lo que pasa "a lo largo del año".
 
 ## Opción 3
 
@@ -72,4 +99,8 @@ Para que tengas una idea, los datos que bajamos durante la primera parte, que er
 
 ### Segunda parte
 
-s dfsdfsd
+Acá dependerá de lo que hayas decidido hacer, pero aprovechá para probar los contornos! 
+
+### Tercera parte
+
+Si llegaste hasta acá, seguro ya tenés alguna idea de que cuentas querrías hacer. Cualquier cosa nos avisas!

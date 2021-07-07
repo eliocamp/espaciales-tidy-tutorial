@@ -3,6 +3,18 @@ navbar:
   left: 
     - text: Preparación
       href: preparacion.html
+    - text: Materiales
+      menu:
+        - text: Introducción
+          href: 01_intro.html
+        - text: Descarga y lectura
+          href: 02_lectura.html
+        - text: Graficado
+          href: 03_graficado.html
+        - text: Cómputos
+          href: 04_calculos.html
+        - text: Guía práctica
+          href: guia-práctica.html
     - text: Relación ENSO - Presión a nivel del mar
       href: ejemplo.html
   right:

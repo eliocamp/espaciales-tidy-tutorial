@@ -46,6 +46,8 @@ sst1 %>%
 
 Con `geom_raster()`, cada punto de grilla es representado como un rectángulo cuyo color de relleno se mapea al valor de la variable, por lo tanto la estética a usar es `fill`.
 
+## Contornos
+
 Otra forma de mostrar este tipo de campos (o sea, que pinta tiene la variable en una región) es usando contornos con `geom_contour()`.
 A mí me gusta usar `metR::geom_contour2()` porque usa contornos negros por default y tiene otras funcionalidades útiles. En este caso, cada línea corresponde a un valor específico de la variable y por eso usamos el argumento `z` para mapearla.
 
@@ -89,7 +91,7 @@ sst1 %>%
 ```
 
 Aún con esto seguimos viendo las cosas "pixeladas". 
-Una forma de resolver esto es rellenando esos pixels con un valor razonable. 
+Una forma de resolver esto es rellenando las regiones sin datos con un valor razonable. 
 `metR::geom_contour_fill()` tiene el argumento `na.fill` que si es `TRUE`, interpola los datos faltantes: 
 
 ```{r}
@@ -98,7 +100,7 @@ sst1 %>%
   geom_contour_fill(aes(z = sst), na.fill = TRUE) 
 ```
 
-Sabemos que los datos bien adentro de los continentes no tienen sentido, pero si lo que vamos a hacer es taparlos con el mapa, ¿a quién le importa?
+Sabemos que los datos bien adentro de los continentes no tienen sentido, pero si lo que vamos a hacer es taparlos con el mapa, no tiene mucha importancia.
 
 ```{r}
 sst1 %>%  
@@ -106,17 +108,18 @@ sst1 %>%
   geom_contour_fill(aes(z = sst), na.fill = TRUE) +
   mapa
 ```
+
 ## Usando proyecciones
 
 Hasta ahora usamos datos grillados en una grilla regular en longitud y latitude, pero no todos los datos son así. 
-Por ejemplo el dataset de ejemplo `surface` tiene datos de altura del centro de Argentina.
+Por ejemplo el dataset de ejemplo `surface` tiene datos de topografía del centro de Argentina.
 
 
 ```{r}
 head(surface)
 ```
 
-Vemos que tiene datos de altura en longitud y latitud. Vamos a ver qué pinta tienen:
+Vemos que tiene datos de topografía en longitud y latitud, en este espacio los datos no son regulares ya que tiene en cuenta la curvatura de la Tierra. Pero además en el data.frame hay dos columnas x e y que corresponde a la distancia en metros entre las observaciones o datos al punto central de la proyección de estos datos.  Vamos a ver qué pinta tienen cuando graficamos en función de la latitud y la longitud:
 
 
 ```{r}
@@ -126,8 +129,8 @@ surface %>%
 ```
 
 
-Claramente esto no es un cuadrado, pero si se fijan bien, hay una cierta regularidad en la ubicación de los puntos. 
-Es porque la grilla sí es regular, pero en otra proyección:
+Claramente esto no es un cuadrado, pero hay una cierta regularidad en la ubicación de los puntos. 
+La grilla sí es regular, pero en la proyección de Lambert. Si graficamos usando la información en x e y (o sea los datos "desproyectados" nos encontramos con lo siguiente:
 
 ```{r}
 surface %>% 
@@ -135,7 +138,7 @@ surface %>%
   geom_raster(aes(fill = height))
 ```
 
-En esta grilla regular podemos calcular contornos sin dolor.
+En esta grilla regular si podemos graficar contornos sin problema.
 
 ```{r}
 surface %>% 
@@ -155,7 +158,7 @@ En este caso, el "metadato" es este documento y la proj-string es la siguiente:
 proj_string <- paste0("+proj=lcc +lat_1=-30.9659996032715 +lat_2=-30.9659996032715 +lat_0=-30.9660034179688 +lon_0=296.432998657227 +a=6370000 +b=6370000 +over")
 ```
 
-Si metemos esto directamente al argumento `proj` de `geom_contour_fill()` podemos pasar de las coordenadas proyectadas x/y a lon/lat. 
+Si incluimos esta información en argumento `proj` de `geom_contour_fill()` podemos pasar de las coordenadas proyectadas x/y a lon/lat y visualizar la región de manera correcta. 
 
 
 ```{r}
@@ -163,7 +166,6 @@ surface %>%
   ggplot(aes(x, y)) +
   geom_contour_fill(aes(z = height), proj = proj_string)
 ```
-
 
 Y ahora se puede superponer estos datos de topografía a los datos de temperatura de la superficie del mar:
 
@@ -298,10 +300,13 @@ sst1 %>%
   mapa
 ```
 
-Además de quedar bonitos, ahora es muy fácil saber si un detarminado valor es una anomalía positiva o negativa aún en blanco y negro
+Además de quedar bonitos, ahora es muy fácil saber si un detarminado valor es una anomalía positiva o negativa aún en blanco y negro.
 
 ```{r}
 colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %>% 
   cowplot::plot_grid()
 ```
 
+::: {.alert .alert-info}
+El paquete {colorblindr} es muy útil para ver que pinta tiene el gráfico según distintos tipos de ceguera del color. Podés instalarlo con `remotes::install_github("clauswilke/colorblindr")`
+:::
