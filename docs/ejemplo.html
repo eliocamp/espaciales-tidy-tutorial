@@ -29,10 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -58,6 +57,11 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -219,70 +223,10 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-
-
-
 <style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
+.code-folding-btn { margin-bottom: 4px; }
 </style>
+
 
 
 
@@ -292,16 +236,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -335,6 +269,13 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
 
 
 
@@ -450,10 +391,9 @@ library(metR)</code></pre>
 <p><img src="ejemplo_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVsYWNpw7NuIGVudHJlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hciB5IEVOU08iCm91dHB1dDogCiAgaHRtbF9kb2N1bWVudDoKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogZmFsc2UKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGNhY2hlID0gVFJVRSwKICBlY2hvID0gVFJVRSwKICBtZXNzYWdlID0gRkFMU0UsCiAgd2FybmluZyA9IEZBTFNFCikKYGBgCgoKCmBgYHtyfQojIENhcmdvIGxvcyBwYXF1ZXRlcyBuZWNlc2FyaW9zCmxpYnJhcnkobWFncml0dHIpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKbGlicmFyeShkYXRhLnRhYmxlKQpsaWJyYXJ5KG1ldFIpCmBgYAoKVm95IGxlZXIgbG9zIGRhdG9zIGRlIHRlbXBlcmF0dXJhIGRlIGxhIHN1cGVyZmljaWUgZGVsIG1hciB5IGRlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hci4KCmBgYHtyfQpkYXRvcyA8LSBSZWFkTmV0Q0RGKCJkYXRvcy90ZW1wZXJhdHVyYV9tYXIubmMiLCB2YXJzID0gYygic3N0IiwgcHJlc2lvbiA9ICJtc2wiKSkKYGBgCgpZIHRhbWJpw6luIHZveSBhIGFybWFybWUgdW5hIGZ1bmNpw7NuIHBhcmEgcGxvdGVhciB1biBtYXBhCgpgYGB7cn0KbWFwYSA8LSBmdW5jdGlvbihmaWxsID0gIndoaXRlIiwgY29sb3VyID0gTkEpIHsKICBnZW9tX3BvbHlnb24oZGF0YSA9IG1hcF9kYXRhKCJ3b3JsZDIiKSwgYWVzKGxvbmcsIGxhdCwgZ3JvdXAgPSBncm91cCksIAogICAgICAgICAgICAgICBmaWxsID0gZmlsbCwgY29sb3VyID0gY29sb3VyLCBpbmhlcml0LmFlcyA9IEZBTFNFLCBzaXplID0gMC4yKQp9CmBgYAoKUHJpbWVybywgY2FsY3VsbyBhbm9tYWzDrWFzIG1lbnN1YWxlcyBkZSB0ZW1wZXJhdHVyYSBkZSBzdXBlcmZpY2llIGRlbCBtYXIuIAoKIyMgey50YWJzZXQgLnVubGlzdGVkIC51bm51bWJlcmVkfQoKIyMjIGRhdGEudGFibGUKCmBgYHtyfQpkYXRvc1ssIGMoInNzdF9hIiwgInByZXNpb25fYSIpIDo9IGxpc3Qoc3N0IC0gbWVhbihzc3QpLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZXNpb24gLSBtZWFuKHByZXNpb24pKSwKICAgICAgYnkgPSAuKGxvbmdpdHVkZSwgbGF0aXR1ZGUsIG1vbnRoKHRpbWUpKV0KYGBgCgoKIyMjIGRwbHlyCgpgYGB7ciwgZXZhbCA9IEZBTFNFfQpkYXRvcyA8LSBkYXRvcyAlPiUgCiAgZ3JvdXBfYnkobG9uZ2l0dWRlLCBsYXRpdHVkZSwgbWVzID0gbW9udGgodGltZSkpICU+JSAKICBtdXRhdGUoc3N0X2EgPSBzc3QgLSBtZWFuKHNzdCksIAogICAgICAgICBwcmVzaW9uX2EgPSBwcmVzaW9uIC0gbWVhbihwcmVzaW9uKSkgJT4lIAogIHVuZ3JvdXAoKSAlPiUgCiAgc2VsZWN0KC1tZXMpCmBgYAoKIyMKCkNvbiBlc3RvLCBkZWZpbm8gZWwgw61uZGljZSBFTlNPIGNvbW8gbGEgYW5vbWFsw61hIG1lZGlhIGVuIHVuYSBjYWphIGVudHJlIDE3MMK6RSB5IDEyMMK6RSB5IDXCulMgeSA1wrpOLiAKCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc28gPC0gZGF0b3MgJT4lIAogIC5bYWJzKGxhdGl0dWRlKSA8IDUgJiBDb252ZXJ0TG9uZ2l0dWRlKGxvbmdpdHVkZSkgJWJldHdlZW4lIGMoLTE3MCwgLTEyMCldICU+JSAKICAuWywgLihlbnNvMzQgPSBtZWFuKHNzdF9hKSksIGJ5ID0gdGltZV0KYGBgCgojIyMgZHBseXIKCmBgYHtyLCBldmFsID0gRkFMU0V9CmVuc28gPC0gZGF0b3MgJT4lIAogIGZpbHRlcihhYnMobGF0aXR1ZGUpIDwgNSAmIGJldHdlZW4oQ29udmVydExvbmdpdHVkZShsb25naXR1ZGUpLCAtMTcwLCAtMTIwKSkgJT4lIAogIGdyb3VwX2J5KHRpbWUpICU+JSAKICBzdW1tYXJpc2UoZW5zbzM0ID0gbWVhbihzc3RfYSkpICU+JSAKICB1bmdyb3VwKCkKYGBgCgoKIyMgCgrCv0PDs21vIGV2b2x1Y2lvbsOzIGVzdGUgw61uZGljZSBhIGxvIGxhcmdvIGRlbCB0aWVtcG8/CgpgYGB7cn0KZ2dwbG90KGVuc28sIGFlcyh0aW1lLCBlbnNvMzQpKSArCiAgZ2VvbV9saW5lKCkgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoLTAuNSwgMC41KSkgKyAKICBhbm5vdGF0ZSgibGFiZWwiLCB5ID0gYygwLjUsIC0wLjUpLCB4ID0gbHVicmlkYXRlOjphc19kYXRldGltZSgiMTk3OS0wMS0wMSIpLAogICAgICAgICAgIGxhYmVsID0gYygiTknDkU8iLCAiTknDkUEiKSwgdmp1c3QgPSBjKC0wLjIsIDEuMiksIGxhYmVsLnNpemUgPSBncmlkOjp1bml0KDAsImxpbmVzIikpICsKICBzY2FsZV94X2RhdGV0aW1lKG5hbWUgPSBOVUxMKSArCiAgc2NhbGVfeV9jb250aW51b3VzKG5hbWUgPSBOVUxMKSArCiAgbGFicyh0aXRsZSA9ICLDjW5kaWNlIEVOU08zNCIsIAogICAgICAgY2FwdGlvbiA9ICJGdWVudGU6IEVSQTUgKDE5NznigJMyMDIwKSIpICsKICB0aGVtZV9taW5pbWFsKCkKYGBgCgoKwr9DdcOhbCBlcyBsYSByZWxhY2nDs24gZW50cmUgcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIHkgRU5TTyBhIG5pdmVsIGdsb2JhbD8KCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc29fcmVncmVzaW9uIDwtIGRhdG9zICU+JSAKICAuW2Vuc28sIG9uID0gInRpbWUiXSAlPiUgCiAgLlssIEZpdExtKHByZXNpb25fYSwgZW5zbzM0KSwgYnkgPSAuKGxvbmdpdHVkZSwgbGF0aXR1ZGUpXSAlPiUgCiAgLlt0ZXJtICE9ICIoSW50ZXJjZXB0KSJdIApgYGAKCiMjIyBkcGx5cgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KZW5zb19yZWdyZXNpb24gPC0gc3N0ICU+JSAKICByaWdodF9qb2luKGVuc28sIGJ5ID0gInRpbWUiKSAlPiUgCiAgZ3JvdXBfYnkobGF0aXR1ZGUsIGxvbmdpdHVkZSkgJT4lIAogIHN1bW1hcmlzZShhcy5kYXRhLmZyYW1lKEZpdExtKHByZXNpb25fYSwgZW5zbzM0KSkpICU+JSAKICB1bmdyb3VwKCkgJT4lIAogIGZpbHRlcih0ZXJtICE9ICIoSW50ZXJjZXB0KSIpIApgYGAKCiMjIAoKYGBge3J9CmVuc29fcmVncmVzaW9uICU+JSAKICBnZ3Bsb3QoYWVzKGxvbmdpdHVkZSwgbGF0aXR1ZGUpKSArCiAgZ2VvbV9jb250b3VyX2ZpbGwoYWVzKHogPSBlc3RpbWF0ZSwgZmlsbCA9IC4ubGV2ZWwuLiksIG5hLmZpbGwgPSAwLCAKICAgICAgICAgICAgICAgICAgICBicmVha3MgPSBBbmNob3JCcmVha3MoYmlud2lkdGggPSAyNSwgZXhjbHVkZSA9IDApKSArCiAgZ2VvbV9jb250b3VyX3RhbmFrYShhZXMoeiA9IGVzdGltYXRlKSwgbmEuZmlsbCA9IDAsIAogICAgICAgICAgICAgICAgICAgICAgYnJlYWtzID0gQW5jaG9yQnJlYWtzKGJpbndpZHRoID0gMjUsIGV4Y2x1ZGUgPSAwKSkgKwogIG1hcGEoZmlsbCA9IE5BLCBjb2xvdXIgPSAiYmxhY2siKSAgKwogIHNjYWxlX2ZpbGxfZGl2ZXJnZW50X2Rpc2NyZXRpc2VkKG5hbWUgPSAiaFBhIikgKwogIHNjYWxlX3hfbG9uZ2l0dWRlKCkgKwogIHNjYWxlX3lfbGF0aXR1ZGUoKSArCiAgY29vcmRfcXVpY2ttYXAoKSArCiAgdGhlbWVfbWluaW1hbCgpICsKICBsYWJzKHRpdGxlID0gIlJlZ3Jlc8Otb24gcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIGNvbiBFTlNPIiwgCiAgICAgICBjYXB0aW9uID0gIkZ1ZW50ZTogRVJBNSAoMTk3OeKAkzIwMjApIikKYGBgCgo=</div>
 
 
-</div>
-</div>
 
 </div>
 
@@ -485,33 +425,12 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-
 <script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
+$(document).ready(function () {
+  window.initializeSourceEmbed("ejemplo.Rmd");
 });
 </script>
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

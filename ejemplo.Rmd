@@ -1,6 +1,9 @@
 ---
 title: "Relación entre presión a nivel del mar y ENSO"
-output: html_document
+output: 
+  html_document:
+    code_download: true
+    toc: false
 ---
 
 ```{r setup, include=FALSE}
