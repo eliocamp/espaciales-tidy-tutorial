@@ -5,7 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  cache = TRUE,
+  cache = FALSE,
   echo = TRUE,
   fig.height = 3,
   fig.width = 5,
@@ -306,10 +306,14 @@ sst %>%
   scale_fill_divergent()
 ```
 
-Esto se ve bien. 
-
-
 ## 
+
+
+Esto se ve bien. 
+Ahora podemos ver si hay relación entre este índice y otras variables climáticas.
+
+
+Leamos los datos de presión a nivel del mar y precipitación total.
 
 
 ```{r}
@@ -320,81 +324,31 @@ datos <- ReadNetCDF("datos/temperatura_mar.nc",
 ### data.table
 
 ```{r}
-cor_pp <- datos %>% 
-  .[, pp_a := pp - mean(pp), by = .(longitude, latitude, month(time))] %>% 
+correlacion <- datos %>% 
+  melt(id.vars = c("time", "longitude", "latitude")) %>% 
+  .[, value := value - mean(value), by = .(longitude, latitude, variable, month(time))] %>% 
   .[enso, on = "time"] %>% 
-  .[, .(correlacion = cor(pp_a, enso34)), by = .(latitude, longitude, season(time))]
+  .[, .(correlacion = cor(value, enso34)), by = .(latitude, longitude, variable)]
 ```
 
 
 ### dplyr 
 
 ```{r, eval=FALSE}
-cor_pp <- datos %>%
-  group_by(longitude, latitude, month(time)) %>% 
-  mutate(pp_a = pp - mean(pp)) %>% 
+correlacion <- datos %>%
+  tidyr::pivot_longer(cols = c(msl, pp), names_to = "variable") %>% 
+  group_by(longitude, latitude, variable, month(time)) %>% 
+  mutate(value = value - mean(value)) %>% 
   left_join(enso, by = "time") %>% 
-  group_by(latitude, longitude, season(time)) %>% 
-  summarise(correlacion = cor(pp_a, enso34)) %>% 
+  group_by(latitude, longitude, variable) %>% 
+  summarise(correlacion = cor(value, enso34)) %>% 
   ungroup()
 ```
 
 ## 
 
-
 ```{r}
-cor_pp %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion)) +
-  scale_fill_divergent() +
-  mapa(fill = NA, colour = "black") +
-  facet_wrap(~season, ncol = 2)
-```
-
-
-```{r}
-cor_pp %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion), 
-                    breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
-  mapa(fill = NA, colour = "black") +
-  scale_x_longitude(limits = c(270, 330)) +
-  scale_y_latitude(limits = c(-60, -10)) +
-  scale_fill_divergent() +
-  coord_quickmap() +
-  facet_wrap(~season, ncol = 2)
-```
-
-
-## {.tabset .unlisted .unnumbered}
-
-### data.table
-
-```{r}
-cor_msl <- datos %>% 
-  .[, msl_a := msl - mean(msl), by = .(longitude, latitude, month(time))] %>% 
-  .[enso, on = "time"] %>% 
-  .[, .(correlacion = cor(msl_a, enso34)), by = .(latitude, longitude, season(time))]
-```
-
-
-### dplyr 
-
-```{r, eval=FALSE}
-cor_pp <- datos %>%
-  group_by(longitude, latitude, month(time)) %>% 
-  mutate(msl_a = msl - mean(msl)) %>% 
-  left_join(enso, by = "time") %>% 
-  group_by(latitude, longitude, season(time)) %>% 
-  summarise(correlacion = cor(msl_a, enso34)) %>% 
-  ungroup()
-```
-
-## 
-
-
-```{r}
-cor_msl %>% 
+correlacion %>% 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(exclude = 0)) +
   scale_fill_divergent() +
@@ -403,7 +357,5 @@ cor_msl %>%
   scale_x_longitude() +
   scale_y_latitude() +
   coord_quickmap() +
-  facet_wrap(~season, ncol = 2) +
-  
-  metR:::theme_field() 
+  facet_wrap(~variable, ncol = 2)
 ```

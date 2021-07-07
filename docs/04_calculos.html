@@ -321,6 +321,30 @@ div.tocify {
         <li>
   <a href="preparacion.html">Preparación</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Materiales
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_intro.html">Introducción</a>
+    </li>
+    <li>
+      <a href="02_lectura.html">Descarga y lectura</a>
+    </li>
+    <li>
+      <a href="03_graficado.html">Graficado</a>
+    </li>
+    <li>
+      <a href="04_calculos.html">Cómputos</a>
+    </li>
+    <li>
+      <a href="guia-práctica.html">Guía práctica</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="ejemplo.html">Relación ENSO - Presión a nivel del mar</a>
 </li>
@@ -343,6 +367,9 @@ div.tocify {
 </div>
 
 
+<div id="haciendo-cálculos" class="section level2">
+<h2>Haciendo cálculos</h2>
+<p>Una de las grandes ventajas de tener los datos organizados en un data.frame tidy es que es posible aplicar todas las técnicas de análisis de datos tradicionales a estos datos grillados.</p>
 <pre class="r"><code># Cargo los paquetes necesarios
 library(magrittr)
 library(ggplot2)
@@ -350,26 +377,29 @@ library(dplyr)
 library(data.table)
 library(metR)
 
-# Leo los datos
-# 
-sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot;)</code></pre>
-<pre class="r"><code>mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
+# función para generar un mapa
+mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
   geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
                fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
-}</code></pre>
+}
+
+# Leo los datos
+sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot;)</code></pre>
+<p>Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)? Esencialmente es calcular el promedio de <code>sst</code> para cada longitud y latitud, una operación que se traduce de forma directa a operaciones en grupos.</p>
+</div>
 <div id="section" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table" class="section level3">
-<h3>data.table</h3>
+<div id="data.table" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered">data.table</h3>
 <pre class="r"><code>sst %&gt;% 
   .[, .(sst = mean(sst)), by = .(longitude, latitude)] %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst), na.fill = TRUE) +
   mapa()</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
 </div>
-<div id="dplyr" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered">dplyr</h3>
 <pre class="r"><code>sst %&gt;% 
   group_by(longitude, latitude) %&gt;% 
   summarise(sst = mean(sst)) %&gt;% 
@@ -377,21 +407,28 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst), na.fill = TRUE) +
   mapa() </code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
 </div>
 </div>
-<div id="section-1" class="section level2">
-<h2></h2>
+<div id="section-1" class="section level2 unlisted unnumbered">
+<h2 class="unlisted unnumbered"></h2>
+<p>Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad.</p>
+<p>Definamos tres puntos que representan zonas muy disímiles del planeta:</p>
 <pre class="r"><code>puntos &lt;- tibble::tribble(~longitude, ~latitude,
                           180       , 0, 
                           170       , 50, 
                           280       , -60) %&gt;% 
   as.data.table()</code></pre>
+<pre class="r"><code>ggplot(puntos, aes(longitude, latitude)) +
+  geom_point() +
+  mapa()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p>Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join.</p>
 </div>
 <div id="section-2" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-1" class="section level3">
-<h3>data.table</h3>
+<div id="data.table-1" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered">data.table</h3>
 <pre class="r"><code>sst %&gt;% 
   .[puntos, on = .NATURAL] %&gt;% 
   ggplot(aes(time, sst)) +
@@ -413,6 +450,9 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 </div>
 <div id="section-3" class="section level2">
 <h2></h2>
+<p>Se puede ver que las región tropical tiene una variabilidad de relativa baja frecuencia y sin un ciclo anual pronunciado. Por otro lado, en los puntos extratropicales la variabilidad más fuerte es el ciclo anual, que naturalmente se invierte entre el hemisferio norte y el hemisferio sur.</p>
+<p>Pero el ciclo anual no es interesante, es una variabilidad casi constante, predecible. Lo que es interesante es lo impredecible, lo que se aleja del ciclo anual. Para esto se calculan las anomalías: el alejamiento de los datos con respecto a el ciclo anual promedio.</p>
+<p>Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud. Nuevamente esto se traduce durectamente en operaciones sobre grupos.</p>
 </div>
 <div id="section-4" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -431,48 +471,35 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 </div>
 <div id="section-5" class="section level2">
 <h2></h2>
-<p>Anomalias</p>
+<p>Entonces ahora podemos ver a las anomalías. Por definición, las anomalías tienen media cero y lo interesante es ver cuánto se alejan de ese promedio, lo cual hacer que una escala divergente sea la elección natural para visualizarlas.</p>
 <pre class="r"><code>sst %&gt;% 
-  .[time == unique(time)[229]] %&gt;% 
+  .[time == unique(time)[229]] %&gt;%       # elijo un mes en particular 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst_a), na.fill = TRUE) +
   mapa() +
   scale_fill_divergent()</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-10-1.png" width="480" /></p>
 </div>
+<div id="eof" class="section level2">
+<h2>EOF</h2>
+<p>Algunos métodos con datos grillados se presetan de forma más natural a la oganización de datos grillados en forma de matriz. Análisis de Componentes Principales (también llamado Empirical Orthogonal Functions en ciencias de la atmósfera) es uno de ellos.</p>
+<p>metR tiene la función <code>EOF()</code> que aplica componentes principales a los datos. Su primer argumento es una fórmula que define la estructura de la matriz de entrada a partir de los datos.</p>
+<p>Esta fórmula tiene la forma general:</p>
+<pre><code>variable ~ x + y | a + b</code></pre>
+<p>La idea es leer esto como</p>
+<p>“variable <em>en función de</em> la combinación de x e y en las filas y la combinación de a y b en las columnas”</p>
+<p>Entonces, vamos a calcular los primeros dos EOFs del campo de anomalías de SST.</p>
+</div>
 <div id="section-6" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table-3" class="section level3">
-<h3>data.table</h3>
-<pre class="r"><code>sst %&gt;% 
-  .[, .(sst_sd = sd(sst_a)), by = .(longitude, latitude)] %&gt;% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
-  mapa()</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
-</div>
-<div id="dplyr-3" class="section level3">
-<h3>dplyr</h3>
-<pre class="r"><code>sst %&gt;% 
-  group_by(longitude, latitude) %&gt;% 
-  summarise(sst_sd = sd(sst_a)) %&gt;% 
-  ungroup() %&gt;% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
-  mapa()</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-12-1.png" width="480" /></p>
-</div>
-</div>
-<div id="section-7" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-4" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>eofs &lt;- sst %&gt;%
   .[!is.na(sst_a)] %&gt;% 
   .[, sst_a := sst_a*sqrt(cos(latitude*pi/180))] %&gt;% 
   EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)</code></pre>
 </div>
-<div id="dplyr-4" class="section level3">
+<div id="dplyr-3" class="section level3">
 <h3>dplyr</h3>
 <pre class="r"><code>eofs &lt;- sst %&gt;%
   filter(!is.na(sst_a)) %&gt;% 
@@ -480,8 +507,9 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)</code></pre>
 </div>
 </div>
-<div id="section-8" class="section level2">
+<div id="section-7" class="section level2">
 <h2></h2>
+<p><code>EOF()</code> devuelve una lista de data.tables con la parte izqueirda, derecha y la varianza explicada por cada componente.</p>
 <pre class="r"><code>str(eofs)</code></pre>
 <pre><code>## List of 3
 ##  $ left :Classes &#39;data.table&#39; and &#39;data.frame&#39;:  13832 obs. of  4 variables:
@@ -504,24 +532,27 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;eof&quot; &quot;list&quot;
 ##  - attr(*, &quot;suffix&quot;)= chr &quot;PC&quot;
 ##  - attr(*, &quot;value.var&quot;)= chr &quot;sst_a&quot;</code></pre>
+<p>Si queremos ver la parte espacial, extraemos la parte izquierda:</p>
 <pre class="r"><code>eofs$left %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst_a)) +
   mapa() +
   scale_fill_divergent() +
   facet_wrap(~PC, ncol = 1)</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
-<p><a href="https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain" class="uri">https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain</a></p>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-14-1.png" width="480" /></p>
+<p>Es primera componente principal nos indica que la mayor parte de la variabildiad de SST está asociada a cambios en la temperatura del Pacífico ecuatorial. Esto se conoce como la oscilación de El Niño.</p>
+<p>Una forma de calcular un índice de esta oscilación que no requiere calculos “raros” como EOF es con el <a href="https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain">índice ENSO34</a>, que se define como las anomalías de temperatura promedio entre 5ºS y 5ºN en la región entre 170ºO y 120ºO.</p>
+<p>Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo. Nuevamente, estas son operaciones básicas del análisis de datos tidy.</p>
 </div>
-<div id="section-9" class="section level2 tabset unlisted unnumbered">
+<div id="section-8" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-5" class="section level3">
+<div id="data.table-4" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>enso &lt;- sst %&gt;% 
   .[abs(latitude) &lt; 5 &amp; ConvertLongitude(longitude) %between% c(-170, -120)] %&gt;% 
   .[, .(enso34 = mean(sst_a)), by = time]</code></pre>
 </div>
-<div id="dplyr-5" class="section level3">
+<div id="dplyr-4" class="section level3">
 <h3>dplyr</h3>
 <pre class="r"><code>enso &lt;- sst %&gt;% 
   filter(abs(latitude) &lt; 5 &amp; between(ConvertLongitude(longitude), -170, -120)) %&gt;% 
@@ -530,16 +561,23 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   ungroup()</code></pre>
 </div>
 </div>
-<div id="section-10" class="section level2">
+<div id="section-9" class="section level2">
 <h2></h2>
+<p>El resultado:</p>
 <pre class="r"><code>ggplot(enso, aes(time, enso34)) +
   geom_line() +
   geom_hline(yintercept = c(-0.5, 0.5))</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-17-1.png" width="480" /></p>
+<p>Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan tradicionalmente para definir eventos de ENSO positivos y negativos respetivamente.</p>
 </div>
-<div id="section-11" class="section level2 tabset unlisted unnumbered">
+<div id="regresiones-y-correlaciones" class="section level2">
+<h2>Regresiones y correlaciones</h2>
+<p>Para asegurarnos de que este índice realmetne representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice. Para eso primero hay que unir los datos de SST con el índice que calculamos y luego calcular la regresión en cada punto.</p>
+<p>Un problema acá es que <code>lm()</code> es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento. Para acelerar las cosas, metR tiene la función <code>FitLm()</code> que sirve para calcular los coeficientes de regresiones lineales mucho más rápido.</p>
+</div>
+<div id="section-10" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-6" class="section level3">
+<div id="data.table-5" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>sst %&gt;% 
   .[enso, on = &quot;time&quot;] %&gt;% 
@@ -549,9 +587,9 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   geom_contour_fill(aes(z = estimate), na.fill = 0) +
   mapa() +
   scale_fill_divergent()</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
 </div>
-<div id="dplyr-6" class="section level3">
+<div id="dplyr-5" class="section level3">
 <h3>dplyr</h3>
 <pre class="r"><code>sst %&gt;% 
   right_join(enso, by = &quot;time&quot;) %&gt;% 
@@ -563,75 +601,38 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   geom_contour_fill(aes(z = estimate), na.fill = 0) +
   mapa() +
   scale_fill_divergent()</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+</div>
+</div>
+<div id="section-11" class="section level2">
+<h2></h2>
+<p>Esto se ve bien. Ahora podemos ver si hay relación entre este índice y otras variables climáticas.</p>
+<p>Leamos los datos de presión a nivel del mar y precipitación total.</p>
+<pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, 
+                    vars = c(&quot;msl&quot;, pp = &quot;tp&quot;))</code></pre>
+<div id="data.table-6" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>correlacion &lt;- datos %&gt;% 
+  melt(id.vars = c(&quot;time&quot;, &quot;longitude&quot;, &quot;latitude&quot;)) %&gt;% 
+  .[, value := value - mean(value), by = .(longitude, latitude, variable, month(time))] %&gt;% 
+  .[enso, on = &quot;time&quot;] %&gt;% 
+  .[, .(correlacion = cor(value, enso34)), by = .(latitude, longitude, variable)]</code></pre>
+</div>
+<div id="dplyr-6" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>correlacion &lt;- datos %&gt;%
+  tidyr::pivot_longer(cols = c(msl, pp), names_to = &quot;variable&quot;) %&gt;% 
+  group_by(longitude, latitude, variable, month(time)) %&gt;% 
+  mutate(value = value - mean(value)) %&gt;% 
+  left_join(enso, by = &quot;time&quot;) %&gt;% 
+  group_by(latitude, longitude, variable) %&gt;% 
+  summarise(correlacion = cor(value, enso34)) %&gt;% 
+  ungroup()</code></pre>
 </div>
 </div>
 <div id="section-12" class="section level2">
 <h2></h2>
-<pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, 
-                    vars = c(&quot;msl&quot;, pp = &quot;tp&quot;))</code></pre>
-<div id="data.table-7" class="section level3">
-<h3>data.table</h3>
-<pre class="r"><code>cor_pp &lt;- datos %&gt;% 
-  .[, pp_a := pp - mean(pp), by = .(longitude, latitude, month(time))] %&gt;% 
-  .[enso, on = &quot;time&quot;] %&gt;% 
-  .[, .(correlacion = cor(pp_a, enso34)), by = .(latitude, longitude, season(time))]</code></pre>
-</div>
-<div id="dplyr-7" class="section level3">
-<h3>dplyr</h3>
-<pre class="r"><code>cor_pp &lt;- datos %&gt;%
-  group_by(longitude, latitude, month(time)) %&gt;% 
-  mutate(pp_a = pp - mean(pp)) %&gt;% 
-  left_join(enso, by = &quot;time&quot;) %&gt;% 
-  group_by(latitude, longitude, season(time)) %&gt;% 
-  summarise(correlacion = cor(pp_a, enso34)) %&gt;% 
-  ungroup()</code></pre>
-</div>
-</div>
-<div id="section-13" class="section level2">
-<h2></h2>
-<pre class="r"><code>cor_pp %&gt;% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion)) +
-  scale_fill_divergent() +
-  mapa(fill = NA, colour = &quot;black&quot;) +
-  facet_wrap(~season, ncol = 2)</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
-<pre class="r"><code>cor_pp %&gt;% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion), 
-                    breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
-  mapa(fill = NA, colour = &quot;black&quot;) +
-  scale_x_longitude(limits = c(270, 330)) +
-  scale_y_latitude(limits = c(-60, -10)) +
-  scale_fill_divergent() +
-  coord_quickmap() +
-  facet_wrap(~season, ncol = 2)</code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-26-1.png" width="480" /></p>
-</div>
-<div id="section-14" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-8" class="section level3">
-<h3>data.table</h3>
-<pre class="r"><code>cor_msl &lt;- datos %&gt;% 
-  .[, msl_a := msl - mean(msl), by = .(longitude, latitude, month(time))] %&gt;% 
-  .[enso, on = &quot;time&quot;] %&gt;% 
-  .[, .(correlacion = cor(msl_a, enso34)), by = .(latitude, longitude, season(time))]</code></pre>
-</div>
-<div id="dplyr-8" class="section level3">
-<h3>dplyr</h3>
-<pre class="r"><code>cor_pp &lt;- datos %&gt;%
-  group_by(longitude, latitude, month(time)) %&gt;% 
-  mutate(msl_a = msl - mean(msl)) %&gt;% 
-  left_join(enso, by = &quot;time&quot;) %&gt;% 
-  group_by(latitude, longitude, season(time)) %&gt;% 
-  summarise(correlacion = cor(msl_a, enso34)) %&gt;% 
-  ungroup()</code></pre>
-</div>
-</div>
-<div id="section-15" class="section level2">
-<h2></h2>
-<pre class="r"><code>cor_msl %&gt;% 
+<pre class="r"><code>correlacion %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(exclude = 0)) +
   scale_fill_divergent() +
@@ -640,10 +641,8 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
   scale_x_longitude() +
   scale_y_latitude() +
   coord_quickmap() +
-  facet_wrap(~season, ncol = 2) +
-  
-  metR:::theme_field() </code></pre>
-<p><img src="04_calculos_files/figure-html/unnamed-chunk-29-1.png" width="480" /></p>
+  facet_wrap(~variable, ncol = 2)</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-23-1.png" width="480" /></p>
 </div>
 
 

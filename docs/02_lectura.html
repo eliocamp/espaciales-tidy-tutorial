@@ -321,6 +321,30 @@ div.tocify {
         <li>
   <a href="preparacion.html">Preparación</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Materiales
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_intro.html">Introducción</a>
+    </li>
+    <li>
+      <a href="02_lectura.html">Descarga y lectura</a>
+    </li>
+    <li>
+      <a href="03_graficado.html">Graficado</a>
+    </li>
+    <li>
+      <a href="04_calculos.html">Cómputos</a>
+    </li>
+    <li>
+      <a href="guia-práctica.html">Guía práctica</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="ejemplo.html">Relación ENSO - Presión a nivel del mar</a>
 </li>
@@ -575,7 +599,7 @@ library(data.table)</code></pre>
 </div>
 <div id="section-1" class="section level2">
 <h2></h2>
-<p>En este gráfico y ase ven varias cosas. Se ve que hay una clara estructura de mayores temperaturas cerca del ecuador, lo cual no debería sorprender a nadie. También se ve que, como lo que estamos leyendo es la temperatura de la superficie del mar, tenemos datos faltantes sobre los continentes. Esto puede molestar un poco para algunas operaciones, ¡pero nos viene bárbaro para tener el contorno de los continentes gratis! Finalmente, notar que como las longitudes van de 0º a 360º (en vez de -180º a 180º), el mapa sale centrado en el Océano Pacífico. Esto va a haber que tenerlo en cuenta cuando sea la hora de graficar los continentes con algo mejor que bloques grises.</p>
+<p>En este gráfico ya se ven varias cosas. Se ve que hay una clara estructura de mayores temperaturas cerca del ecuador, lo cual no debería sorprender a nadie. También se ve que, como lo que estamos leyendo es la temperatura de la superficie del mar, tenemos datos faltantes sobre los continentes. Esto puede molestar un poco para algunas operaciones, ¡pero nos viene bárbaro para tener el contorno de los continentes gratis! Finalmente, notar que como las longitudes van de 0º a 360º (en vez de -180º a 180º), el mapa sale centrado en el Océano Pacífico. Esto va a haber que tenerlo en cuenta cuando sea la hora de graficar los continentes con algo mejor que bloques grises.</p>
 </div>
 <div id="leyendo-regiones" class="section level2">
 <h2>Leyendo regiones</h2>
@@ -593,7 +617,7 @@ library(data.table)</code></pre>
      latitude = c(0, -90))</code></pre>
 <p>Lo que significa que se van a leer los datos con latitud entre -90º y 0º, y con longitud entre 100º y 200º.</p>
 <div class="alert alert-info">
-<p>El argumento <code>subset</code> de <code>ReadNetCDF()</code> tiene otros aces bajo la manga, como usar <code>NA</code> para referirse al mínimo o al máximo o leer regiones discontinuas de datos. Todo eso se puede leer en la ayuda: <code>?ReadNetCDF()</code>.</p>
+<p>El argumento <code>subset</code> de <code>ReadNetCDF()</code> tiene otros aces bajo la manga, como usar <code>NA</code> para referirse al mínimo o al máximo valor posible en un rango a la hora de hacer un subset o leer regiones discontinuas de datos. Todo eso se puede leer en la ayuda: <code>?ReadNetCDF()</code>.</p>
 </div>
 </div>
 
