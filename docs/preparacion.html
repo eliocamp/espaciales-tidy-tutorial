@@ -371,6 +371,8 @@ install.packages(paquetes)</code></pre>
 <img src="img/api-key.png" alt="" />
 <p class="caption">Captura de pantalla de la sección API Key en la página del Climate Data Store</p>
 </div>
+<p>Si estás trabajando en una cuenta de <strong>RStudio Cloud</strong>, antes de lo que viene corré esta línea:</p>
+<pre class="r"><code>options(keyring_backend = &quot;env&quot;)</code></pre>
 <p>Ahora corré este código en R, reemplazando <code>&lt;UID&gt;</code> por tu UID y <code>&lt;API Key&gt;</code> con tu APi Key:</p>
 <pre class="r"><code>ecmwfr::wf_set_key(service = &quot;cds&quot;, user = &quot;&lt;UID&gt;&quot;, key = &quot;&lt;API Key&gt;&quot;)</code></pre>
 <p>Si todo sale bien, la función va a devolver un mensaje como este:</p>
