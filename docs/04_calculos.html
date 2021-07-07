@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Calculos</title>
+
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Datos espaciales a lo tidy</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="preparacion.html">Preparación</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">Repositorio</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Calculos</h1>
+
+</div>
+
+
+<pre class="r"><code># Cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(metR)
+
+# Leo los datos
+# 
+sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot;)</code></pre>
+<pre class="r"><code>mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
+  geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
+               fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
+}</code></pre>
+<div id="section" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>sst %&gt;% 
+  .[, .(sst = mean(sst)), by = .(longitude, latitude)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
+</div>
+<div id="dplyr" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>sst %&gt;% 
+  group_by(longitude, latitude) %&gt;% 
+  summarise(sst = mean(sst)) %&gt;% 
+  ungroup() %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa() </code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+</div>
+</div>
+<div id="section-1" class="section level2">
+<h2></h2>
+<pre class="r"><code>puntos &lt;- tibble::tribble(~longitude, ~latitude,
+                          180       , 0, 
+                          170       , 50, 
+                          280       , -60) %&gt;% 
+  as.data.table()</code></pre>
+</div>
+<div id="section-2" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-1" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>sst %&gt;% 
+  .[puntos, on = .NATURAL] %&gt;% 
+  ggplot(aes(time, sst)) +
+  geom_line()+ 
+  facet_wrap(~ longitude + latitude, scales = &quot;free_y&quot;, 
+             labeller = label_both, ncol = 1)</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
+</div>
+<div id="dplyr-1" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>sst %&gt;% 
+  right_join(puntos) %&gt;% 
+  ggplot(aes(time, sst)) +
+  geom_line()+ 
+  facet_wrap(~ longitude + latitude, scales = &quot;free_y&quot;, 
+             labeller = label_both, ncol = 1)</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
+</div>
+</div>
+<div id="section-3" class="section level2">
+<h2></h2>
+</div>
+<div id="section-4" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-2" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>sst[, sst_a := sst - mean(sst), by = .(longitude, latitude, month(time))] </code></pre>
+</div>
+<div id="dplyr-2" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>sst &lt;- sst %&gt;% 
+  group_by(longitude, latitude, mes = month(time)) %&gt;% 
+  mutate(sst_a = sst - mean(sst)) %&gt;% 
+  ungroup() %&gt;% 
+  select(-mes)</code></pre>
+</div>
+</div>
+<div id="section-5" class="section level2">
+<h2></h2>
+<p>Anomalias</p>
+<pre class="r"><code>sst %&gt;% 
+  .[time == unique(time)[229]] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_a), na.fill = TRUE) +
+  mapa() +
+  scale_fill_divergent()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-10-1.png" width="480" /></p>
+</div>
+<div id="section-6" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-3" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>sst %&gt;% 
+  .[, .(sst_sd = sd(sst_a)), by = .(longitude, latitude)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
+  mapa()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
+</div>
+<div id="dplyr-3" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>sst %&gt;% 
+  group_by(longitude, latitude) %&gt;% 
+  summarise(sst_sd = sd(sst_a)) %&gt;% 
+  ungroup() %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
+  mapa()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-12-1.png" width="480" /></p>
+</div>
+</div>
+<div id="section-7" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-4" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>eofs &lt;- sst %&gt;%
+  .[!is.na(sst_a)] %&gt;% 
+  .[, sst_a := sst_a*sqrt(cos(latitude*pi/180))] %&gt;% 
+  EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)</code></pre>
+</div>
+<div id="dplyr-4" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>eofs &lt;- sst %&gt;%
+  filter(!is.na(sst_a)) %&gt;% 
+  mutate(sst_a = sst_a*sqrt(cos(latitude*pi/180))) %&gt;% 
+  EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)</code></pre>
+</div>
+</div>
+<div id="section-8" class="section level2">
+<h2></h2>
+<pre class="r"><code>str(eofs)</code></pre>
+<pre><code>## List of 3
+##  $ left :Classes &#39;data.table&#39; and &#39;data.frame&#39;:  13832 obs. of  4 variables:
+##   ..$ longitude: num [1:13832] 0 2.5 5 7.5 10 12.5 15 17.5 20 22.5 ...
+##   ..$ latitude : num [1:13832] 90 90 90 90 90 90 90 90 90 90 ...
+##   ..$ PC       : Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##   ..$ sst_a    : num [1:13832] -7.33e-15 -7.33e-15 -7.33e-15 -7.33e-15 -7.33e-15 ...
+##   ..- attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt; 
+##  $ right:Classes &#39;data.table&#39; and &#39;data.frame&#39;:  1008 obs. of  3 variables:
+##   ..$ time : POSIXct[1:1008], format: &quot;1979-01-01&quot; &quot;1979-02-01&quot; ...
+##   ..$ PC   : Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##   ..$ sst_a: num [1:1008] 0.0186 0.00745 0.00186 0.01872 0.02797 ...
+##   ..- attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt; 
+##  $ sdev :Classes &#39;data.table&#39; and &#39;data.frame&#39;:  2 obs. of  3 variables:
+##   ..$ PC: Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 2
+##   ..$ sd: num [1:2] 358 325
+##   ..$ r2: num [1:2] 0.138 0.114
+##   ..- attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt; 
+##  - attr(*, &quot;call&quot;)= language EOF(formula = sst_a ~ longitude + latitude | time, n = 1:2, data = .)
+##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;eof&quot; &quot;list&quot;
+##  - attr(*, &quot;suffix&quot;)= chr &quot;PC&quot;
+##  - attr(*, &quot;value.var&quot;)= chr &quot;sst_a&quot;</code></pre>
+<pre class="r"><code>eofs$left %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_a)) +
+  mapa() +
+  scale_fill_divergent() +
+  facet_wrap(~PC, ncol = 1)</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
+<p><a href="https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain" class="uri">https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain</a></p>
+</div>
+<div id="section-9" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-5" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>enso &lt;- sst %&gt;% 
+  .[abs(latitude) &lt; 5 &amp; ConvertLongitude(longitude) %between% c(-170, -120)] %&gt;% 
+  .[, .(enso34 = mean(sst_a)), by = time]</code></pre>
+</div>
+<div id="dplyr-5" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>enso &lt;- sst %&gt;% 
+  filter(abs(latitude) &lt; 5 &amp; between(ConvertLongitude(longitude), -170, -120)) %&gt;% 
+  group_by(time) %&gt;% 
+  summarise(enso34 = mean(sst_a)) %&gt;% 
+  ungroup()</code></pre>
+</div>
+</div>
+<div id="section-10" class="section level2">
+<h2></h2>
+<pre class="r"><code>ggplot(enso, aes(time, enso34)) +
+  geom_line() +
+  geom_hline(yintercept = c(-0.5, 0.5))</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+</div>
+<div id="section-11" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-6" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>sst %&gt;% 
+  .[enso, on = &quot;time&quot;] %&gt;% 
+  .[, FitLm(sst_a, enso34), by = .(longitude, latitude)] %&gt;% 
+  .[term != &quot;(Intercept)&quot;] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = estimate), na.fill = 0) +
+  mapa() +
+  scale_fill_divergent()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
+</div>
+<div id="dplyr-6" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>sst %&gt;% 
+  right_join(enso, by = &quot;time&quot;) %&gt;% 
+  group_by(latitude, longitude) %&gt;% 
+  summarise(as.data.frame(FitLm(sst_a, enso34))) %&gt;% 
+  ungroup() %&gt;% 
+  filter(term != &quot;(Intercept)&quot;) %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = estimate), na.fill = 0) +
+  mapa() +
+  scale_fill_divergent()</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
+</div>
+</div>
+<div id="section-12" class="section level2">
+<h2></h2>
+<pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, 
+                    vars = c(&quot;msl&quot;, pp = &quot;tp&quot;))</code></pre>
+<div id="data.table-7" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>cor_pp &lt;- datos %&gt;% 
+  .[, pp_a := pp - mean(pp), by = .(longitude, latitude, month(time))] %&gt;% 
+  .[enso, on = &quot;time&quot;] %&gt;% 
+  .[, .(correlacion = cor(pp_a, enso34)), by = .(latitude, longitude, season(time))]</code></pre>
+</div>
+<div id="dplyr-7" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>campos_cor &lt;- datos %&gt;%
+  group_by(longitude, latitude, month(time)) %&gt;% 
+  mutate(pp_a = pp - mean(pp)) %&gt;% 
+  left_join(enso, by = &quot;time&quot;) %&gt;% 
+  group_by(latitude, longitude, season(time)) %&gt;% 
+  summarise(correlacion = cor(pp_a, enso34)) %&gt;% 
+  ungroup()</code></pre>
+</div>
+</div>
+<div id="section-13" class="section level2">
+<h2></h2>
+<pre class="r"><code>cor_pp %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = correlacion)) +
+  scale_fill_divergent() +
+  mapa(fill = NA, colour = &quot;black&quot;) +
+  facet_wrap(~season, ncol = 2)</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
+<pre class="r"><code>cor_pp %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
+  mapa(fill = NA, colour = &quot;black&quot;) +
+  scale_x_longitude(limits = c(270, 330)) +
+  scale_y_latitude(limits = c(-60, -10)) +
+  scale_fill_divergent() +
+  coord_quickmap() +
+  facet_wrap(~season, ncol = 2)</code></pre>
+<p><img src="04_calculos_files/figure-html/unnamed-chunk-26-1.png" width="480" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

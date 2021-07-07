@@ -29,7 +29,7 @@ Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés re
 |5   | Pausa `r emo::ji("coffee")` |
 |50  | [Gráficos](03_graficado.html) |
 |5   | Pausa `r emo::ji("coffee")`  |
-|30  | Tema 3 |
+|30  | [Cómputos](04_calculos.html) |
 |20 | Preguntas y cierre |
 
 Los materiales del tutorial estarán disponibles en esta misma página muy pronto.
