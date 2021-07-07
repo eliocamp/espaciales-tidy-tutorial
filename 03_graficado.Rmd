@@ -30,10 +30,13 @@ sst <- ReadNetCDF("datos/temperatura_mar.nc", vars = "sst")
 
 # Me quedo con un solo campo, para graficar
 sst1 <- sst[time == time[1]]
+
+sst1 <- sst %>% 
+  filter(time == time[1])
 ```
 
 
-Ya vimos una forma simple de graficar este tipo de datos usando `geom_raster()`:
+Ya vimos una forma rápida de graficar este tipo de datos usando `geom_raster()`:
 
 ```{r}
 sst1 %>%  
@@ -41,10 +44,10 @@ sst1 %>%
   geom_raster(aes(fill = sst)) 
 ```
 
-Con `geom_raster()`, cada punto de grilla es representado como un rectángulo cuyo color de relleno se mapea al valor de la variable; extremadamente simple.
+Con `geom_raster()`, cada punto de grilla es representado como un rectángulo cuyo color de relleno se mapea al valor de la variable, por lo tanto la estética a usar es `fill`.
 
-Otra forma de mostrar este tipo de campos es usando contornos con `geom_contour()`.
-A mí me gusta usar `metR::geom_contour2()` porque usa contornos negros por default y tiene otras funcionalidades.
+Otra forma de mostrar este tipo de campos (o sea, que pinta tiene la variable en una región) es usando contornos con `geom_contour()`.
+A mí me gusta usar `metR::geom_contour2()` porque usa contornos negros por default y tiene otras funcionalidades útiles. En este caso, cada línea corresponde a un valor específico de la variable y por eso usamos el argumento `z` para mapearla.
 
 ```{r}
 sst1 %>%  
@@ -53,7 +56,7 @@ sst1 %>%
 ```
 
 
-El problema es que ahora perdemos los contienentes gratis y no sabemos los valores. 
+El problema es que ahora perdemos los contienentes gratis y no tenemos información sobre que valores representa cada línea. 
 Podemos obtener un resultado intermedio usando contornos llenos con `metR::geom_contour_fill()` (de nuevo, ggplot2 tiene un `geom_contour_filled()` pero yo prefiero los defaults y otras funcionalidades de `geom_contour_fill()`).
 
 ```{r}
@@ -62,8 +65,8 @@ sst1 %>%
   geom_contour_fill(aes(z = sst)) 
 ```
 
-En este punto estaría bueno tener no tener los continentes pixelados. 
-El paquete `rnaturalearth` tiene datos de costas y países, pero para no tener que instalar otro paquete extra, vamos a usar la función `map_data()` de ggplot2.
+En este punto estaría bueno tener no tener los continentes pixelados (esto se debe a la baja resolución de los datos principalmente). 
+El paquete {rnaturalearth} tiene datos de costas, países y regiones en distitas resoluciones. Pero por ahora podemos evitar instalar otro paquete, usando la función `map_data()` de ggplot2.
 
 ```{r}
 ggplot() +
@@ -85,7 +88,7 @@ sst1 %>%
   mapa
 ```
 
-El problema es que todavía tenemos las costas pixeladas. 
+Aún con esto seguimos viendo las cosas "pixeladas". 
 Una forma de resolver esto es rellenando esos pixels con un valor razonable. 
 `metR::geom_contour_fill()` tiene el argumento `na.fill` que si es `TRUE`, interpola los datos faltantes: 
 
