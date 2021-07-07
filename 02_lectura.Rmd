@@ -298,7 +298,7 @@ sst %>%
 
 ## 
 
-En este gráfico y ase ven varias cosas.
+En este gráfico ya se ven varias cosas.
 Se ve que hay una clara estructura de mayores temperaturas cerca del ecuador, lo cual no debería sorprender a nadie.
 También se ve que, como lo que estamos leyendo es la temperatura de la superficie del mar, tenemos datos faltantes sobre los continentes.
 Esto puede molestar un poco para algunas operaciones, ¡pero nos viene bárbaro para tener el contorno de los continentes gratis!
@@ -333,5 +333,5 @@ Lo que significa que se van a leer los datos con latitud entre -90º y 0º, y co
 
 
 ::: {.alert .alert-info}
-El argumento `subset` de `ReadNetCDF()` tiene otros aces bajo la manga, como usar `NA` para referirse al mínimo o al máximo o leer regiones discontinuas de datos. Todo eso se puede leer en la ayuda: `?ReadNetCDF()`.
+El argumento `subset` de `ReadNetCDF()` tiene otros aces bajo la manga, como usar `NA` para referirse al mínimo o al máximo valor posible en un rango a la hora de hacer un subset o leer regiones discontinuas de datos. Todo eso se puede leer en la ayuda: `?ReadNetCDF()`.
 :::
