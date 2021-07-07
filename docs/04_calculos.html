@@ -13,7 +13,6 @@
 
 <title>Calculos</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -341,7 +340,7 @@ div.tocify {
       <a href="04_calculos.html">Cómputos</a>
     </li>
     <li>
-      <a href="guia-práctica.html">Guía práctica</a>
+      <a href="guia-practica.html">Guía práctica</a>
     </li>
   </ul>
 </li>
@@ -388,9 +387,9 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p>Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)? Esencialmente es calcular el promedio de <code>sst</code> para cada longitud y latitud, una operación que se traduce de forma directa a operaciones en grupos.</p>
 </div>
 <div id="section" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
+<h2></h2>
 <div id="data.table" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">data.table</h3>
+<h3>data.table</h3>
 <pre class="r"><code>sst %&gt;% 
   .[, .(sst = mean(sst)), by = .(longitude, latitude)] %&gt;% 
   ggplot(aes(longitude, latitude)) +
@@ -399,7 +398,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
 </div>
 <div id="dplyr" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">dplyr</h3>
+<h3>dplyr</h3>
 <pre class="r"><code>sst %&gt;% 
   group_by(longitude, latitude) %&gt;% 
   summarise(sst = mean(sst)) %&gt;% 
@@ -411,7 +410,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 </div>
 </div>
 <div id="section-1" class="section level2 unlisted unnumbered">
-<h2 class="unlisted unnumbered"></h2>
+<h2></h2>
 <p>Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad.</p>
 <p>Definamos tres puntos que representan zonas muy disímiles del planeta:</p>
 <pre class="r"><code>puntos &lt;- tibble::tribble(~longitude, ~latitude,
@@ -426,9 +425,9 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p>Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join.</p>
 </div>
 <div id="section-2" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
+<h2></h2>
 <div id="data.table-1" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">data.table</h3>
+<h3>data.table</h3>
 <pre class="r"><code>sst %&gt;% 
   .[puntos, on = .NATURAL] %&gt;% 
   ggplot(aes(time, sst)) +
@@ -455,7 +454,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p>Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud. Nuevamente esto se traduce durectamente en operaciones sobre grupos.</p>
 </div>
 <div id="section-4" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
+<h2></h2>
 <div id="data.table-2" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>sst[, sst_a := sst - mean(sst), by = .(longitude, latitude, month(time))] </code></pre>
@@ -491,7 +490,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p>Entonces, vamos a calcular los primeros dos EOFs del campo de anomalías de SST.</p>
 </div>
 <div id="section-6" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
+<h2></h2>
 <div id="data.table-3" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>eofs &lt;- sst %&gt;%
@@ -516,12 +515,12 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 ##   ..$ longitude: num [1:13832] 0 2.5 5 7.5 10 12.5 15 17.5 20 22.5 ...
 ##   ..$ latitude : num [1:13832] 90 90 90 90 90 90 90 90 90 90 ...
 ##   ..$ PC       : Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##   ..$ sst_a    : num [1:13832] -7.33e-15 -7.33e-15 -7.33e-15 -7.33e-15 -7.33e-15 ...
+##   ..$ sst_a    : num [1:13832] 7.36e-15 7.32e-15 7.34e-15 7.37e-15 7.37e-15 ...
 ##   ..- attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt; 
 ##  $ right:Classes &#39;data.table&#39; and &#39;data.frame&#39;:  1008 obs. of  3 variables:
 ##   ..$ time : POSIXct[1:1008], format: &quot;1979-01-01&quot; &quot;1979-02-01&quot; ...
 ##   ..$ PC   : Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##   ..$ sst_a: num [1:1008] 0.0186 0.00745 0.00186 0.01872 0.02797 ...
+##   ..$ sst_a: num [1:1008] -0.0186 -0.00745 -0.00186 -0.01872 -0.02797 ...
 ##   ..- attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt; 
 ##  $ sdev :Classes &#39;data.table&#39; and &#39;data.frame&#39;:  2 obs. of  3 variables:
 ##   ..$ PC: Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 2
@@ -545,7 +544,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p>Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo. Nuevamente, estas son operaciones básicas del análisis de datos tidy.</p>
 </div>
 <div id="section-8" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
+<h2></h2>
 <div id="data.table-4" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>enso &lt;- sst %&gt;% 
@@ -576,7 +575,7 @@ sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot
 <p>Un problema acá es que <code>lm()</code> es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento. Para acelerar las cosas, metR tiene la función <code>FitLm()</code> que sirve para calcular los coeficientes de regresiones lineales mucho más rápido.</p>
 </div>
 <div id="section-10" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
+<h2></h2>
 <div id="data.table-5" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>sst %&gt;% 

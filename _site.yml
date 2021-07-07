@@ -14,7 +14,7 @@ navbar:
         - text: Cómputos
           href: 04_calculos.html
         - text: Guía práctica
-          href: guia-práctica.html
+          href: guia-practica.html
     - text: Relación ENSO - Presión a nivel del mar
       href: ejemplo.html
   right:

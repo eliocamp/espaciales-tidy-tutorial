@@ -13,7 +13,6 @@
 
 <title>Antes del tutorial</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -341,7 +340,7 @@ div.tocify {
       <a href="04_calculos.html">Cómputos</a>
     </li>
     <li>
-      <a href="guia-práctica.html">Guía práctica</a>
+      <a href="guia-practica.html">Guía práctica</a>
     </li>
   </ul>
 </li>
@@ -390,12 +389,12 @@ install.packages(paquetes)</code></pre>
 <p>Vamos a usar el paquete <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a> para descargar datos climáticos. El mismo permite hacer pedidos de datos a varios servicios, en este tutorial vamos a usar el Climate Data Store.</p>
 <p>Para descargar datos climáticos del Climate Data Store primero hay que tener una cuenta. Si no tenés una, creala en <a href="https://cds.climate.copernicus.eu/user/register" class="uri">https://cds.climate.copernicus.eu/user/register</a>.</p>
 <div class="figure">
-<img src="img/registro.png" alt="" />
+<img src="img/registro.png" alt="Captura de pantalla del formulario de registro de Climate Data Store." />
 <p class="caption">Captura de pantalla del formulario de registro de Climate Data Store.</p>
 </div>
 <p>Una vez que tengas tu usuario y contraseña, hay que setear las credenciales en R. Andá a <a href="https://cds.climate.copernicus.eu/user/login?destination=user">tu perfil de usuario</a> y abajo de todo vas a ver una sección con título “API Key” con dos valores: tu UID (User ID) y tu API Key.</p>
 <div class="figure">
-<img src="img/api-key.png" alt="" />
+<img src="img/api-key.png" alt="Captura de pantalla de la sección API Key en la página del Climate Data Store" />
 <p class="caption">Captura de pantalla de la sección API Key en la página del Climate Data Store</p>
 </div>
 <p>Si estás trabajando en una cuenta de <strong>RStudio Cloud</strong>, antes de lo que viene corré esta línea:</p>
