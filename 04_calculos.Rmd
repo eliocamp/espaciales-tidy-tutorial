@@ -15,6 +15,11 @@ knitr::opts_chunk$set(
 ```
 
 
+## Haciendo cálculos
+
+
+Una de las grandes ventajas de tener los datos organizados en un data.frame tidy es que es posible aplicar todas las técnicas de análisis de datos tradicionales a estos datos grillados. 
+
 
 ```{r}
 # Cargo los paquetes necesarios
@@ -24,21 +29,24 @@ library(dplyr)
 library(data.table)
 library(metR)
 
-# Leo los datos
-# 
-sst <- ReadNetCDF("datos/temperatura_mar.nc", vars = "sst")
-```
-
-```{r}
+# función para generar un mapa
 mapa <- function(fill = "white", colour = NA) {
   geom_polygon(data = map_data("world2"), aes(long, lat, group = group), 
                fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
 }
+
+# Leo los datos
+sst <- ReadNetCDF("datos/temperatura_mar.nc", vars = "sst")
 ```
+
+
+Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)? 
+Esencialmente es calcular el promedio de `sst` para cada longitud y latitud, una operación que se traduce de forma directa a operaciones en grupos.
+
 
 ##  {.tabset .unlisted .unnumbered}
 
-### data.table
+### data.table {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -48,7 +56,7 @@ sst %>%
   mapa()
 ```
 
-### dplyr
+### dplyr {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -61,8 +69,11 @@ sst %>%
 ```
 
 
+## {.unlisted .unnumbered}
 
-##
+Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad. 
+
+Definamos tres puntos que representan zonas muy disímiles del planeta:
 
 
 ```{r}
@@ -73,9 +84,17 @@ puntos <- tibble::tribble(~longitude, ~latitude,
   as.data.table()
 ```
 
+```{r}
+ggplot(puntos, aes(longitude, latitude)) +
+  geom_point() +
+  mapa()
+```
+
+Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join. 
+
 ## {.tabset .unlisted .unnumbered}
 
-### data.table
+### data.table {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -99,6 +118,16 @@ sst %>%
 
 ## 
 
+Se puede ver que las región tropical tiene una variabilidad de relativa baja frecuencia y sin un ciclo anual pronunciado. 
+Por otro lado, en los puntos extratropicales la variabilidad más fuerte es el ciclo anual, que naturalmente se invierte entre el hemisferio norte y el hemisferio sur. 
+
+Pero el ciclo anual no es interesante, es una variabilidad casi constante, predecible. 
+Lo que es interesante es lo impredecible, lo que se aleja del ciclo anual. 
+Para esto se calculan las anomalías: el alejamiento de los datos con respecto a el ciclo anual promedio. 
+
+Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud. 
+Nuevamente esto se traduce durectamente en operaciones sobre grupos.
+
 ## {.tabset .unlisted .unnumbered}
 
 
@@ -118,45 +147,42 @@ sst <- sst %>%
   select(-mes)
 ```
 
-
-
 ## 
 
-Anomalias 
+Entonces ahora podemos ver a las anomalías. 
+Por definición, las anomalías tienen media cero y lo interesante es ver cuánto se alejan de ese promedio, lo cual hacer que una escala divergente sea la elección natural para visualizarlas.
 
 
 ```{r}
 sst %>% 
-  .[time == unique(time)[229]] %>% 
+  .[time == unique(time)[229]] %>%       # elijo un mes en particular 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = sst_a), na.fill = TRUE) +
   mapa() +
   scale_fill_divergent()
 ```
 
-## {.tabset .unlisted .unnumbered}
 
-### data.table
+## EOF
 
-```{r}
-sst %>% 
-  .[, .(sst_sd = sd(sst_a)), by = .(longitude, latitude)] %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
-  mapa()
+
+Algunos métodos con datos grillados se presetan de forma más natural a la oganización de datos grillados en forma de matriz.
+Análisis de Componentes Principales (también llamado Empirical Orthogonal Functions en ciencias de la atmósfera) es uno de ellos. 
+
+metR tiene la función `EOF()` que aplica componentes principales a los datos. 
+Su primer argumento es una fórmula que define la estructura de la matriz de entrada a partir de los datos. 
+
+Esta fórmula tiene la forma general:
+
 ```
+variable ~ x + y | a + b
+``` 
 
-### dplyr
+La idea es leer esto como 
 
-```{r}
-sst %>% 
-  group_by(longitude, latitude) %>% 
-  summarise(sst_sd = sd(sst_a)) %>% 
-  ungroup() %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
-  mapa()
-```
+"variable _en función de_ la combinación de x e y en las filas y la combinación de a y b en las columnas"
+
+Entonces, vamos a calcular los primeros dos EOFs del campo de anomalías de SST.
 
 ## {.tabset .unlisted .unnumbered}
 
@@ -180,10 +206,15 @@ eofs <- sst %>%
 
 ## 
 
+`EOF()` devuelve una lista de data.tables con la parte izqueirda, derecha y la varianza explicada por cada componente. 
+
+
 ```{r}
 str(eofs)
 ```
 
+
+Si queremos ver la parte espacial, extraemos la parte izquierda:
 
 ```{r}
 eofs$left %>% 
@@ -194,7 +225,15 @@ eofs$left %>%
   facet_wrap(~PC, ncol = 1)
 ```
 
-https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain
+Es primera componente principal nos indica que la mayor parte de la variabildiad de SST está asociada a cambios en la temperatura del Pacífico ecuatorial. 
+Esto se conoce como la oscilación de El Niño. 
+
+
+Una forma de calcular un índice de esta oscilación que no requiere calculos "raros" como EOF es con el [índice ENSO34](https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain), que se define como las anomalías de temperatura promedio entre 5ºS y 5ºN en la región entre 170ºO y 120ºO. 
+
+Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo. 
+Nuevamente, estas son operaciones básicas del análisis de datos tidy.
+
 
 ## {.tabset .unlisted .unnumbered}
 
@@ -218,14 +257,26 @@ enso <- sst %>%
 
 ## 
 
+El resultado:
+
 ```{r}
 ggplot(enso, aes(time, enso34)) +
   geom_line() +
   geom_hline(yintercept = c(-0.5, 0.5))
 ```
 
-## {.tabset .unlisted .unnumbered}
 
+Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan tradicionalmente para definir eventos de ENSO positivos y negativos respetivamente.
+
+## Regresiones y correlaciones
+
+Para asegurarnos de que este índice realmetne representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice. 
+Para eso primero hay que unir los datos de SST con el índice que calculamos y luego calcular la regresión en cada punto. 
+
+Un problema acá es que `lm()` es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento. 
+Para acelerar las cosas, metR tiene la función `FitLm()` que sirve para calcular los coeficientes de regresiones lineales mucho más rápido. 
+
+## {.tabset .unlisted .unnumbered}
 
 ### data.table
 
@@ -254,6 +305,8 @@ sst %>%
   mapa() +
   scale_fill_divergent()
 ```
+
+Esto se ve bien. 
 
 
 ## 
