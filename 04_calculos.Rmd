@@ -1,0 +1,313 @@
+---
+title: "Calculos"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+	echo = TRUE,
+	fig.height = 3,
+	fig.width = 5,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+
+```{r}
+# Cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(metR)
+
+# Leo los datos
+# 
+sst <- ReadNetCDF("datos/temperatura_mar.nc", vars = "sst")
+```
+
+```{r}
+mapa <- function(fill = "white", colour = NA) {
+  geom_polygon(data = map_data("world2"), aes(long, lat, group = group), 
+               fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
+}
+```
+
+##  {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+sst %>% 
+  .[, .(sst = mean(sst)), by = .(longitude, latitude)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa()
+```
+
+### dplyr
+
+```{r}
+sst %>% 
+  group_by(longitude, latitude) %>% 
+  summarise(sst = mean(sst)) %>% 
+  ungroup() %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa() 
+```
+
+
+
+##
+
+
+```{r}
+puntos <- tibble::tribble(~longitude, ~latitude,
+                          180       , 0, 
+                          170       , 50, 
+                          280       , -60) %>% 
+  as.data.table()
+```
+
+## {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+sst %>% 
+  .[puntos, on = .NATURAL] %>% 
+  ggplot(aes(time, sst)) +
+  geom_line()+ 
+  facet_wrap(~ longitude + latitude, scales = "free_y", 
+             labeller = label_both, ncol = 1)
+```
+
+### dplyr
+
+```{r}
+sst %>% 
+  right_join(puntos) %>% 
+  ggplot(aes(time, sst)) +
+  geom_line()+ 
+  facet_wrap(~ longitude + latitude, scales = "free_y", 
+             labeller = label_both, ncol = 1)
+```
+
+## 
+
+## {.tabset .unlisted .unnumbered}
+
+
+### data.table
+
+```{r}
+sst[, sst_a := sst - mean(sst), by = .(longitude, latitude, month(time))] 
+```
+
+### dplyr
+
+```{r, eval = FALSE}
+sst <- sst %>% 
+  group_by(longitude, latitude, mes = month(time)) %>% 
+  mutate(sst_a = sst - mean(sst)) %>% 
+  ungroup() %>% 
+  select(-mes)
+```
+
+
+
+## 
+
+Anomalias 
+
+
+```{r}
+sst %>% 
+  .[time == unique(time)[229]] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_a), na.fill = TRUE) +
+  mapa() +
+  scale_fill_divergent()
+```
+
+## {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+sst %>% 
+  .[, .(sst_sd = sd(sst_a)), by = .(longitude, latitude)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
+  mapa()
+```
+
+### dplyr
+
+```{r}
+sst %>% 
+  group_by(longitude, latitude) %>% 
+  summarise(sst_sd = sd(sst_a)) %>% 
+  ungroup() %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_sd), na.fill = TRUE) +
+  mapa()
+```
+
+## {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+eofs <- sst %>%
+  .[!is.na(sst_a)] %>% 
+  .[, sst_a := sst_a*sqrt(cos(latitude*pi/180))] %>% 
+  EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)
+```
+
+### dplyr
+
+```{r, eval = FALSE}
+eofs <- sst %>%
+  filter(!is.na(sst_a)) %>% 
+  mutate(sst_a = sst_a*sqrt(cos(latitude*pi/180))) %>% 
+  EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)
+```
+
+## 
+
+```{r}
+str(eofs)
+```
+
+
+```{r}
+eofs$left %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_a)) +
+  mapa() +
+  scale_fill_divergent() +
+  facet_wrap(~PC, ncol = 1)
+```
+
+https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain
+
+## {.tabset .unlisted .unnumbered}
+
+### data.table
+
+```{r}
+enso <- sst %>% 
+  .[abs(latitude) < 5 & ConvertLongitude(longitude) %between% c(-170, -120)] %>% 
+  .[, .(enso34 = mean(sst_a)), by = time]
+```
+
+### dplyr
+
+```{r, eval = FALSE}
+enso <- sst %>% 
+  filter(abs(latitude) < 5 & between(ConvertLongitude(longitude), -170, -120)) %>% 
+  group_by(time) %>% 
+  summarise(enso34 = mean(sst_a)) %>% 
+  ungroup()
+```
+
+## 
+
+```{r}
+ggplot(enso, aes(time, enso34)) +
+  geom_line() +
+  geom_hline(yintercept = c(-0.5, 0.5))
+```
+
+## {.tabset .unlisted .unnumbered}
+
+
+### data.table
+
+```{r}
+sst %>% 
+  .[enso, on = "time"] %>% 
+  .[, FitLm(sst_a, enso34), by = .(longitude, latitude)] %>% 
+  .[term != "(Intercept)"] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = estimate), na.fill = 0) +
+  mapa() +
+  scale_fill_divergent()
+```
+
+### dplyr
+
+```{r}
+sst %>% 
+  right_join(enso, by = "time") %>% 
+  group_by(latitude, longitude) %>% 
+  summarise(as.data.frame(FitLm(sst_a, enso34))) %>% 
+  ungroup() %>% 
+  filter(term != "(Intercept)") %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = estimate), na.fill = 0) +
+  mapa() +
+  scale_fill_divergent()
+```
+
+
+## 
+
+
+```{r}
+datos <- ReadNetCDF("datos/temperatura_mar.nc", 
+                    vars = c("msl", pp = "tp"))
+```
+
+### data.table
+
+```{r}
+cor_pp <- datos %>% 
+  .[, pp_a := pp - mean(pp), by = .(longitude, latitude, month(time))] %>% 
+  .[enso, on = "time"] %>% 
+  .[, .(correlacion = cor(pp_a, enso34)), by = .(latitude, longitude, season(time))]
+```
+
+
+### dplyr 
+
+```{r, eval=FALSE}
+campos_cor <- datos %>%
+  group_by(longitude, latitude, month(time)) %>% 
+  mutate(pp_a = pp - mean(pp)) %>% 
+  left_join(enso, by = "time") %>% 
+  group_by(latitude, longitude, season(time)) %>% 
+  summarise(correlacion = cor(pp_a, enso34)) %>% 
+  ungroup()
+```
+
+## 
+
+
+```{r}
+cor_pp %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = correlacion)) +
+  scale_fill_divergent() +
+  mapa(fill = NA, colour = "black") +
+  facet_wrap(~season, ncol = 2)
+```
+
+
+```{r}
+cor_pp %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(binwidth = 0.1, exclude = 0)) +
+  mapa(fill = NA, colour = "black") +
+  scale_x_longitude(limits = c(270, 330)) +
+  scale_y_latitude(limits = c(-60, -10)) +
+  scale_fill_divergent() +
+  coord_quickmap() +
+  facet_wrap(~season, ncol = 2)
+```
+
