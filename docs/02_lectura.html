@@ -13,7 +13,8 @@
 
 <title>Lectura de datos</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -429,12 +430,12 @@ temperatura</code></pre>
 <h2>Consiguiendo datos</h2>
 <p>Ok, pero estos datos son una muestra gratis, ¿cómo hacemos para conseguir más datos? Hoy vamos a usar una plataforma maravillosa para acceder a una enorme cantidad de datos climáticos y meteorológicos: el <a href="https://cds.climate.copernicus.eu/cdsapp#!/home">Climate Data Store</a>.</p>
 <div class="figure">
-<img src="img/cds-homepage.png" alt="Página principal de Cliamte Data Store que dice: Welcome to the Climate Data Store. Dive into this wealth of information about the Earth’s past, present and future climate." />
+<img src="img/cds-homepage.png" alt="" />
 <p class="caption">Página principal de Cliamte Data Store que dice: Welcome to the Climate Data Store. Dive into this wealth of information about the Earth’s past, present and future climate.</p>
 </div>
 <p>En la <a href="preparacion.html">parte preparatoria</a> ya te creaste una cuenta y seteaste R para pedir datos (y si no, es un buen momento para hacerlo). Si hacés click en <a href="https://cds.climate.copernicus.eu/cdsapp#!/search?type=dataset">Datasets</a> vas a ver todas las bases de datos disponibles.</p>
 <div class="figure">
-<img src="img/cds-datasets.png" alt="Sección de Datasets de Climate Data Store" />
+<img src="img/cds-datasets.png" alt="" />
 <p class="caption">Sección de Datasets de Climate Data Store</p>
 </div>
 <p>Es posible que la mayoría no te suene ni de nombre, y la verdad que a mí tampoco. Como ejemplo entonces vamos a descargar datos de <a href="https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5">ERA5</a>, el Reanálisis del Centro Europeo de Previsiones Meteorológicas a Plazo Medio.</p>
@@ -506,7 +507,7 @@ temperatura</code></pre>
 )</code></pre>
 <p>Esto se puede usar así como está pero hay dos cosas que conviene cambiar.</p>
 <ul>
-<li><p>Primero, el campo “target” tiene el nombre del archivo final que por defecto es un genérico <code>&quot;download.nc&quot;</code>. Mejor cambiarlo por algo descriptivo como <code>&quot;temperatura_mar.nc&quot;</code>. Luego, la resolución de este campo es de 0.5x0.5 grados, que para ver patrones globales de gran escala es mucho más que lo necesario.</p></li>
+<li><p>Primero, el campo “target” tiene el nombre del archivo final que por defecto es un genérico <code>"download.nc"</code>. Mejor cambiarlo por algo descriptivo como <code>"temperatura_mar.nc"</code>. Luego, la resolución de este campo es de 0.5x0.5 grados, que para ver patrones globales de gran escala es mucho más que lo necesario.</p></li>
 <li><p>Segundo, para tener un archivo mucho más liviano y fácil de manejar, podemos reducir esa resolución a algo como 2.5x2.5 agregando el campo “grid” y seteándolo a `“2.5/2.5”. Mirando el formato del request, pueden imaginarse que cambios hacer si quieren bajar menos años, o sólo algunos meses, etc…</p></li>
 </ul>
 <pre class="r"><code>request &lt;- list(
@@ -578,7 +579,7 @@ library(dplyr)
 library(data.table)</code></pre>
 </div>
 <div id="section" class="section level2 tabset">
-<h2></h2>
+<h2 class="tabset"></h2>
 <div id="data.table" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>sst %&gt;% 
@@ -658,6 +659,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

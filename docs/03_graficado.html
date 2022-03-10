@@ -13,7 +13,8 @@
 
 <title>Graficando</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -552,7 +553,7 @@ sst1 &lt;- sst %&gt;%
   cowplot::plot_grid()</code></pre>
 <p><img src="03_graficado_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
 <div class="alert alert-info">
-<p>El paquete {colorblindr} es muy útil para ver que pinta tiene el gráfico según distintos tipos de ceguera del color. Podés instalarlo con <code>remotes::install_github(&quot;clauswilke/colorblindr&quot;)</code></p>
+<p>El paquete {colorblindr} es muy útil para ver que pinta tiene el gráfico según distintos tipos de ceguera del color. Podés instalarlo con <code>remotes::install_github("clauswilke/colorblindr")</code></p>
 </div>
 </div>
 
@@ -594,6 +595,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

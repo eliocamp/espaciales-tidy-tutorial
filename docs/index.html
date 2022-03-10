@@ -13,7 +13,8 @@
 
 <title>Datos espaciales a lo tidy</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -425,8 +426,8 @@ div.tocify {
 <div id="sobre-nosotros" class="section level2">
 <h2>Sobre nosotros</h2>
 <p><strong>Elio Campitelli</strong></p>
-<p><img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/> Elio es Licenciado en Ciencias de la Atmósfera y actualmente está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación atmosférica del hemisferio sur influye en las condiciones meteorológicas de Sudamérica.</p>
-<p>Mantiene varios paquetes de R, como metR (paquete para manejo de datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar varias escalas de color en un gráfico). Es profesor de Introducción a la Programación en la Diplomatura en análisis de datos aplicados al desarrollo de políticas públicas de la Universidad Nacional Guillermo Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. Es miembro fundador de <a href="http://metadocencia.org/">MetaDocencia</a> e instructor de <a href="https://carpentries.org/">The Carpentries</a>.</p>
+<p><img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/> Elio tiene una licenciatura en Ciencias de la Atmósfera y actualmente está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación atmosférica del hemisferio sur influye en las condiciones meteorológicas de Sudamérica.</p>
+<p>Mantiene varios paquetes de R, como metR (paquete para manejo de datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar varias escalas de color en un gráfico). Es docente de Introducción a la Programación en la Diplomatura en análisis de datos aplicados al desarrollo de políticas públicas de la Universidad Nacional Guillermo Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. Es miembro fundador de <a href="http://metadocencia.org/">MetaDocencia</a> e instructor de <a href="https://carpentries.org/">The Carpentries</a>.</p>
 <p><a href="https://eliocamp.github.io/">eliocamp.github.io</a> | <a href="https://twitter.com/d_olivaw">@d_olivaw</a></p>
 <p><strong>Pao Corrales</strong></p>
 <p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Pao es Licenciada en Ciencias de la Atmósfera y actualmente está realizando su doctorado en el Centro de Investigaciones del Mar y la Atmósfera, UBA-CONICET aplicando técnicas de asimilación de datos para mejorar pronósticos de eventos severos a corto plazo. Desde 2011 forma parte de Expedición Ciencia, una asociación civil dedicada a generar proyectos que permita a personas de todas las edades desarrollen el pensamiento científico, el placer por la exploración y la curiosidad permanente. En Expedición Ciencia lidera proyectos educativos como campamentos científicos y talleres para estudiantes y docentes.</p>
@@ -477,6 +478,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

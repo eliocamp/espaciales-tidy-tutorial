@@ -13,7 +13,8 @@
 
 <title>blabla</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -400,28 +401,28 @@ div.tocify {
 <p>Programa:</p>
 <ul>
 <li><p>What metR is and what it’s not.</p></li>
-<li>Tidy data
+<li><p>Tidy data</p>
 <ul>
 <li>raster tidy</li>
 </ul></li>
-<li>Climate Data Store
+<li><p>Climate Data Store</p>
 <ul>
 <li>Setting an account with ecmwfr</li>
 <li>Creating a request with addin and downloading data.</li>
 </ul></li>
-<li>ReadNetCDF
+<li><p>ReadNetCDF</p>
 <ul>
 <li>Glance</li>
 <li>Subset</li>
 <li>using DAP</li>
 </ul></li>
-<li>Operations
+<li><p>Operations</p>
 <ul>
 <li>FitLm</li>
 <li>EOF</li>
 <li>widyr::pairwise_cor</li>
 </ul></li>
-<li>Visualisation
+<li><p>Visualisation</p>
 <ul>
 <li>geoms</li>
 <li>scales</li>
@@ -475,6 +476,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

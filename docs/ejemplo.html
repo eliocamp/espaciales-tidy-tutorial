@@ -13,7 +13,8 @@
 
 <title>Relación entre presión a nivel del mar y ENSO</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -322,7 +323,7 @@ library(metR)</code></pre>
 }</code></pre>
 <p>Primero, calculo anomalías mensuales de temperatura de superficie del mar.</p>
 <div id="section" class="section level2 tabset unlisted unnumbered">
-<h2></h2>
+<h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>datos[, c(&quot;sst_a&quot;, &quot;presion_a&quot;) := list(sst - mean(sst), 
@@ -344,7 +345,7 @@ library(metR)</code></pre>
 <p>Con esto, defino el índice ENSO como la anomalía media en una caja entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
 </div>
 <div id="section-2" class="section level2 tabset unlisted unnumbered">
-<h2></h2>
+<h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table-1" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>enso &lt;- datos %&gt;% 
@@ -377,7 +378,7 @@ library(metR)</code></pre>
 <p>¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel global?</p>
 </div>
 <div id="section-4" class="section level2 tabset unlisted unnumbered">
-<h2></h2>
+<h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table-2" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>enso_regresion &lt;- datos %&gt;% 
