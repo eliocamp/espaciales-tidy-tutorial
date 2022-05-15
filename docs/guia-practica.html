@@ -13,7 +13,7 @@
 
 <title>Guía de práctica</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -57,6 +57,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 
 
@@ -81,6 +82,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -233,7 +237,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -246,7 +250,7 @@ $(document).ready(function () {
   <a href="preparacion.html">Preparación</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Materiales
      
     <span class="caret"></span>
@@ -256,7 +260,7 @@ $(document).ready(function () {
       <a href="01_intro.html">Introducción</a>
     </li>
     <li>
-      <a href="02_lectura.html">Descarga y lectura</a>
+      <a href="02_lectura.html">Lectura</a>
     </li>
     <li>
       <a href="03_graficado.html">Graficado</a>
@@ -291,46 +295,73 @@ $(document).ready(function () {
 </div>
 
 
-<p>Ahora es tu turno de aplicar lo que vimos. Te propongo tres posibilidades.</p>
+<p>Ahora es tu turno de aplicar lo que vimos. Te propongo tres
+posibilidades.</p>
 <div id="section" class="section level1 tabset">
 <h1 class="tabset"></h1>
 <div id="opción-1" class="section level2">
 <h2>Opción 1</h2>
-<p>Si nunca trabajaste con este tipo de variables, podés replicar al pie de la letra (o con poca variación) el código que ya viste. Esta es una opción recomendable para practicar lo que viste y no perder tanto tiempo en pensar en qué variables bajar o cómo procesarlas.</p>
+<p>Si nunca trabajaste con este tipo de variables, podés replicar al pie
+de la letra (o con poca variación) el código que ya viste. Esta es una
+opción recomendable para practicar lo que viste y no perder tanto tiempo
+en pensar en qué variables bajar o cómo procesarlas.</p>
 <div id="primera-parte" class="section level3">
 <h3>Primera parte</h3>
-<p>Para replicar lo que hicimos en vivo podés seguir el paso a paso en la sección de lectura de datos a partir de la sección <a href="02_lectura.html#consiguiendo-datos">Consiguiendo Datos</a>.</p>
+<p>Para replicar lo que hicimos en vivo podés seguir el paso a paso en
+la sección de lectura de datos a partir de la sección <a
+href="02_lectura.html#consiguiendo-datos">Consiguiendo Datos</a>.</p>
 <p>Si tenés tiempo, podés probar con otras variables.</p>
 </div>
 <div id="segunda-parte" class="section level3">
 <h3>Segunda parte</h3>
-<p>Ahora es el turno de graficar, podés seguir el paso a pasdo de los gráficos que ya hicimos <a href="03_graficado.html">acá</a> pero también chequear el <a href="ejemplo.html">ejemplo</a>. Por supuesto, siempre podés explorar un poco más y hacer otras pruebas!</p>
+<p>Ahora es el turno de graficar, podés seguir el paso a pasdo de los
+gráficos que ya hicimos <a href="03_graficado.html">acá</a> pero también
+chequear el <a href="ejemplo.html">ejemplo</a>. Por supuesto, siempre
+podés explorar un poco más y hacer otras pruebas!</p>
 </div>
 <div id="tercera-parte" class="section level3">
 <h3>Tercera parte</h3>
-<p>La propuesta es que repliques los cálculos y estadística que charlamos. Si no te resultan familiares, elegí una para concentrarte en eso y tener tiempo de hacer las cuentas, revisar el resultado y hacer un gráfico para ver que pinta tiene.</p>
+<p>La propuesta es que repliques los cálculos y estadística que
+charlamos. Si no te resultan familiares, elegí una para concentrarte en
+eso y tener tiempo de hacer las cuentas, revisar el resultado y hacer un
+gráfico para ver que pinta tiene.</p>
 </div>
 </div>
 <div id="opción-2" class="section level2">
 <h2>Opción 2</h2>
-<p>Si seguiste el código en vivo y/o estas variables ya te resultan familiares, te proponemos algunas preguntas específicas:</p>
+<p>Si seguiste el código en vivo y/o estas variables ya te resultan
+familiares, te proponemos algunas preguntas específicas:</p>
 <ol style="list-style-type: decimal">
 <li>¿Cómo varió la temperatura media global a lo largo del tiempo?</li>
-<li>¿De qué depende la precipitación en alguna región que se te ocurra?</li>
-<li>¿Cómo varía la superficie del mar cubierta por hielo a lo largo del año?</li>
+<li>¿De qué depende la precipitación en alguna región que se te
+ocurra?</li>
+<li>¿Cómo varía la superficie del mar cubierta por hielo a lo largo del
+año?</li>
 </ol>
 <div id="primera-parte-1" class="section level3">
 <h3>Primera parte</h3>
-<p>En esta primera parte deberías descargar y leer los datos relevante a cada pregunta. Te sugerimos las siguientes variables:</p>
+<p>En esta primera parte deberías descargar y leer los datos relevante a
+cada pregunta. Te sugerimos las siguientes variables:</p>
 <dl>
 <dt>Pregunta 1</dt>
-<dd><p>Temperatura del aire para todo el globo, todos los meses hasta 2020 en 950hPa y 100hPa de <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=form">ERA5 (Variables volumétricas)</a>.</p>
+<dd>
+<p>Temperatura del aire para todo el globo, todos los meses hasta 2020
+en 950hPa y 100hPa de <a
+href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=form">ERA5
+(Variables volumétricas)</a>.</p>
 </dd>
 <dt>Pregunta 2</dt>
-<dd><p>Total precipitation, temperatura a 2 metros, “Total column water vapour” de <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form">ERA (variables 2D)</a></p>
+<dd>
+<p>Total precipitation, temperatura a 2 metros, “Total column water
+vapour” de <a
+href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form">ERA
+(variables 2D)</a></p>
 </dd>
 <dt>Pregunta 3</dt>
-<dd><p>Sea-ice cover de <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form">ERA (variables 2D)</a>.</p>
+<dd>
+<p>Sea-ice cover de <a
+href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form">ERA
+(variables 2D)</a>.</p>
 </dd>
 </dl>
 </div>
@@ -338,13 +369,25 @@ $(document).ready(function () {
 <h3>Segunda parte</h3>
 <dl>
 <dt>Pregunta 1</dt>
-<dd><p>Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la temperatura en uno o más puntos a lo largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?</p>
+<dd>
+<p>Nuestra sugerencia es que grafiques campos de la variable en
+distintos momentos para agarrarle la vuelta a los contornos. Si te queda
+tiempo también podés graficar la temperatura en uno o más puntos a lo
+largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?</p>
 </dd>
 <dt>Pregunta 2</dt>
-<dd><p>Nuestra sugerencia es que grafiques campos de las variables para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar las variables en uno o más puntos a lo largo del tiempo. ¿Ves alguan relación entre ellas?</p>
+<dd>
+<p>Nuestra sugerencia es que grafiques campos de las variables para
+agarrarle la vuelta a los contornos. Si te queda tiempo también podés
+graficar las variables en uno o más puntos a lo largo del tiempo. ¿Ves
+alguan relación entre ellas?</p>
 </dd>
 <dt>Pregunta 3</dt>
-<dd><p>Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la variable en uno o más puntos a lo largo del tiempo.</p>
+<dd>
+<p>Nuestra sugerencia es que grafiques campos de la variable en
+distintos momentos para agarrarle la vuelta a los contornos. Si te queda
+tiempo también podés graficar la variable en uno o más puntos a lo largo
+del tiempo.</p>
 </dd>
 </dl>
 </div>
@@ -352,13 +395,19 @@ $(document).ready(function () {
 <h3>Tercera parte</h3>
 <dl>
 <dt>Pregunta 1</dt>
-<dd><p>Para responder esta pregunta, la media y las anomalías te van a venir muy bien.</p>
+<dd>
+<p>Para responder esta pregunta, la media y las anomalías te van a venir
+muy bien.</p>
 </dd>
 <dt>Pregunta 2</dt>
-<dd><p>Para esta pregunta, te sugerimos calcular correlaciones!</p>
+<dd>
+<p>Para esta pregunta, te sugerimos calcular correlaciones!</p>
 </dd>
 <dt>Pregunta 3</dt>
-<dd><p>Para responder esta pregunta, la media y las anomalías te van a venir muy bien. Tené en cuenta la variable temporal para poder responder lo que pasa “a lo largo del año”.</p>
+<dd>
+<p>Para responder esta pregunta, la media y las anomalías te van a venir
+muy bien. Tené en cuenta la variable temporal para poder responder lo
+que pasa “a lo largo del año”.</p>
 </dd>
 </dl>
 </div>
@@ -366,19 +415,35 @@ $(document).ready(function () {
 <div id="opción-3" class="section level2">
 <h2>Opción 3</h2>
 <p>¡Hacé la tuya!</p>
-<p>Si ya trabajaste con este tipo de variables y ya tenés preguntas propias, podés salirte de guión y descargar cualquier variable y hacer cualquier análisis. Tené en cuenta que en el contexto del tutorial tenés que hacer tiempo para pensar el análisis y ejercitar el código. Podés inspirarte en las preguntas de la opción 2 pero cambiarlas ligeramente.</p>
+<p>Si ya trabajaste con este tipo de variables y ya tenés preguntas
+propias, podés salirte de guión y descargar cualquier variable y hacer
+cualquier análisis. Tené en cuenta que en el contexto del tutorial tenés
+que hacer tiempo para pensar el análisis y ejercitar el código. Podés
+inspirarte en las preguntas de la opción 2 pero cambiarlas
+ligeramente.</p>
 <div id="primera-parte-2" class="section level3">
 <h3>Primera parte</h3>
-<p>En <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=overview">este link</a> tenés un listado de las variables 2D de ERA5 y <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=overview">acá</a> el listado de variables 3D.</p>
-<p>Tené en cuenta que si tratás de bajar muchas variables en muchos niveles verticales y muchos tiempos, el tiempo de procesamiento puede ser muy largo (incluso más que los 10 miuntos que dura el ejercicio). Para que tengas una idea, los datos que bajamos durante la primera parte, que eran 3 variables 2D (1 nivel), 40 años mensuales y dominio global a 2.5º de resolución tardaron 5 minutos en descargarse.</p>
+<p>En <a
+href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=overview">este
+link</a> tenés un listado de las variables 2D de ERA5 y <a
+href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=overview">acá</a>
+el listado de variables 3D.</p>
+<p>Tené en cuenta que si tratás de bajar muchas variables en muchos
+niveles verticales y muchos tiempos, el tiempo de procesamiento puede
+ser muy largo (incluso más que los 10 miuntos que dura el ejercicio).
+Para que tengas una idea, los datos que bajamos durante la primera
+parte, que eran 3 variables 2D (1 nivel), 40 años mensuales y dominio
+global a 2.5º de resolución tardaron 5 minutos en descargarse.</p>
 </div>
 <div id="segunda-parte-2" class="section level3">
 <h3>Segunda parte</h3>
-<p>Acá dependerá de lo que hayas decidido hacer, pero aprovechá para probar los contornos!</p>
+<p>Acá dependerá de lo que hayas decidido hacer, pero aprovechá para
+probar los contornos!</p>
 </div>
 <div id="tercera-parte-2" class="section level3">
 <h3>Tercera parte</h3>
-<p>Si llegaste hasta acá, seguro ya tenés alguna idea de que cuentas querrías hacer. Cualquier cosa nos avisas!</p>
+<p>Si llegaste hasta acá, seguro ya tenés alguna idea de que cuentas
+querrías hacer. Cualquier cosa nos avisas!</p>
 </div>
 </div>
 </div>

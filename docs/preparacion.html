@@ -13,7 +13,7 @@
 
 <title>Antes del tutorial</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -309,7 +313,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -322,7 +326,7 @@ div.tocify {
   <a href="preparacion.html">Preparación</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Materiales
      
     <span class="caret"></span>
@@ -332,7 +336,7 @@ div.tocify {
       <a href="01_intro.html">Introducción</a>
     </li>
     <li>
-      <a href="02_lectura.html">Descarga y lectura</a>
+      <a href="02_lectura.html">Lectura</a>
     </li>
     <li>
       <a href="03_graficado.html">Graficado</a>
@@ -367,92 +371,48 @@ div.tocify {
 </div>
 
 
-<p>En el tutorial les propondremos hacer ejercicios en sus propias computadoras, por eso te pedimos que sigas las siguientes instrucciones para tener todo listo ese día.</p>
+<p>En el tutorial les propondremos hacer ejercicios en sus propias
+computadoras, por eso te pedimos que sigas las siguientes instrucciones
+para tener todo listo ese día.</p>
 <div id="paquetes" class="section level1">
 <h1>Paquetes:</h1>
-<p>Durante este tutorial usaremos una serie de paquetes. Es posible que ya tengas algunos instalados, pero es importante que te asegures de tenerlos todos. Te sugerimos que corras las siguientes líneas de código y luego pruebes cargas las librerías.</p>
-<pre class="r"><code>paquetes &lt;- c(&quot;metR&quot;, &quot;ecmwfr&quot;, &quot;ggplot2&quot;, &quot;data.table&quot;, &quot;ggperiodic&quot;, &quot;ggnewscale&quot;)
+<p>Durante este tutorial usaremos una serie de paquetes. Es posible que
+ya tengas algunos instalados, pero es importante que te asegures de
+tenerlos todos. Te sugerimos que corras las siguientes líneas de código
+y luego pruebes cargas las librerías.</p>
+<pre class="r"><code>paquetes &lt;- c(&quot;metR&quot;, &quot;ggplot2&quot;, &quot;data.table&quot;, &quot;ggperiodic&quot;, &quot;ggnewscale&quot;)
 install.packages(paquetes)</code></pre>
-<p>Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes {ncdf4} y {udunits2}.</p>
-<p>En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar con:</p>
+<p>Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para
+leer archivos NetCDF4 es necesario instalar los paquetes
+<strong>ncdf4</strong> y <strong>udunits2</strong>.</p>
+<p>En linux, estos paquetes dependen de las librerías de sistema netcdf
+y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar
+con:</p>
 <pre class="{·bash}"><code>sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev</code></pre>
-<p>En windowns no es necesario que instales ningún programa o librería extra.</p>
+<p>En windowns no es necesario que instales ningún programa o librería
+extra.</p>
 <p>Finalmente, podrás instalar los paquetes de R con:</p>
 <pre class="r"><code>install.packages(c(&quot;udunits2&quot;, &quot;ncdf4&quot;))</code></pre>
-<p>Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete {proj4}, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:</p>
+<p>Como nuestro planeta es una esfera, es útil poder proyectar los datos
+a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar
+el packete <strong>proj4</strong>, que depende de la librería de systema
+proj. Nuevamente, en ubuntu y derivados se puede instalar con:</p>
 <pre class="{·bash}"><code>sudo apt install proj-bin</code></pre>
-<p>(Instrucciones para otros sistemas operativos <a href="https://proj.org/install.html">en la página del proyecto</a>)</p>
+<p>(Instrucciones para otros sistemas operativos <a
+href="https://proj.org/install.html">en la página del proyecto</a>)</p>
 <p>Y luego instalar el paquete de R con:</p>
 <pre class="r"><code>install.packages(&quot;proj4&quot;)</code></pre>
 </div>
-<div id="cuentas" class="section level1">
-<h1>Cuentas</h1>
-<p>Vamos a usar el paquete <a href="https://bluegreen-labs.github.io/ecmwfr/">ecmwfr</a> para descargar datos climáticos. El mismo permite hacer pedidos de datos a varios servicios, en este tutorial vamos a usar el Climate Data Store.</p>
-<p>Para descargar datos climáticos del Climate Data Store primero hay que tener una cuenta. Si no tenés una, creala en <a href="https://cds.climate.copernicus.eu/user/register" class="uri">https://cds.climate.copernicus.eu/user/register</a>.</p>
-<div class="figure">
-<img src="img/registro.png" alt="" />
-<p class="caption">Captura de pantalla del formulario de registro de Climate Data Store.</p>
-</div>
-<p>Una vez que tengas tu usuario y contraseña, hay que setear las credenciales en R. Andá a <a href="https://cds.climate.copernicus.eu/user/login?destination=user">tu perfil de usuario</a> y abajo de todo vas a ver una sección con título “API Key” con dos valores: tu UID (User ID) y tu API Key.</p>
-<div class="figure">
-<img src="img/api-key.png" alt="" />
-<p class="caption">Captura de pantalla de la sección API Key en la página del Climate Data Store</p>
-</div>
-<p>Si estás trabajando en una cuenta de <strong>RStudio Cloud</strong>, antes de lo que viene corré esta línea:</p>
-<pre class="r"><code>options(keyring_backend = &quot;env&quot;)</code></pre>
-<p>Ahora corré este código en R, reemplazando <code>&lt;UID&gt;</code> por tu UID y <code>&lt;API Key&gt;</code> con tu APi Key:</p>
-<pre class="r"><code>ecmwfr::wf_set_key(service = &quot;cds&quot;, user = &quot;&lt;UID&gt;&quot;, key = &quot;&lt;API Key&gt;&quot;)</code></pre>
-<p>Si todo sale bien, la función va a devolver un mensaje como este:</p>
-<pre><code>User &lt;UID&gt; for cds service added successfully in keychain</code></pre>
-<p>Finalmente, hay que aceptar los términos y condiciones de uso del servicio. Entrá a <a href="https://cds.climate.copernicus.eu/cdsapp/#!/terms/licence-to-use-copernicus-products">este link</a> y poné aceptar abajo de todo.</p>
-</div>
-<div id="funcionó" class="section level1">
-<h1>¿Funcionó?</h1>
-<p>Finalmente, para probar que todo se instaló correctamente, corré este pequeño “Hello, world!”</p>
-<pre class="{·r}"><code>request &lt;- list(
-  format = &quot;netcdf&quot;,
-  product_type = &quot;monthly_averaged_reanalysis&quot;,
-  variable = &quot;temperature&quot;,
-  pressure_level = &quot;500&quot;,
-  year = &quot;2021&quot;,
-  month = &quot;01&quot;,
-  time = &quot;00:00&quot;,
-  dataset_short_name = &quot;reanalysis-era5-pressure-levels-monthly-means&quot;,
-  target = &quot;download.nc&quot;
-)
-
-data &lt;- ecmwfr::wf_request(request)
-metR::ReadNetCDF(data, vars = &quot;t&quot;)</code></pre>
-<p>Primero deberías ver algo como esto:</p>
-<pre><code>Requesting data to the cds service with username 11343
-- staging data transfer at url endpoint or request id:
-  xxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxx
-
-- timeout set to 1.0 hours
-| polling server for a data transfer</code></pre>
-<p>Esto indica que el pedido de datos se envió al servicio y éste lo está procesando. Luego de unos segundos, va a empezar a descargar:</p>
-<pre><code>Downloading file
-  |===========================================================| 100%
-- file not copied and removed (path == tempdir())
-- request purged from queue!</code></pre>
-<p>Y luego de que los datos se descarguen, la última línea leerá los datos y como resultado verás:</p>
-<pre><code>               time latitude longitude        t
-      1: 2021-01-01       90      0.00 233.5851
-      2: 2021-01-01       90      0.25 233.5851
-      3: 2021-01-01       90      0.50 233.5851
-      4: 2021-01-01       90      0.75 233.5851
-      5: 2021-01-01       90      1.00 233.5851
-     ---                                       
-1038236: 2021-01-01      -90    358.75 237.5989
-1038237: 2021-01-01      -90    359.00 237.5989
-1038238: 2021-01-01      -90    359.25 237.5989
-1038239: 2021-01-01      -90    359.50 237.5989
-1038240: 2021-01-01      -90    359.75 237.5989</code></pre>
-<p>Si salió todo bien, ¡ya está todo listo para el tutorial!</p>
-</div>
 <div id="plan-b" class="section level1">
 <h1>Plan B</h1>
-<p>Si no lográs que funcione o preferís no instalar los paquetes en tu computadora, podés usar <a href="https://rstudio.cloud/project/2679681">este proyecto de RStudio Cloud</a>, donde dejamos todos los paquetes instalados. Tené encuenta que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene sus limitaciones pero debería ser suficiente para el tutorial). Además deberás crear una cuenta en Climate Data Store y seguir los pasos de configuración en R.</p>
+<p>Si no lográs que funcione o preferís no instalar los paquetes en tu
+computadora, podés usar <a
+href="https://rstudio.cloud/project/xxxxxx">este proyecto de RStudio
+Cloud</a>, donde dejamos todos los paquetes instalados. Tené encuenta
+que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene
+sus limitaciones pero debería ser suficiente para el tutorial). Además
+deberás crear una cuenta en Climate Data Store y seguir los pasos de
+configuración en R.</p>
 </div>
 
 
