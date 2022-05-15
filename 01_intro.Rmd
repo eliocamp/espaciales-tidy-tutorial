@@ -18,7 +18,7 @@ Por supuesto ambos enfoques tienen sus pros y sus contras y dependerá de la tar
 |Pros | * Uso eficiente de la memoria</br> * Enfoque muy difundido</br> * Hay muchas herramientas disponibles  | * Permite trabajar los datos como cualquier otros aprovechando librerías conocidas |
 |Cons | * Es necesario aprender a usar herramientas específicas  | * Los data.frames puede ocupan mucha memoria </br> * Algunos cálculos puede tomar mucho tiempo, es necesario optimizarlos |
 
-Sí algún día se te ocurre leer un data.frame con varios millones de filas, es posible que {dplyr} no funcione muy bien, uno de los problemas es que esta librería hace copias de los objetos y si estos ocupan mucha memoria puede ser un problema. Una posible solución es usar la librería {data.table}, que tiene una sintaxis distinta o {dtplyr} que mantiene la sintaxis de {dplyr} con las ventajas de {data.table}. Pero no te preocupes, los datos que usaremos en el tutorial son aptos para cualquier computadora. 
-
-
+Sí algún día se te ocurre leer un data.frame con varios millones de filas, es posible que **dplyr** no funcione muy bien, uno de los problemas es que esta librería hace copias de los objetos y si estos ocupan mucha memoria puede ser un problema. 
+Una posible solución es usar la librería **data.table**, que tiene una sintaxis distinta o **dtplyr** que mantiene la sintaxis de dplyr con las ventajas de data.table. 
+Pero no te preocupes, los datos que usaremos en el tutorial son aptos para cualquier computadora. 
 

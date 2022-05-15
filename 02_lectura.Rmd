@@ -39,11 +39,11 @@ La página web de unidata describe al formato netCDF como:
 
 Todo ese márketing lo que significa en la práctica es que los datos en netCDF son muy cómodos porque tienen los metadatos incluídos y porque es muy fácil leer sólo las partes necesarias.
 Existen muchos paquetes de R para leer (y escribir) archivos en este formato.
-En este tutorial vamos a usar {metR}.
+En este tutorial vamos a usar **metR**.
 
 Los datos en archivos NetCDF puede ser bastante grandes y destruir tu sesión de R si tratás de leerlos enteros en memoria.
 Por eso, siempre es bueno primero fijarse qué tiene un archivo nuevo.
-Para eso, {metR} tiene la función GlanceNetCDF que muestra un vistazo de los metadatos del archivo.
+Para eso, metR tiene la función GlanceNetCDF que muestra un vistazo de los metadatos del archivo.
 Vamos a trabajar con un archivo en este formato que contiene datos de reanálisis del NCEP.
 
 ```{r}

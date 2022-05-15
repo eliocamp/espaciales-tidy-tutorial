@@ -13,7 +13,7 @@ paquetes <- c("metR", "ggplot2", "data.table", "ggperiodic", "ggnewscale")
 install.packages(paquetes)
 ```
 
-Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes {ncdf4} y {udunits2}. 
+Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes **ncdf4** y **udunits2**. 
 
 En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar con:
 
@@ -29,7 +29,7 @@ Finalmente, podrás instalar los paquetes de R con:
 install.packages(c("udunits2", "ncdf4"))
 ```
 
-Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete {proj4}, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:
+Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete **proj4**, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:
 
 ```{·bash}
 sudo apt install proj-bin

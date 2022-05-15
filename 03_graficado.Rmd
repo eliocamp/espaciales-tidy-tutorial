@@ -68,7 +68,7 @@ sst1 %>%
 ```
 
 En este punto estaría bueno tener no tener los continentes pixelados (esto se debe a la baja resolución de los datos principalmente). 
-El paquete {rnaturalearth} tiene datos de costas, países y regiones en distitas resoluciones. Pero por ahora podemos evitar instalar otro paquete, usando la función `map_data()` de ggplot2.
+El paquete **rnaturalearth** tiene datos de costas, países y regiones en distintas resoluciones. Pero por ahora podemos evitar instalar otro paquete, usando la función `map_data()` de ggplot2.
 
 ```{r}
 ggplot() +
@@ -130,7 +130,7 @@ surface %>%
 
 
 Claramente esto no es un cuadrado, pero hay una cierta regularidad en la ubicación de los puntos. 
-La grilla sí es regular, pero en la proyección de Lambert. Si graficamos usando la información en x e y (o sea los datos "desproyectados" nos encontramos con lo siguiente:
+La grilla sí es regular, pero en la proyección de Lambert. Si graficamos usando la información en x e y (o sea los datos "desproyectados") nos encontramos con lo siguiente:
 
 ```{r}
 surface %>% 
@@ -205,7 +205,7 @@ El problema de eso es que no respeta necesariamente la idea de que `geom_contour
 
 Una primera solución es usar una variable discreta.
 Para esto hay que cambiar el aes fill a `..level..`, que es la variable "level" computada por el geom. 
-Esta es una versión discreta de la variable usada por default (`..level_mid..`), lo cual fuerz a gplot2 a elegir una escala discreta junto con su guía.
+Esta es una versión discreta de la variable usada por default (`..level_mid..`), lo cual fuerza a gplot2 a elegir una escala discreta junto con su guía.
 
 
 ```{r}
@@ -308,5 +308,5 @@ colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %>%
 ```
 
 ::: {.alert .alert-info}
-El paquete {colorblindr} es muy útil para ver que pinta tiene el gráfico según distintos tipos de ceguera del color. Podés instalarlo con `remotes::install_github("clauswilke/colorblindr")`
+El paquete **colorblindr** es muy útil para ver que pinta tiene el gráfico según distintos tipos de ceguera del color. Podés instalarlo con `remotes::install_github("clauswilke/colorblindr")`
 :::
