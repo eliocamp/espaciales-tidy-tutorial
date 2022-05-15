@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Graficando</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Datos espaciales a lo tidy</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="preparacion.html">Preparación</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Materiales
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_intro.html">Introducción</a>
+    </li>
+    <li>
+      <a href="02_lectura.html">Descarga y lectura</a>
+    </li>
+    <li>
+      <a href="03_graficado.html">Graficado</a>
+    </li>
+    <li>
+      <a href="04_calculos.html">Cómputos</a>
+    </li>
+    <li>
+      <a href="guia-practica.html">Guía práctica</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="ejemplo.html">Relación ENSO - Presión a nivel del mar</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">Repositorio</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Graficando</h1>
+
+</div>
+
+
+<p>Ahora que tenés los datos en forma de tabla, todo lo que queda es usar las mismas herramientas que usarías para trabajar con cualquier otro tipo de dato.</p>
+<pre class="r"><code># Cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(metR)
+
+# Leo los datos
+# 
+sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot;)
+
+# Me quedo con un solo campo, para graficar
+sst1 &lt;- sst[time == time[1]]
+
+sst1 &lt;- sst %&gt;% 
+  filter(time == time[1])</code></pre>
+<p>Ya vimos una forma rápida de graficar este tipo de datos usando <code>geom_raster()</code>:</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_raster(aes(fill = sst)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
+<p>Con <code>geom_raster()</code>, cada punto de grilla es representado como un rectángulo cuyo color de relleno se mapea al valor de la variable, por lo tanto la estética a usar es <code>fill</code>.</p>
+<div id="contornos" class="section level2">
+<h2>Contornos</h2>
+<p>Otra forma de mostrar este tipo de campos (o sea, que pinta tiene la variable en una región) es usando contornos con <code>geom_contour()</code>. A mí me gusta usar <code>metR::geom_contour2()</code> porque usa contornos negros por default y tiene otras funcionalidades útiles. En este caso, cada línea corresponde a un valor específico de la variable y por eso usamos el argumento <code>z</code> para mapearla.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour2(aes(z = sst)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
+<p>El problema es que ahora perdemos los contienentes gratis y no tenemos información sobre que valores representa cada línea. Podemos obtener un resultado intermedio usando contornos llenos con <code>metR::geom_contour_fill()</code> (de nuevo, ggplot2 tiene un <code>geom_contour_filled()</code> pero yo prefiero los defaults y otras funcionalidades de <code>geom_contour_fill()</code>).</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+<p>En este punto estaría bueno tener no tener los continentes pixelados (esto se debe a la baja resolución de los datos principalmente). El paquete {rnaturalearth} tiene datos de costas, países y regiones en distitas resoluciones. Pero por ahora podemos evitar instalar otro paquete, usando la función <code>map_data()</code> de ggplot2.</p>
+<pre class="r"><code>ggplot() +
+  geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
+               fill = &quot;white&quot;)</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p>Ahora podemos poner eso encima del gráfico anterior.</p>
+<pre class="r"><code>mapa &lt;- geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
+                     fill = &quot;white&quot;, inherit.aes = FALSE)</code></pre>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst)) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
+<p>Aún con esto seguimos viendo las cosas “pixeladas”. Una forma de resolver esto es rellenando las regiones sin datos con un valor razonable. <code>metR::geom_contour_fill()</code> tiene el argumento <code>na.fill</code> que si es <code>TRUE</code>, interpola los datos faltantes:</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-8-1.png" width="480" /></p>
+<p>Sabemos que los datos bien adentro de los continentes no tienen sentido, pero si lo que vamos a hacer es taparlos con el mapa, no tiene mucha importancia.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-9-1.png" width="480" /></p>
+</div>
+<div id="usando-proyecciones" class="section level2">
+<h2>Usando proyecciones</h2>
+<p>Hasta ahora usamos datos grillados en una grilla regular en longitud y latitude, pero no todos los datos son así. Por ejemplo el dataset de ejemplo <code>surface</code> tiene datos de topografía del centro de Argentina.</p>
+<pre class="r"><code>head(surface)</code></pre>
+<pre><code>##          lon       lat   height       x        y
+## 1: -74.83386 -40.91083   0.0000 -960000 -1160000
+## 2: -74.36743 -40.94587   0.0000 -920000 -1160000
+## 3: -73.90057 -40.97941 276.4575 -880000 -1160000
+## 4: -73.43341 -41.01149 182.4261 -840000 -1160000
+## 5: -72.96585 -41.04207 123.7324 -800000 -1160000
+## 6: -72.49799 -41.07118 770.1770 -760000 -1160000</code></pre>
+<p>Vemos que tiene datos de topografía en longitud y latitud, en este espacio los datos no son regulares ya que tiene en cuenta la curvatura de la Tierra. Pero además en el data.frame hay dos columnas x e y que corresponde a la distancia en metros entre las observaciones o datos al punto central de la proyección de estos datos. Vamos a ver qué pinta tienen cuando graficamos en función de la latitud y la longitud:</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(lon, lat)) +
+  geom_point(aes(colour = height))</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
+<p>Claramente esto no es un cuadrado, pero hay una cierta regularidad en la ubicación de los puntos. La grilla sí es regular, pero en la proyección de Lambert. Si graficamos usando la información en x e y (o sea los datos “desproyectados” nos encontramos con lo siguiente:</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(x, y)) +
+  geom_raster(aes(fill = height))</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-12-1.png" width="480" /></p>
+<p>En esta grilla regular si podemos graficar contornos sin problema.</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(x, y)) +
+  geom_contour_fill(aes(z = height))</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-13-1.png" width="480" /></p>
+<p>Una forma de definir esa proyección es con una “proj-string”; un texto que define de qué proyección se trata y cuáles son sus parámetros. (Aunque notar que este paradigma <a href="https://inbo.github.io/tutorials/tutorials/spatial_crs_coding/">ya se quedó viejo</a>) ¿De donde sale esta string? ¡De los metadatos! Si tu archivo netCDF está bien hecho, parte de sus metadatos va a ser la proyección. En este caso, el “metadato” es este documento y la proj-string es la siguiente:</p>
+<pre class="r"><code>proj_string &lt;- paste0(&quot;+proj=lcc +lat_1=-30.9659996032715 +lat_2=-30.9659996032715 +lat_0=-30.9660034179688 +lon_0=296.432998657227 +a=6370000 +b=6370000 +over&quot;)</code></pre>
+<p>Si incluimos esta información en argumento <code>proj</code> de <code>geom_contour_fill()</code> podemos pasar de las coordenadas proyectadas x/y a lon/lat y visualizar la región de manera correcta.</p>
+<pre class="r"><code>surface %&gt;% 
+  ggplot(aes(x, y)) +
+  geom_contour_fill(aes(z = height), proj = proj_string)</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-15-1.png" width="480" /></p>
+<p>Y ahora se puede superponer estos datos de topografía a los datos de temperatura de la superficie del mar:</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
+<p>Pero ahí hay un problema, que es que estamos graficando dos variables muy distintas usando la misma escala de colores. Una forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete <a href="https://eliocamp.github.io/ggnewscale/">ggnewscale</a>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
+  mapa +
+  ggnewscale::new_scale_fill() +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
+                    breaks = seq(1, 6000, by = 500)) +
+  scale_fill_gradientn(colours = terrain.colors(4), guide = &quot;none&quot;) +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-17-1.png" width="480" /></p>
+</div>
+<div id="guía-discretizada" class="section level2">
+<h2>Guía discretizada</h2>
+<p>Un último truco que hace ayuda a interpretar los contornos llenos es cambiar la guía de colores. <code>geom_contour_fill()</code> por defecto usa una escala continua para el aes fill, por lo que la guía de colores es un degradé continuo. El problema de eso es que no respeta necesariamente la idea de que <code>geom_contour_fill()</code> en cierta forma está discretizando los datos.</p>
+<p>Una primera solución es usar una variable discreta. Para esto hay que cambiar el aes fill a <code>..level..</code>, que es la variable “level” computada por el geom. Esta es una versión discreta de la variable usada por default (<code>..level_mid..</code>), lo cual fuerz a gplot2 a elegir una escala discreta junto con su guía.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-18-1.png" width="480" /> El problema con esta escala es que no reconoce que si bien los datos ahora son discretos, ¡éstos representan números continuos! Para ilustrar el problema, veamos qué pasa si usamos breaks que no son equidistantes.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE, 
+                    breaks= c(272, 275, 280, 295, 300)) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+<p>Como la escala es discreta, no tiene forma de interpretar que el “ancho” de la región entre 272 y 275 es muy distinto que el ancho entre 280 y 295. Esto se puede remediar usando una escala discretizada.</p>
+<p>Cualquier escala contínua se puede convertir en una escala discretizada agregando <code>super = metR::ScaleDiscretised</code> (el <code>metR::</code> no es necesario si tenés metR cargado, pero está acá para indicar en de qué paquete sale). Además, hay que usar la escala colorsteps de ggplot2 con el argumento <code>even.steps = FALSE</code>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE, 
+                    breaks= c(272, 275, 280, 295, 300)) + 
+  scale_fill_viridis_c(option = &quot;B&quot;, super = metR::ScaleDiscretised,
+                       guide = guide_colorsteps(even.steps = FALSE)) +
+  mapa +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
+<p>Volviendo a agregar todo, queda una escala que es continua y discreta a la vez.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  .[longitude %between% c(270, 320) &amp; latitude %between% c(-60, -20)] %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  as.discretised_scale(scale_fill_viridis_c)(option = &quot;B&quot;) +
+  mapa +
+  ggnewscale::new_scale_fill() +
+  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
+                    breaks = seq(1, 6000, by = 500)) +
+  scale_fill_gradientn(colours = terrain.colors(4), guide = &quot;none&quot;) +
+  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) </code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
+</div>
+<div id="contornos-iluminados" class="section level2">
+<h2>Contornos iluminados</h2>
+<p>Muchas veces los datos tienen un punto medio lógico y interesa ver las desviaciones con respecto a ese punto medio. En ese caso, es muy útil usar una escala de colores divergente. Para esto se puede usar <code>scale_fill_gradient2()</code> o <code>metR::scale_fill_divergent()</code> (que es lo mismo pero con el default razonable de que valores mayores al punto medio están en rojo y valores menores se pintan de azul), o la versión discretizada <code>metR::scale_fill_divergent_discretised()</code>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  scale_fill_divergent_discretised(midpoint =  290) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-22-1.png" width="480" /></p>
+<p>¿Pero qué pasa si este gráfico alguien lo veo imprime en blanco y negro? Lo que pasa es que los valores mayores al punto medio se ven iguales que los valores menores al punto medio.</p>
+<pre class="r"><code>colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %&gt;% 
+  cowplot::plot_grid()</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-23-1.png" width="480" /></p>
+<p>Una posible solución es agregarle un efecto de relieve a los contornos usando <code>metR::geom_contour_tanaka()</code>.</p>
+<pre class="r"><code>sst1 %&gt;%  
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
+  geom_contour_tanaka(aes(z = sst), na.fill = TRUE) + 
+  scale_fill_divergent_discretised(midpoint =  290) +
+  mapa</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
+<p>Además de quedar bonitos, ahora es muy fácil saber si un detarminado valor es una anomalía positiva o negativa aún en blanco y negro.</p>
+<pre class="r"><code>colorblindr::edit_colors(last_plot(), colfun = colorspace::desaturate) %&gt;% 
+  cowplot::plot_grid()</code></pre>
+<p><img src="03_graficado_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
+<div class="alert alert-info">
+<p>El paquete {colorblindr} es muy útil para ver que pinta tiene el gráfico según distintos tipos de ceguera del color. Podés instalarlo con <code>remotes::install_github("clauswilke/colorblindr")</code></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

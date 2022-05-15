@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Relación entre presión a nivel del mar y ENSO</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Datos espaciales a lo tidy</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="preparacion.html">Preparación</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Materiales
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_intro.html">Introducción</a>
+    </li>
+    <li>
+      <a href="02_lectura.html">Descarga y lectura</a>
+    </li>
+    <li>
+      <a href="03_graficado.html">Graficado</a>
+    </li>
+    <li>
+      <a href="04_calculos.html">Cómputos</a>
+    </li>
+    <li>
+      <a href="guia-practica.html">Guía práctica</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="ejemplo.html">Relación ENSO - Presión a nivel del mar</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/eliocamp/espaciales-tidy-tutorial/">Repositorio</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Relación entre presión a nivel del mar y ENSO</h1>
+
+</div>
+
+
+<pre class="r"><code># Cargo los paquetes necesarios
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(metR)</code></pre>
+<p>Voy leer los datos de temperatura de la superficie del mar y de presión a nivel del mar.</p>
+<pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = c(&quot;sst&quot;, presion = &quot;msl&quot;))</code></pre>
+<p>Y también voy a armarme una función para plotear un mapa</p>
+<pre class="r"><code>mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
+  geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
+               fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
+}</code></pre>
+<p>Primero, calculo anomalías mensuales de temperatura de superficie del mar.</p>
+<div id="section" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>datos[, c(&quot;sst_a&quot;, &quot;presion_a&quot;) := list(sst - mean(sst), 
+                                        presion - mean(presion)),
+      by = .(longitude, latitude, month(time))]</code></pre>
+</div>
+<div id="dplyr" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>datos &lt;- datos %&gt;% 
+  group_by(longitude, latitude, mes = month(time)) %&gt;% 
+  mutate(sst_a = sst - mean(sst), 
+         presion_a = presion - mean(presion)) %&gt;% 
+  ungroup() %&gt;% 
+  select(-mes)</code></pre>
+</div>
+</div>
+<div id="section-1" class="section level2">
+<h2></h2>
+<p>Con esto, defino el índice ENSO como la anomalía media en una caja entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
+</div>
+<div id="section-2" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-1" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>enso &lt;- datos %&gt;% 
+  .[abs(latitude) &lt; 5 &amp; ConvertLongitude(longitude) %between% c(-170, -120)] %&gt;% 
+  .[, .(enso34 = mean(sst_a)), by = time]</code></pre>
+</div>
+<div id="dplyr-1" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>enso &lt;- datos %&gt;% 
+  filter(abs(latitude) &lt; 5 &amp; between(ConvertLongitude(longitude), -170, -120)) %&gt;% 
+  group_by(time) %&gt;% 
+  summarise(enso34 = mean(sst_a)) %&gt;% 
+  ungroup()</code></pre>
+</div>
+</div>
+<div id="section-3" class="section level2">
+<h2></h2>
+<p>¿Cómo evolucionó este índice a lo largo del tiempo?</p>
+<pre class="r"><code>ggplot(enso, aes(time, enso34)) +
+  geom_line() +
+  geom_hline(yintercept = c(-0.5, 0.5)) + 
+  annotate(&quot;label&quot;, y = c(0.5, -0.5), x = lubridate::as_datetime(&quot;1979-01-01&quot;),
+           label = c(&quot;NIÑO&quot;, &quot;NIÑA&quot;), vjust = c(-0.2, 1.2), label.size = grid::unit(0,&quot;lines&quot;)) +
+  scale_x_datetime(name = NULL) +
+  scale_y_continuous(name = NULL) +
+  labs(title = &quot;Índice ENSO34&quot;, 
+       caption = &quot;Fuente: ERA5 (1979–2020)&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="ejemplo_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel global?</p>
+</div>
+<div id="section-4" class="section level2 tabset unlisted unnumbered">
+<h2 class="tabset unlisted unnumbered"></h2>
+<div id="data.table-2" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>enso_regresion &lt;- datos %&gt;% 
+  .[enso, on = &quot;time&quot;] %&gt;% 
+  .[, FitLm(presion_a, enso34), by = .(longitude, latitude)] %&gt;% 
+  .[term != &quot;(Intercept)&quot;] </code></pre>
+</div>
+<div id="dplyr-2" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>enso_regresion &lt;- sst %&gt;% 
+  right_join(enso, by = &quot;time&quot;) %&gt;% 
+  group_by(latitude, longitude) %&gt;% 
+  summarise(as.data.frame(FitLm(presion_a, enso34))) %&gt;% 
+  ungroup() %&gt;% 
+  filter(term != &quot;(Intercept)&quot;) </code></pre>
+</div>
+</div>
+<div id="section-5" class="section level2">
+<h2></h2>
+<pre class="r"><code>enso_regresion %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = estimate, fill = ..level..), na.fill = 0, 
+                    breaks = AnchorBreaks(binwidth = 25, exclude = 0)) +
+  geom_contour_tanaka(aes(z = estimate), na.fill = 0, 
+                      breaks = AnchorBreaks(binwidth = 25, exclude = 0)) +
+  mapa(fill = NA, colour = &quot;black&quot;)  +
+  scale_fill_divergent_discretised(name = &quot;hPa&quot;) +
+  scale_x_longitude() +
+  scale_y_latitude() +
+  coord_quickmap() +
+  theme_minimal() +
+  labs(title = &quot;Regresíon presión a nivel del mar con ENSO&quot;, 
+       caption = &quot;Fuente: ERA5 (1979–2020)&quot;)</code></pre>
+<p><img src="ejemplo_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVsYWNpw7NuIGVudHJlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hciB5IEVOU08iCm91dHB1dDogCiAgaHRtbF9kb2N1bWVudDoKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogZmFsc2UKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGNhY2hlID0gVFJVRSwKICBlY2hvID0gVFJVRSwKICBtZXNzYWdlID0gRkFMU0UsCiAgd2FybmluZyA9IEZBTFNFCikKYGBgCgoKCmBgYHtyfQojIENhcmdvIGxvcyBwYXF1ZXRlcyBuZWNlc2FyaW9zCmxpYnJhcnkobWFncml0dHIpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKbGlicmFyeShkYXRhLnRhYmxlKQpsaWJyYXJ5KG1ldFIpCmBgYAoKVm95IGxlZXIgbG9zIGRhdG9zIGRlIHRlbXBlcmF0dXJhIGRlIGxhIHN1cGVyZmljaWUgZGVsIG1hciB5IGRlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hci4KCmBgYHtyfQpkYXRvcyA8LSBSZWFkTmV0Q0RGKCJkYXRvcy90ZW1wZXJhdHVyYV9tYXIubmMiLCB2YXJzID0gYygic3N0IiwgcHJlc2lvbiA9ICJtc2wiKSkKYGBgCgpZIHRhbWJpw6luIHZveSBhIGFybWFybWUgdW5hIGZ1bmNpw7NuIHBhcmEgcGxvdGVhciB1biBtYXBhCgpgYGB7cn0KbWFwYSA8LSBmdW5jdGlvbihmaWxsID0gIndoaXRlIiwgY29sb3VyID0gTkEpIHsKICBnZW9tX3BvbHlnb24oZGF0YSA9IG1hcF9kYXRhKCJ3b3JsZDIiKSwgYWVzKGxvbmcsIGxhdCwgZ3JvdXAgPSBncm91cCksIAogICAgICAgICAgICAgICBmaWxsID0gZmlsbCwgY29sb3VyID0gY29sb3VyLCBpbmhlcml0LmFlcyA9IEZBTFNFLCBzaXplID0gMC4yKQp9CmBgYAoKUHJpbWVybywgY2FsY3VsbyBhbm9tYWzDrWFzIG1lbnN1YWxlcyBkZSB0ZW1wZXJhdHVyYSBkZSBzdXBlcmZpY2llIGRlbCBtYXIuIAoKIyMgey50YWJzZXQgLnVubGlzdGVkIC51bm51bWJlcmVkfQoKIyMjIGRhdGEudGFibGUKCmBgYHtyfQpkYXRvc1ssIGMoInNzdF9hIiwgInByZXNpb25fYSIpIDo9IGxpc3Qoc3N0IC0gbWVhbihzc3QpLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZXNpb24gLSBtZWFuKHByZXNpb24pKSwKICAgICAgYnkgPSAuKGxvbmdpdHVkZSwgbGF0aXR1ZGUsIG1vbnRoKHRpbWUpKV0KYGBgCgoKIyMjIGRwbHlyCgpgYGB7ciwgZXZhbCA9IEZBTFNFfQpkYXRvcyA8LSBkYXRvcyAlPiUgCiAgZ3JvdXBfYnkobG9uZ2l0dWRlLCBsYXRpdHVkZSwgbWVzID0gbW9udGgodGltZSkpICU+JSAKICBtdXRhdGUoc3N0X2EgPSBzc3QgLSBtZWFuKHNzdCksIAogICAgICAgICBwcmVzaW9uX2EgPSBwcmVzaW9uIC0gbWVhbihwcmVzaW9uKSkgJT4lIAogIHVuZ3JvdXAoKSAlPiUgCiAgc2VsZWN0KC1tZXMpCmBgYAoKIyMKCkNvbiBlc3RvLCBkZWZpbm8gZWwgw61uZGljZSBFTlNPIGNvbW8gbGEgYW5vbWFsw61hIG1lZGlhIGVuIHVuYSBjYWphIGVudHJlIDE3MMK6RSB5IDEyMMK6RSB5IDXCulMgeSA1wrpOLiAKCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc28gPC0gZGF0b3MgJT4lIAogIC5bYWJzKGxhdGl0dWRlKSA8IDUgJiBDb252ZXJ0TG9uZ2l0dWRlKGxvbmdpdHVkZSkgJWJldHdlZW4lIGMoLTE3MCwgLTEyMCldICU+JSAKICAuWywgLihlbnNvMzQgPSBtZWFuKHNzdF9hKSksIGJ5ID0gdGltZV0KYGBgCgojIyMgZHBseXIKCmBgYHtyLCBldmFsID0gRkFMU0V9CmVuc28gPC0gZGF0b3MgJT4lIAogIGZpbHRlcihhYnMobGF0aXR1ZGUpIDwgNSAmIGJldHdlZW4oQ29udmVydExvbmdpdHVkZShsb25naXR1ZGUpLCAtMTcwLCAtMTIwKSkgJT4lIAogIGdyb3VwX2J5KHRpbWUpICU+JSAKICBzdW1tYXJpc2UoZW5zbzM0ID0gbWVhbihzc3RfYSkpICU+JSAKICB1bmdyb3VwKCkKYGBgCgoKIyMgCgrCv0PDs21vIGV2b2x1Y2lvbsOzIGVzdGUgw61uZGljZSBhIGxvIGxhcmdvIGRlbCB0aWVtcG8/CgpgYGB7cn0KZ2dwbG90KGVuc28sIGFlcyh0aW1lLCBlbnNvMzQpKSArCiAgZ2VvbV9saW5lKCkgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoLTAuNSwgMC41KSkgKyAKICBhbm5vdGF0ZSgibGFiZWwiLCB5ID0gYygwLjUsIC0wLjUpLCB4ID0gbHVicmlkYXRlOjphc19kYXRldGltZSgiMTk3OS0wMS0wMSIpLAogICAgICAgICAgIGxhYmVsID0gYygiTknDkU8iLCAiTknDkUEiKSwgdmp1c3QgPSBjKC0wLjIsIDEuMiksIGxhYmVsLnNpemUgPSBncmlkOjp1bml0KDAsImxpbmVzIikpICsKICBzY2FsZV94X2RhdGV0aW1lKG5hbWUgPSBOVUxMKSArCiAgc2NhbGVfeV9jb250aW51b3VzKG5hbWUgPSBOVUxMKSArCiAgbGFicyh0aXRsZSA9ICLDjW5kaWNlIEVOU08zNCIsIAogICAgICAgY2FwdGlvbiA9ICJGdWVudGU6IEVSQTUgKDE5NznigJMyMDIwKSIpICsKICB0aGVtZV9taW5pbWFsKCkKYGBgCgoKwr9DdcOhbCBlcyBsYSByZWxhY2nDs24gZW50cmUgcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIHkgRU5TTyBhIG5pdmVsIGdsb2JhbD8KCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc29fcmVncmVzaW9uIDwtIGRhdG9zICU+JSAKICAuW2Vuc28sIG9uID0gInRpbWUiXSAlPiUgCiAgLlssIEZpdExtKHByZXNpb25fYSwgZW5zbzM0KSwgYnkgPSAuKGxvbmdpdHVkZSwgbGF0aXR1ZGUpXSAlPiUgCiAgLlt0ZXJtICE9ICIoSW50ZXJjZXB0KSJdIApgYGAKCiMjIyBkcGx5cgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KZW5zb19yZWdyZXNpb24gPC0gc3N0ICU+JSAKICByaWdodF9qb2luKGVuc28sIGJ5ID0gInRpbWUiKSAlPiUgCiAgZ3JvdXBfYnkobGF0aXR1ZGUsIGxvbmdpdHVkZSkgJT4lIAogIHN1bW1hcmlzZShhcy5kYXRhLmZyYW1lKEZpdExtKHByZXNpb25fYSwgZW5zbzM0KSkpICU+JSAKICB1bmdyb3VwKCkgJT4lIAogIGZpbHRlcih0ZXJtICE9ICIoSW50ZXJjZXB0KSIpIApgYGAKCiMjIAoKYGBge3J9CmVuc29fcmVncmVzaW9uICU+JSAKICBnZ3Bsb3QoYWVzKGxvbmdpdHVkZSwgbGF0aXR1ZGUpKSArCiAgZ2VvbV9jb250b3VyX2ZpbGwoYWVzKHogPSBlc3RpbWF0ZSwgZmlsbCA9IC4ubGV2ZWwuLiksIG5hLmZpbGwgPSAwLCAKICAgICAgICAgICAgICAgICAgICBicmVha3MgPSBBbmNob3JCcmVha3MoYmlud2lkdGggPSAyNSwgZXhjbHVkZSA9IDApKSArCiAgZ2VvbV9jb250b3VyX3RhbmFrYShhZXMoeiA9IGVzdGltYXRlKSwgbmEuZmlsbCA9IDAsIAogICAgICAgICAgICAgICAgICAgICAgYnJlYWtzID0gQW5jaG9yQnJlYWtzKGJpbndpZHRoID0gMjUsIGV4Y2x1ZGUgPSAwKSkgKwogIG1hcGEoZmlsbCA9IE5BLCBjb2xvdXIgPSAiYmxhY2siKSAgKwogIHNjYWxlX2ZpbGxfZGl2ZXJnZW50X2Rpc2NyZXRpc2VkKG5hbWUgPSAiaFBhIikgKwogIHNjYWxlX3hfbG9uZ2l0dWRlKCkgKwogIHNjYWxlX3lfbGF0aXR1ZGUoKSArCiAgY29vcmRfcXVpY2ttYXAoKSArCiAgdGhlbWVfbWluaW1hbCgpICsKICBsYWJzKHRpdGxlID0gIlJlZ3Jlc8Otb24gcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIGNvbiBFTlNPIiwgCiAgICAgICBjYXB0aW9uID0gIkZ1ZW50ZTogRVJBNSAoMTk3OeKAkzIwMjApIikKYGBgCgo=</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("ejemplo.Rmd");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

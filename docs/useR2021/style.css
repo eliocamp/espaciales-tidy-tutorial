@@ -1,0 +1,122 @@
+
+/*----------------NAVBAR ---------------*/
+.navbar-default {
+    background-color: #0e9a83;
+}
+
+.navbar-default .navbar-nav>.open>a, 
+.navbar-default .navbar-nav>.active>a, 
+a.dropdown-toggle:hover {
+  background-color: #007367 !important;
+}
+
+/* Dropdown menu color */
+.navbar-default .dropdown-menu {
+  background-color: #007367;
+}
+
+/* Dropdown menu hover color */
+  .navbar-default .dropdown-menu>li>a:hover {
+    background-color: #007367f2;
+  }
+
+/* Navbar Links when hovered*/
+.navbar-default .dropdown-menu>.active>a
+.navbar-default .navbar-nav>.active>a:hover, 
+.navbar-default .navbar-nav:hover, 
+.navbar-default .navbar-nav>li>a:hover, 
+a.navbar-brand:hover {
+  color: #ffffffab !important;
+  background-color: #007367;
+}
+
+/*----------LOGO above TOC---------*/
+
+#TOC::before {
+  content: "";
+  display: block;
+  height: 200px;
+  margin: 2em 20px 40px 20px;
+  background-image: url("img/logo-sam.png");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+/*
+#TOC::after {
+  content: "Materiales del tutorial Datos espaciales a lo tidy para useR!2021";
+  font-size: 13px;
+  display: block;
+  height: 100px;
+  margin: 2em 20px 40px 20px;
+}
+*/
+.tocify {
+/*  
+  position: -webkit-sticky;
+  position: sticky; 
+  top: 60px; 
+*/
+
+  width: 100% !important;
+  border: none;
+}
+
+   /* TOC links */
+
+.list-group-item {
+    color: #007367;
+    font-size: 16px;
+}
+
+.list-group-item.active {
+    color: white;
+    background-color: #007367;
+    border: none;
+}
+
+.list-group-item:hover, 
+.list-group-item.active:hover {
+    color: #131b23;
+    background-color: #d3d3d3;
+}
+
+/* links */
+a { 
+  color: #007367;
+}
+
+a:hover {
+ color: #181818; /* darker color when hovering */
+}
+
+/*----------------ADDING WHITE SPACE-------------*/
+
+.title {
+  margin-top: 2em !important;
+  margin-bottom: 0.75em;
+}
+
+.section h1,
+.section h2, 
+.section h3, 
+.section h4, 
+.section h5 { 
+  padding-top: 3em !important; /*adding so much padding because theme adds a margin-top: -65px by default */
+  margin-bottom: 0.75em;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+
+.alert-info {
+    background-color: #0e9a83;
+    border-color: #007367;
+    color: #ffffff;
+    font-weight: 900;
+}
