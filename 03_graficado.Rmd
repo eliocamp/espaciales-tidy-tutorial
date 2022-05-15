@@ -197,6 +197,19 @@ sst1 %>%
 ```
 
 
+```{r}
+topo <- GetTopography(270, 320, -20, -60, resolution = 1/30)
+
+topo %>% 
+  ggplot(aes(lon, lat)) +
+  geom_contour_fill(aes(z = h), data = ~.x[h > 0]) +
+  scale_fill_gradientn(colours = terrain.colors(4)) +
+  ggnewscale::new_scale_fill() +
+  geom_contour_fill(aes(z = h), data = ~.x[h <= 0]) 
+
+```
+
+
 ## Guía discretizada
 
 Un último truco que hace ayuda a interpretar los contornos llenos es cambiar la guía de colores. 
@@ -246,23 +259,6 @@ sst1 %>%
   scale_fill_viridis_c(option = "B", super = metR::ScaleDiscretised,
                        guide = guide_colorsteps(even.steps = FALSE)) +
   mapa +
-  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
-```
-
-
-Volviendo a agregar todo, queda una escala que es continua y discreta a la vez. 
-
-```{r}
-sst1 %>%  
-  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst, fill = ..level..), na.fill = TRUE) +
-  as.discretised_scale(scale_fill_viridis_c)(option = "B") +
-  mapa +
-  ggnewscale::new_scale_fill() +
-  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
-                    breaks = seq(1, 6000, by = 500)) +
-  scale_fill_gradientn(colours = terrain.colors(4), guide = "none") +
   coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
 ```
 

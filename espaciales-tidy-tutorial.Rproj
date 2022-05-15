@@ -16,4 +16,6 @@ AutoAppendNewline: Yes
 
 BuildType: Website
 
+UseNativePipeOperator: No
+
 SpellingDictionary: es_ES

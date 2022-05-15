@@ -40,7 +40,7 @@ Además de los materiales linkeados en la agenda, charlaremos sobre este [ejempl
 <img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/> Elio tiene una licenciatura en Ciencias de la Atmósfera y actualmente está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación atmosférica del hemisferio sur influye en las condiciones meteorológicas de Sudamérica. 
 
 Mantiene varios paquetes de R, como metR (paquete para manejo de datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar varias escalas de color en un gráfico). Es docente de Introducción a la Programación en la Diplomatura en análisis de datos aplicados al desarrollo de políticas públicas de la Universidad Nacional Guillermo Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. 
-Es miembro fundador de [MetaDocencia](http://metadocencia.org/) e instructor de [The Carpentries](https://carpentries.org/).
+Es miembro fundador de [MetaDocencia](http://metadocencia.org/) e instructore de [The Carpentries](https://carpentries.org/).
 
 [eliocamp.github.io](https://eliocamp.github.io/) | [\@d_olivaw](https://twitter.com/d_olivaw)
 
