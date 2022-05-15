@@ -7,7 +7,7 @@ navbar:
       menu:
         - text: Introducción
           href: 01_intro.html
-        - text: Descarga y lectura
+        - text: Lectura
           href: 02_lectura.html
         - text: Graficado
           href: 03_graficado.html

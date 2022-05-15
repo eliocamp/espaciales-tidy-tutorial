@@ -3,12 +3,11 @@ title: "Datos espaciales a lo tidy"
 output: html_document
 ---
 
-En este tutorial vas a aprender a descargar, leer, analizar y visualizar datos espaciales grillados en R usando datos tidy. Va a ser un tutorial participativo con programación en vivo y ejercicios, bajo la idea de que puedas usar los datos para responder tus propias preguntas, escribiendo tu propio código. 
+En este tutorial vas a aprender a leer, analizar y visualizar datos espaciales grillados en R usando datos tidy. Va a ser un tutorial participativo con programación en vivo y ejercicios, bajo la idea de que puedas usar los datos para responder tus propias preguntas, escribiendo tu propio código. 
 
 Al final del taller vas a haber aprendido como: 
 
-- descargar datos meteorológicos y climáticos programáticamente desde R, 
-- leerlos en un formato tidy, 
+- leer datos meteorológicos y climáticos en un formato tidy, 
 - computar estadísicas espaciales y temporales, 
 - graficar los resultados usando ggplot2 y extensiones.
 
@@ -20,12 +19,12 @@ Durante el tutorial les propondremos ejercicios para que resuelvan en sus comput
 
 ## Agenda
 
-Esta es la agenda tentativa del tutorial comenzando a las 15:15 UTC-3 (podés revisar el horario en tu país en el [programa de tutoriales](https://user2021.r-project.org/program/tutorials/) o en [este link](https://arewemeetingyet.com/UTC/2021-07-07/18:15/Datos%20espaciales%20a%20lo%20tidy#eyJ1cmwiOiJodHRwczovL2VsaW9jYW1wLmdpdGh1Yi5pby9lc3BhY2lhbGVzLXRpZHktdHV0b3JpYWwvIn0=)). Haremos todo lo posible por respetar el horario de las pausas para que puedan organizarte mejor. 
+Esta es la agenda tentativa del tutorial comenzando a las 18:00 UTC-3. Haremos todo lo posible por respetar el horario de las pausas para que puedan organizarte mejor. 
 
 |Duración (minutos) |Contenidos|
 |:---|----------|
 |10  | [Introducción](01_intro.html) |
-|45  | [Descarga y lectura de datos](02_lectura.html) |
+|45  | [Lectura de datos](02_lectura.html) |
 |5   | Pausa `r emo::ji("coffee")` |
 |55  | [Gráficos](03_graficado.html) |
 |5   | Pausa `r emo::ji("coffee")`  |
