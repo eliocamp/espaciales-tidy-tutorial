@@ -13,7 +13,7 @@
 
 <title>Datos espaciales a lo tidy</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -371,11 +371,7 @@ div.tocify {
 </div>
 
 
-<p>En este tutorial vas a aprender a leer, analizar y visualizar datos
-espaciales grillados en R usando datos tidy. Va a ser un tutorial
-participativo con programación en vivo y ejercicios, bajo la idea de que
-puedas usar los datos para responder tus propias preguntas, escribiendo
-tu propio código.</p>
+<p>En este tutorial vas a aprender a leer, analizar y visualizar datos espaciales grillados en R usando datos tidy. Va a ser un tutorial participativo con programación en vivo y ejercicios, bajo la idea de que puedas usar los datos para responder tus propias preguntas, escribiendo tu propio código.</p>
 <p>Al final del taller vas a haber aprendido como:</p>
 <ul>
 <li>leer datos meteorológicos y climáticos en un formato tidy,</li>
@@ -384,18 +380,12 @@ tu propio código.</p>
 </ul>
 <div id="antes-del-tutorial" class="section level2">
 <h2>Antes del tutorial</h2>
-<p>Durante el tutorial les propondremos ejercicios para que resuelvan en
-sus computadoras. Si bien esto no es obligatorio, les sugerimos que
-sigan las indicaciones para instalar paquetes y generar las credenciales
-necesarias que usaremos ese día.</p>
-<p><a href="preparacion.html"><strong>Instrucciones a seguir antes del
-tutorial</strong></a></p>
+<p>Durante el tutorial les propondremos ejercicios para que resuelvan en sus computadoras. Si bien esto no es obligatorio, les sugerimos que sigan las indicaciones para instalar paquetes y generar las credenciales necesarias que usaremos ese día.</p>
+<p><a href="preparacion.html"><strong>Instrucciones a seguir antes del tutorial</strong></a></p>
 </div>
 <div id="agenda" class="section level2">
 <h2>Agenda</h2>
-<p>Esta es la agenda tentativa del tutorial comenzando a las 18:00
-UTC-3. Haremos todo lo posible por respetar el horario de las pausas
-para que puedan organizarte mejor.</p>
+<p>Esta es la agenda tentativa del tutorial comenzando a las 18:00 UTC-3. Haremos todo lo posible por respetar el horario de las pausas para que puedan organizarte mejor.</p>
 <table>
 <thead>
 <tr class="header">
@@ -434,59 +424,22 @@ para que puedan organizarte mejor.</p>
 </tr>
 </tbody>
 </table>
-<p>Además de los materiales linkeados en la agenda, charlaremos sobre
-este <a href="ejemplo.html">ejemplo</a> y resolveremos algunos <a
-href="guia-practica.html">ejercicios</a>.</p>
+<p>Además de los materiales linkeados en la agenda, charlaremos sobre este <a href="ejemplo.html">ejemplo</a> y resolveremos algunos <a href="guia-practica.html">ejercicios</a>.</p>
 </div>
 <div id="sobre-nosotros" class="section level2">
 <h2>Sobre nosotros</h2>
 <p><strong>Elio Campitelli</strong></p>
-<p><img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/>
-Elio tiene una licenciatura en Ciencias de la Atmósfera y actualmente
-está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de
-Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación
-atmosférica del hemisferio sur influye en las condiciones meteorológicas
-de Sudamérica.</p>
-<p>Mantiene varios paquetes de R, como metR (paquete para manejo de
-datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar
-varias escalas de color en un gráfico). Es docente de Introducción a la
-Programación en la Diplomatura en análisis de datos aplicados al
-desarrollo de políticas públicas de la Universidad Nacional Guillermo
-Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. Es
-miembro fundador de <a href="http://metadocencia.org/">MetaDocencia</a>
-e instructore de <a href="https://carpentries.org/">The
-Carpentries</a>.</p>
-<p><a href="https://eliocamp.github.io/">eliocamp.github.io</a> | <a
-href="https://twitter.com/d_olivaw">@d_olivaw</a></p>
+<p><img src="img/elio_cicle.png" alt="Foto de Elio" width="100" height="100" align="left" style="margin:10px"/> Elio tiene una licenciatura en Ciencias de la Atmósfera y actualmente está haciendo un doctorado en Ciencias de la Atmósfera en el Centro de Investigaciones del Mar y la Atmósfera para estudiar cómo la circulación atmosférica del hemisferio sur influye en las condiciones meteorológicas de Sudamérica.</p>
+<p>Mantiene varios paquetes de R, como metR (paquete para manejo de datos meteorológicos) y ggnewscale (extensión de ggplot2 para usar varias escalas de color en un gráfico). Es docente de Introducción a la Programación en la Diplomatura en análisis de datos aplicados al desarrollo de políticas públicas de la Universidad Nacional Guillermo Brown y dicta cursos y talleres de R aplicado a ciencia reproducible. Es miembro fundador de <a href="http://metadocencia.org/">MetaDocencia</a> e instructore de <a href="https://carpentries.org/">The Carpentries</a>.</p>
+<p><a href="https://eliocamp.github.io/">eliocamp.github.io</a> | <a href="https://twitter.com/d_olivaw">@d_olivaw</a></p>
 <p><strong>Pao Corrales</strong></p>
-<p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/>
-Pao es Licenciada en Ciencias de la Atmósfera y actualmente está
-realizando su doctorado en el Centro de Investigaciones del Mar y la
-Atmósfera, UBA-CONICET aplicando técnicas de asimilación de datos para
-mejorar pronósticos de eventos severos a corto plazo. Desde 2011 forma
-parte de Expedición Ciencia, una asociación civil dedicada a generar
-proyectos que permita a personas de todas las edades desarrollen el
-pensamiento científico, el placer por la exploración y la curiosidad
-permanente. En Expedición Ciencia lidera proyectos educativos como
-campamentos científicos y talleres para estudiantes y docentes.</p>
-<p>Desde 2017 forma parte de distintas comunidades de usuarios y
-usuarias de R (por ejemplo, R-Ladies Buenos Aires y LatinR) en las que
-genera actividades presenciales y virtuales. Paola también es
-instructora y entrenadora de instructores certificada por <a
-href="https://carpentries.org/">The Carpentries</a>, instructora
-certificada por <a
-href="https://education.rstudio.com/trainers/people/corrales+paola/">RStudio</a>
-y co-fundadora de <a
-href="http://metadocencia.org/">MetaDocencia</a>.</p>
-<p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> |
-<a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
+<p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Pao es Licenciada en Ciencias de la Atmósfera y actualmente está realizando su doctorado en el Centro de Investigaciones del Mar y la Atmósfera, UBA-CONICET aplicando técnicas de asimilación de datos para mejorar pronósticos de eventos severos a corto plazo. Desde 2011 forma parte de Expedición Ciencia, una asociación civil dedicada a generar proyectos que permita a personas de todas las edades desarrollen el pensamiento científico, el placer por la exploración y la curiosidad permanente. En Expedición Ciencia lidera proyectos educativos como campamentos científicos y talleres para estudiantes y docentes.</p>
+<p>Desde 2017 forma parte de distintas comunidades de usuarios y usuarias de R (por ejemplo, R-Ladies Buenos Aires y LatinR) en las que genera actividades presenciales y virtuales. Paola también es instructora y entrenadora de instructores certificada por <a href="https://carpentries.org/">The Carpentries</a>, instructora certificada por <a href="https://education.rstudio.com/trainers/people/corrales+paola/">RStudio</a> y co-fundadora de <a href="http://metadocencia.org/">MetaDocencia</a>.</p>
+<p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> | <a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
 <hr />
 <div id="licencia-de-uso" class="section level3">
 <h3>Licencia de uso</h3>
-<p><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-Todos los materiales de este curso se encuentran bajo la licencia
-<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative
-Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+<p><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /> Todos los materiales de este curso se encuentran bajo la licencia <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
 </div>
 </div>
 

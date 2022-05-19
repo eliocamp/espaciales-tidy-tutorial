@@ -13,7 +13,7 @@
 
 <title>Calculos</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -373,9 +373,7 @@ div.tocify {
 
 <div id="haciendo-cálculos" class="section level2">
 <h2>Haciendo cálculos</h2>
-<p>Una de las grandes ventajas de tener los datos organizados en un
-data.frame tidy es que es posible aplicar todas las técnicas de análisis
-de datos tradicionales a estos datos grillados.</p>
+<p>Una de las grandes ventajas de tener los datos organizados en un data.frame tidy es que es posible aplicar todas las técnicas de análisis de datos tradicionales a estos datos grillados.</p>
 <pre class="r"><code># Cargo los paquetes necesarios
 library(magrittr)
 library(ggplot2)
@@ -391,10 +389,7 @@ mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
 
 # Leo los datos
 sst &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = &quot;sst&quot;)</code></pre>
-<p>Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la
-superficie del mar (SST)? Esencialmente es calcular el promedio de
-<code>sst</code> para cada longitud y latitud, una operación que se
-traduce de forma directa a operaciones en grupos.</p>
+<p>Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)? Esencialmente es calcular el promedio de <code>sst</code> para cada longitud y latitud, una operación que se traduce de forma directa a operaciones en grupos.</p>
 </div>
 <div id="section" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -421,10 +416,8 @@ traduce de forma directa a operaciones en grupos.</p>
 </div>
 <div id="section-1" class="section level2 unlisted unnumbered">
 <h2 class="unlisted unnumbered"></h2>
-<p>Veamos ahora series temporales te SST en distintos puntos, para tener
-una idea de algunas características de su variabilidad.</p>
-<p>Definamos tres puntos que representan zonas muy disímiles del
-planeta:</p>
+<p>Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad.</p>
+<p>Definamos tres puntos que representan zonas muy disímiles del planeta:</p>
 <pre class="r"><code>puntos &lt;- tibble::tribble(~longitude, ~latitude,
                           180       , 0, 
                           170       , 50, 
@@ -434,8 +427,7 @@ planeta:</p>
   geom_point() +
   mapa()</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
-<p>Para filtrar los datos de SST correspondientes a esos puntos, se
-puede hacer un join.</p>
+<p>Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join.</p>
 </div>
 <div id="section-2" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -462,18 +454,9 @@ puede hacer un join.</p>
 </div>
 <div id="section-3" class="section level2">
 <h2></h2>
-<p>Se puede ver que las región tropical tiene una variabilidad de
-relativa baja frecuencia y sin un ciclo anual pronunciado. Por otro
-lado, en los puntos extratropicales la variabilidad más fuerte es el
-ciclo anual, que naturalmente se invierte entre el hemisferio norte y el
-hemisferio sur.</p>
-<p>Pero el ciclo anual no es interesante, es una variabilidad casi
-constante, predecible. Lo que es interesante es lo impredecible, lo que
-se aleja del ciclo anual. Para esto se calculan las anomalías: el
-alejamiento de los datos con respecto a el ciclo anual promedio.</p>
-<p>Para calcular anomalías, hay que calcular el valor del dato menos el
-valor promedio del dato, para cada mes, y cada latitud y longitud.
-Nuevamente esto se traduce durectamente en operaciones sobre grupos.</p>
+<p>Se puede ver que las región tropical tiene una variabilidad de relativa baja frecuencia y sin un ciclo anual pronunciado. Por otro lado, en los puntos extratropicales la variabilidad más fuerte es el ciclo anual, que naturalmente se invierte entre el hemisferio norte y el hemisferio sur.</p>
+<p>Pero el ciclo anual no es interesante, es una variabilidad casi constante, predecible. Lo que es interesante es lo impredecible, lo que se aleja del ciclo anual. Para esto se calculan las anomalías: el alejamiento de los datos con respecto a el ciclo anual promedio.</p>
+<p>Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud. Nuevamente esto se traduce durectamente en operaciones sobre grupos.</p>
 </div>
 <div id="section-4" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -492,10 +475,7 @@ Nuevamente esto se traduce durectamente en operaciones sobre grupos.</p>
 </div>
 <div id="section-5" class="section level2">
 <h2></h2>
-<p>Entonces ahora podemos ver a las anomalías. Por definición, las
-anomalías tienen media cero y lo interesante es ver cuánto se alejan de
-ese promedio, lo cual hacer que una escala divergente sea la elección
-natural para visualizarlas.</p>
+<p>Entonces ahora podemos ver a las anomalías. Por definición, las anomalías tienen media cero y lo interesante es ver cuánto se alejan de ese promedio, lo cual hacer que una escala divergente sea la elección natural para visualizarlas.</p>
 <pre class="r"><code>sst %&gt;% 
   .[time == unique(time)[229]] %&gt;%       # elijo un mes en particular 
   ggplot(aes(longitude, latitude)) +
@@ -506,20 +486,13 @@ natural para visualizarlas.</p>
 </div>
 <div id="eof" class="section level2">
 <h2>EOF</h2>
-<p>Algunos métodos con datos grillados se presetan de forma más natural
-a la oganización de datos grillados en forma de matriz. Análisis de
-Componentes Principales (también llamado Empirical Orthogonal Functions
-en ciencias de la atmósfera) es uno de ellos.</p>
-<p>metR tiene la función <code>EOF()</code> que aplica componentes
-principales a los datos. Su primer argumento es una fórmula que define
-la estructura de la matriz de entrada a partir de los datos.</p>
+<p>Algunos métodos con datos grillados se presetan de forma más natural a la oganización de datos grillados en forma de matriz. Análisis de Componentes Principales (también llamado Empirical Orthogonal Functions en ciencias de la atmósfera) es uno de ellos.</p>
+<p>metR tiene la función <code>EOF()</code> que aplica componentes principales a los datos. Su primer argumento es una fórmula que define la estructura de la matriz de entrada a partir de los datos.</p>
 <p>Esta fórmula tiene la forma general:</p>
 <pre><code>variable ~ x + y | a + b</code></pre>
 <p>La idea es leer esto como</p>
-<p>“variable <em>en función de</em> la combinación de x e y en las filas
-y la combinación de a y b en las columnas”</p>
-<p>Entonces, vamos a calcular los primeros dos EOFs del campo de
-anomalías de SST.</p>
+<p>“variable <em>en función de</em> la combinación de x e y en las filas y la combinación de a y b en las columnas”</p>
+<p>Entonces, vamos a calcular los primeros dos EOFs del campo de anomalías de SST.</p>
 </div>
 <div id="section-6" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -540,15 +513,14 @@ anomalías de SST.</p>
 </div>
 <div id="section-7" class="section level2">
 <h2></h2>
-<p><code>EOF()</code> devuelve una lista de data.tables con la parte
-izqueirda, derecha y la varianza explicada por cada componente.</p>
+<p><code>EOF()</code> devuelve una lista de data.tables con la parte izqueirda, derecha y la varianza explicada por cada componente.</p>
 <pre class="r"><code>str(eofs)</code></pre>
 <pre><code>## List of 3
 ##  $ left :Classes &#39;data.table&#39; and &#39;data.frame&#39;:  13832 obs. of  4 variables:
 ##   ..$ longitude: num [1:13832] 0 2.5 5 7.5 10 12.5 15 17.5 20 22.5 ...
 ##   ..$ latitude : num [1:13832] 90 90 90 90 90 90 90 90 90 90 ...
 ##   ..$ PC       : Ord.factor w/ 2 levels &quot;PC1&quot;&lt;&quot;PC2&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##   ..$ sst_a    : num [1:13832] 6.07e-15 7.13e-15 7.37e-15 6.70e-15 7.17e-15 ...
+##   ..$ sst_a    : num [1:13832] 7.36e-15 7.32e-15 7.34e-15 7.37e-15 7.37e-15 ...
 ##   ..- attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt; 
 ##  $ right:Classes &#39;data.table&#39; and &#39;data.frame&#39;:  1008 obs. of  3 variables:
 ##   ..$ time : POSIXct[1:1008], format: &quot;1979-01-01&quot; &quot;1979-02-01&quot; ...
@@ -573,18 +545,9 @@ izqueirda, derecha y la varianza explicada por cada componente.</p>
   scale_fill_divergent() +
   facet_wrap(~PC, ncol = 1)</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-14-1.png" width="480" /></p>
-<p>Es primera componente principal nos indica que la mayor parte de la
-variabildiad de SST está asociada a cambios en la temperatura del
-Pacífico ecuatorial. Esto se conoce como la oscilación de El Niño.</p>
-<p>Una forma de calcular un índice de esta oscilación que no requiere
-calculos “raros” como EOF es con el <a
-href="https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain">índice
-ENSO34</a>, que se define como las anomalías de temperatura promedio
-entre 5ºS y 5ºN en la región entre 170ºO y 120ºO.</p>
-<p>Podemos calcular este índice con nuestros datos filtrando primero los
-datos que están en esa caja y luego calculando el promedio para cada
-tiempo. Nuevamente, estas son operaciones básicas del análisis de datos
-tidy.</p>
+<p>Es primera componente principal nos indica que la mayor parte de la variabildiad de SST está asociada a cambios en la temperatura del Pacífico ecuatorial. Esto se conoce como la oscilación de El Niño.</p>
+<p>Una forma de calcular un índice de esta oscilación que no requiere calculos “raros” como EOF es con el <a href="https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain">índice ENSO34</a>, que se define como las anomalías de temperatura promedio entre 5ºS y 5ºN en la región entre 170ºO y 120ºO.</p>
+<p>Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo. Nuevamente, estas son operaciones básicas del análisis de datos tidy.</p>
 </div>
 <div id="section-8" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -610,22 +573,12 @@ tidy.</p>
   geom_line() +
   geom_hline(yintercept = c(-0.5, 0.5))</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-17-1.png" width="480" /></p>
-<p>Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan
-tradicionalmente para definir eventos de ENSO positivos y negativos
-respetivamente.</p>
+<p>Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan tradicionalmente para definir eventos de ENSO positivos y negativos respetivamente.</p>
 </div>
 <div id="regresiones-y-correlaciones" class="section level2">
 <h2>Regresiones y correlaciones</h2>
-<p>Para asegurarnos de que este índice realmetne representa lo que
-creemos que representa, podemos calcular la regresión de la SST en cada
-punto con este índice. Para eso primero hay que unir los datos de SST
-con el índice que calculamos y luego calcular la regresión en cada
-punto.</p>
-<p>Un problema acá es que <code>lm()</code> es muy lento principalmente
-porque se toma mucho tiempo tratando de entender la fórmula que es el
-primer argumento. Para acelerar las cosas, metR tiene la función
-<code>FitLm()</code> que sirve para calcular los coeficientes de
-regresiones lineales mucho más rápido.</p>
+<p>Para asegurarnos de que este índice realmetne representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice. Para eso primero hay que unir los datos de SST con el índice que calculamos y luego calcular la regresión en cada punto.</p>
+<p>Un problema acá es que <code>lm()</code> es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento. Para acelerar las cosas, metR tiene la función <code>FitLm()</code> que sirve para calcular los coeficientes de regresiones lineales mucho más rápido.</p>
 </div>
 <div id="section-10" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -658,10 +611,8 @@ regresiones lineales mucho más rápido.</p>
 </div>
 <div id="section-11" class="section level2">
 <h2></h2>
-<p>Esto se ve bien. Ahora podemos ver si hay relación entre este índice
-y otras variables climáticas.</p>
-<p>Leamos los datos de presión a nivel del mar y precipitación
-total.</p>
+<p>Esto se ve bien. Ahora podemos ver si hay relación entre este índice y otras variables climáticas.</p>
+<p>Leamos los datos de presión a nivel del mar y precipitación total.</p>
 <pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, 
                     vars = c(&quot;msl&quot;, pp = &quot;tp&quot;))</code></pre>
 <div id="data.table-6" class="section level3">

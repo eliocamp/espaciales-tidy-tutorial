@@ -13,7 +13,7 @@
 
 <title>Relación entre presión a nivel del mar y ENSO</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -307,8 +307,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Relación entre presión a nivel del mar y
-ENSO</h1>
+<h1 class="title toc-ignore">Relación entre presión a nivel del mar y ENSO</h1>
 
 </div>
 
@@ -319,16 +318,14 @@ library(ggplot2)
 library(dplyr)
 library(data.table)
 library(metR)</code></pre>
-<p>Voy leer los datos de temperatura de la superficie del mar y de
-presión a nivel del mar.</p>
+<p>Voy leer los datos de temperatura de la superficie del mar y de presión a nivel del mar.</p>
 <pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = c(&quot;sst&quot;, presion = &quot;msl&quot;))</code></pre>
 <p>Y también voy a armarme una función para plotear un mapa</p>
 <pre class="r"><code>mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
   geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
                fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
 }</code></pre>
-<p>Primero, calculo anomalías mensuales de temperatura de superficie del
-mar.</p>
+<p>Primero, calculo anomalías mensuales de temperatura de superficie del mar.</p>
 <div id="section" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table" class="section level3">
@@ -349,8 +346,7 @@ mar.</p>
 </div>
 <div id="section-1" class="section level2">
 <h2></h2>
-<p>Con esto, defino el índice ENSO como la anomalía media en una caja
-entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
+<p>Con esto, defino el índice ENSO como la anomalía media en una caja entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
 </div>
 <div id="section-2" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -383,8 +379,7 @@ entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
        caption = &quot;Fuente: ERA5 (1979–2020)&quot;) +
   theme_minimal()</code></pre>
 <p><img src="ejemplo_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel
-global?</p>
+<p>¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel global?</p>
 </div>
 <div id="section-4" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
