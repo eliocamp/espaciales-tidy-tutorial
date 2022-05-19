@@ -13,6 +13,18 @@ paquetes <- c("metR", "ggplot2", "data.table", "ggperiodic", "ggnewscale")
 install.packages(paquetes)
 ```
 
+Para manipular los datos tendremos ejemplos usando **dplyr** y **dtplyr** o **data.table** según lo que sepas y te resulte más cómodo. Por eso te pedimos que instales estos paquetes:
+
+``` {.r}
+install.packages(c("dplyr", "dtplyr"))
+```
+
+o si preferís:
+
+``` {.r}
+install.packages("data.table")
+```
+
 Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes **ncdf4** y **udunits2**. 
 
 En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar con:
@@ -21,7 +33,7 @@ En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-
 sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev
 ```
 
-En windowns no es necesario que instales ningún programa o librería extra. 
+En windows no es necesario que instales ningún programa o librería extra. 
 
 Finalmente, podrás instalar los paquetes de R con:
 
@@ -43,7 +55,12 @@ Y luego instalar el paquete de R con:
 install.packages("proj4")
 ```
 
+Finalmente, será necesario instalar:
+
+``` {.r}
+install.packages(c("PCICt", "raster", "rgdal"))
+```
 
 # Plan B
 
-Si no lográs que funcione o preferís no instalar los paquetes en tu computadora, podés usar [este proyecto de RStudio Cloud](https://rstudio.cloud/project/xxxxxx), donde dejamos todos los paquetes instalados. Tené encuenta que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene sus limitaciones pero debería ser suficiente para el tutorial). Además deberás crear una cuenta en Climate Data Store y seguir los pasos de configuración en R.
+Si no lográs que funcione o preferís no instalar los paquetes en tu computadora, podés usar [este proyecto de RStudio Cloud](https://rstudio.cloud/project/xxxxxx), donde dejamos todos los paquetes instalados. Tené encuenta que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene sus limitaciones pero debería ser suficiente para el tutorial). 
