@@ -14,12 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 ## Haciendo cálculos
 
-
-Una de las grandes ventajas de tener los datos organizados en un data.frame tidy es que es posible aplicar todas las técnicas de análisis de datos tradicionales a estos datos grillados. 
-
+Una de las grandes ventajas de tener los datos organizados en un data.frame tidy es que es posible aplicar todas las técnicas de análisis de datos tradicionales a estos datos grillados.
 
 ```{r}
 # Cargo los paquetes necesarios
@@ -37,12 +34,11 @@ mapa <- function(fill = "white", colour = NA) {
 
 # Leo los datos
 sst <- ReadNetCDF("datos/temperatura_mar.nc", vars = "sst")
+sst$sst <- sst$sst - 273.15   # Paso a grados centígrados
 ```
 
-
-Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)? 
+Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)?
 Esencialmente es calcular el promedio de `sst` para cada longitud y latitud, una operación que se traduce de forma directa a operaciones en grupos.
-
 
 ##  {.tabset .unlisted .unnumbered}
 
@@ -68,19 +64,17 @@ sst %>%
   mapa() 
 ```
 
+##  {.unlisted .unnumbered}
 
-## {.unlisted .unnumbered}
+Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad.
 
-Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad. 
-
-Definamos tres puntos que representan zonas muy disímiles del planeta:
-
+Definamos tres puntos que representan zonas muy disimiles del planeta:
 
 ```{r}
-puntos <- tibble::tribble(~longitude, ~latitude,
-                          180       , 0, 
-                          170       , 50, 
-                          280       , -60) %>% 
+puntos <- tibble::tribble(~longitude, ~latitude, ~ nombre,
+                          180       , 0,        "Ecuatorial",
+                          170       , 45,       "Extratropical Norte",
+                          200       , -40,      "Extratropical Sur") %>% 
   as.data.table()
 ```
 
@@ -90,9 +84,11 @@ ggplot(puntos, aes(longitude, latitude)) +
   mapa()
 ```
 
-Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join. 
+Como se ve, tenemos un punto en el Pacífico ecuatorial, otro en altas latitudes del hemisferio norte y otro en altas latitudes del hemisferio sur.
 
-## {.tabset .unlisted .unnumbered}
+Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join.
+
+##  {.tabset .unlisted .unnumbered}
 
 ### data.table {.unlisted .unnumbered}
 
@@ -101,8 +97,7 @@ sst %>%
   .[puntos, on = .NATURAL] %>% 
   ggplot(aes(time, sst)) +
   geom_line()+ 
-  facet_wrap(~ longitude + latitude, scales = "free_y", 
-             labeller = label_both, ncol = 1)
+  facet_wrap(~ nombre, scales = "free_y", ncol = 1)
 ```
 
 ### dplyr
@@ -118,18 +113,18 @@ sst %>%
 
 ## 
 
-Se puede ver que las región tropical tiene una variabilidad de relativa baja frecuencia y sin un ciclo anual pronunciado. 
-Por otro lado, en los puntos extratropicales la variabilidad más fuerte es el ciclo anual, que naturalmente se invierte entre el hemisferio norte y el hemisferio sur. 
+Se puede ver que las región tropical tiene una variabilidad de relativa baja frecuencia y sin un ciclo anual pronunciado.
+Por otro lado, en los puntos extratropicales la variabilidad más fuerte es el ciclo anual, que naturalmente se invierte entre el hemisferio norte y el hemisferio sur.
+Mirando la escala, se ve que la región ecuatorial varía poco más de 3 grados mientras que en las regiones extratopicales la variación es mucho mayor, del órden de 10º u 8º.
 
-Pero el ciclo anual no es interesante, es una variabilidad casi constante, predecible. 
-Lo que es interesante es lo impredecible, lo que se aleja del ciclo anual. 
-Para esto se calculan las anomalías: el alejamiento de los datos con respecto a el ciclo anual promedio. 
+Pero el ciclo anual no es interesante, ya que es una variabilidad casi constante y predecible.
+Lo que es interesante es lo impredecible, lo que se aleja del ciclo anual.
+Para esto se calculan las anomalías: el alejamiento de los datos con respecto a el ciclo anual promedio.
 
-Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud. 
-Nuevamente esto se traduce durectamente en operaciones sobre grupos.
+Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud.
+Nuevamente esto se traduce directamente en operaciones sobre grupos.
 
-## {.tabset .unlisted .unnumbered}
-
+##  {.tabset .unlisted .unnumbered}
 
 ### data.table
 
@@ -149,9 +144,8 @@ sst <- sst %>%
 
 ## 
 
-Entonces ahora podemos ver a las anomalías. 
+Ahora podemos graficar campos de anomalías en vez de de datos crudos.
 Por definición, las anomalías tienen media cero y lo interesante es ver cuánto se alejan de ese promedio, lo cual hacer que una escala divergente sea la elección natural para visualizarlas.
-
 
 ```{r}
 sst %>% 
@@ -162,33 +156,95 @@ sst %>%
   scale_fill_divergent()
 ```
 
+O, también, podemos ver las series temporales en los puntos que elegimos anteriormente.
+
+```{r}
+sst %>% 
+  .[puntos, on = .NATURAL] %>% 
+  ggplot(aes(time, sst_a)) +
+  geom_line()+ 
+  facet_wrap(~ nombre, ncol = 1)
+```
+
+En este gráfico se puede ver que la variabilidad de la temperatura con respecto al ciclo anual es comparable en los tres puntos.
+
+Podríamos querer cuantificar esto calculando el desvío estándar de cada punto de grilla.
+Igual que antes, esto se traduce en una operación por grupos: calcular el desvío por cada combinación de longitud y latitud.
+
+##  {.tabset .unlisted .unnumbered}
+
+### data.table {.unlisted .unnumbered}
+
+```{r}
+sst %>% 
+  .[, .(sd = sd(sst_a)), by = .(longitude, latitude)] %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sd), na.fill = TRUE) +
+  mapa()
+```
+
+### dplyr {.unlisted .unnumbered}
+
+```{r}
+sst %>% 
+  group_by(longitude, latitude) %>% 
+  summarise(sd = sd(sst_a)) %>% 
+  ungroup() %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sd), na.fill = TRUE) +
+  mapa() 
+```
+
+##  {.unlisted .unnumbered}
+
+Acá podemos ver que hay una región del Pacífico central que tiene una variabilidad particularmente alta.
+Esta es la región de [El Niño](https://es.wikipedia.org/wiki/El_Ni%C3%B1o_(fen%C3%B3meno)) o ENSO, y representa una de los fenómenos climáticos de mayor influencia a nivel global.
 
 ## EOF
 
+Además de usar los mismos métodos de siempre, como `mean()`, `sd()` y etc..., hay ciertos métodos que son más específicos o que no se pueden traducir tan fácilmente a operaciones simples sobre grupos.
 
-Algunos métodos con datos grillados se presetan de forma más natural a la oganización de datos grillados en forma de matriz.
-Análisis de Componentes Principales (también llamado Empirical Orthogonal Functions en ciencias de la atmósfera) es uno de ellos. 
+Algunos métodos con datos grillados se prestan de forma más natural a la organización de datos grillados en forma de matriz.
+[Análisis de Componentes Principales](https://es.wikipedia.org/wiki/An%C3%A1lisis_de_componentes_principales) (también llamado Empirical Orthogonal Functions, o EOF, en ciencias de la atmósfera) es uno de ellos.
 
-metR tiene la función `EOF()` que aplica componentes principales a los datos. 
-Su primer argumento es una fórmula que define la estructura de la matriz de entrada a partir de los datos. 
+EOF es una metodología genérica que se puede aplicar a cualquier tipo de datos, pero en el contexto de los datos grillados permite computar una serie de campos cuya combinación lineal reconstruyen los datos originales.
+El truco es que estos campos tienen "jerarquía": el primer campo es el que más variabilidad explica, el segundo campo, el que le sigue, y así.
+De esta manera, se puede analizar la variabilidad de muchísimos campos usando sólo unos pocos.
+
+metR tiene la función `EOF()` que aplica componentes principales a los datos.
+Su primer argumento es una fórmula que define la estructura de la matriz de entrada a partir de los datos.
 
 Esta fórmula tiene la forma general:
 
-```
 variable ~ x + y | a + b
-``` 
 
-La idea es leer esto como 
+La idea es leer esto como
 
-"variable _en función de_ la combinación de x e y en las filas y la combinación de a y b en las columnas"
+"variable *en función de* la combinación de x e y en las filas y la combinación de a y b en las columnas"
 
 Entonces, vamos a calcular los primeros dos EOFs del campo de anomalías de SST.
+Un detalle con los datos grillados es que, como están organizados en una grilla regular en longitud y latitud, los puntos en altas latitudes representan un área cada vez menor.
+Para corregir esto hay que pesar los datos por $\sqrt{\cos (\mathrm{lat})}$
 
-## {.tabset .unlisted .unnumbered}
+##  {.tabset .unlisted .unnumbered}
 
 ### data.table
 
-```{r}
+```{r include=FALSE}
+# Hacemos un poco de trampa para asegurarnos de que el signo sea más fácil de interpretar
+eofs <- sst %>%
+  .[!is.na(sst_a)] %>% 
+  .[, sst_a := sst_a*sqrt(cos(latitude*pi/180))] %>% 
+  EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)
+
+correccion <- eofs$left %>% 
+  .[abs(latitude) < 10, sign(mean(sst_a)), by = PC]
+
+eofs$left <- eofs$left[correccion, on = "PC"][, sst_a := sst_a*V1][, V1 := NULL]
+eofs$right <- eofs$right[correccion, on = "PC"][, sst_a := sst_a*V1][, V1 := NULL]
+```
+
+```{r, eval = FALSE}
 eofs <- sst %>%
   .[!is.na(sst_a)] %>% 
   .[, sst_a := sst_a*sqrt(cos(latitude*pi/180))] %>% 
@@ -206,13 +262,11 @@ eofs <- sst %>%
 
 ## 
 
-`EOF()` devuelve una lista de data.tables con la parte izqueirda, derecha y la varianza explicada por cada componente. 
-
+`EOF()` devuelve una lista de data.tables con la parte izquierda (en este caso, espacial), derecha (en este caso, temporal) y la varianza explicada por cada componente.
 
 ```{r}
-str(eofs)
+str(eofs, 1)
 ```
-
 
 Si queremos ver la parte espacial, extraemos la parte izquierda:
 
@@ -225,17 +279,35 @@ eofs$left %>%
   facet_wrap(~PC, ncol = 1)
 ```
 
-Es primera componente principal nos indica que la mayor parte de la variabildiad de SST está asociada a cambios en la temperatura del Pacífico ecuatorial. 
-Esto se conoce como la oscilación de El Niño. 
+::: {.alert .alert-info}
+El signo de los EOFs es arbitrario y es posible que el código te devuelva campos con el signo contrario. Esto no es un problema porque la parte temporal también va a cambiar de signo y entonces la interpretación física es la misma.
+:::
 
+Es primera componente principal nos indica que la mayor parte de la variabilidad de la temperatura del mar está asociada a cambios en la temperatura del Pacífico ecuatorial; justamente en la región del El Niño.
 
-Una forma de calcular un índice de esta oscilación que no requiere calculos "raros" como EOF es con el [índice ENSO34](https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain), que se define como las anomalías de temperatura promedio entre 5ºS y 5ºN en la región entre 170ºO y 120ºO. 
+La segunda componente tiene anomalías cálidas relativamente homogéneas en todo el globo.
+Eso es, seguramente, la señal del calentamiento global.
 
-Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo. 
+Podemos ver cómo se comporta la parte temporal extrayendo la parte derecha.
+
+```{r}
+eofs$right %>% 
+  ggplot(aes(time, sst_a)) +
+  geom_line(aes(color = PC))
+```
+
+Como se ve, el PC2 tiene una tendencia positiva y valores positivos en el pasado reciente.
+Combinado con el campo de anomalías positivo, implica una tendencia de temperatura positiva.
+
+El PC1 tiene una variabilidad más alta y algunos picos bien definidos (en 1983, 1997, 2015).
+Estos eventos donde este índice es muy positivo implican momentos en los que la superficie del mar en el Pacífico está particularmente cálida y son conocidos como eventos El Niño (los eventos contrarios son La Niña).
+
+Una forma de calcular un índice de esta oscilación que no requiere cálculos "raros" como EOF es con el [índice ENSO34](https://www.pmel.noaa.gov/elnino/nino-3-4-enso-index-explain), que se define como las anomalías de temperatura promedio entre 5ºS y 5ºN en la región entre 170ºO y 120ºO.
+
+Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo.
 Nuevamente, estas son operaciones básicas del análisis de datos tidy.
 
-
-## {.tabset .unlisted .unnumbered}
+##  {.tabset .unlisted .unnumbered}
 
 ### data.table
 
@@ -257,26 +329,28 @@ enso <- sst %>%
 
 ## 
 
-El resultado:
+El resultado de este índice es muy similar al EOF1 obtenido anteriormente.
 
 ```{r}
 ggplot(enso, aes(time, enso34)) +
   geom_line() +
-  geom_hline(yintercept = c(-0.5, 0.5))
+  geom_hline(yintercept = c(-0.5, 0.5)) +
+  geom_line(data = eofs$right[PC == "PC1"], 
+            aes(time, sst_a/sd(sst_a)),
+            color = "#a56de2")
 ```
 
-
-Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan tradicionalmente para definir eventos de ENSO positivos y negativos respetivamente.
+Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan tradicionalmente para definir eventos de ENSO positivos y negativos respectivamente.
 
 ## Regresiones y correlaciones
 
-Para asegurarnos de que este índice realmetne representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice. 
-Para eso primero hay que unir los datos de SST con el índice que calculamos y luego calcular la regresión en cada punto. 
+Para asegurarnos de que este índice realmente representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice.
+Para eso primero hay que unir los datos de SST con el índice que calculamos y luego calcular la regresión en cada punto.
 
-Un problema acá es que `lm()` es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento. 
-Para acelerar las cosas, metR tiene la función `FitLm()` que sirve para calcular los coeficientes de regresiones lineales mucho más rápido. 
+Un problema acá es que `lm()` es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento.
+Para acelerar las cosas, metR tiene la función `FitLm()` que sirve para calcular los coeficientes de regresiones lineales mucho más rápido.
 
-## {.tabset .unlisted .unnumbered}
+##  {.tabset .unlisted .unnumbered}
 
 ### data.table
 
@@ -308,54 +382,58 @@ sst %>%
 
 ## 
 
+Se puede ver que este patrón es muy similar al obtenido mediante EOF.  
 
-Esto se ve bien. 
-Ahora podemos ver si hay relación entre este índice y otras variables climáticas.
-
-
-Leamos los datos de presión a nivel del mar y precipitación total.
-
+Lo mismo pondemos hacer si queremos explorar si hay relación entre este índice y otras variables climáticas.
+En el archivo "datos/precipitacion.nc" hay datos de precipitación mensual para la región de Sudamérica. 
+Podemos leerlo, calcular anomalías, unir con el índice de ENSO y calcular la correlación para cada longitud y latitud. 
 
 ```{r}
-datos <- ReadNetCDF("datos/temperatura_mar.nc", 
-                    vars = c("msl", pp = "tp"))
+precipitacion <- ReadNetCDF("datos/precipitación.nc", 
+                            vars = c(pp = "tp"))
 ```
+
+##  {.tabset .unlisted .unnumbered}
 
 ### data.table
 
 ```{r}
-correlacion <- datos %>% 
-  melt(id.vars = c("time", "longitude", "latitude")) %>% 
-  .[, value := value - mean(value), by = .(longitude, latitude, variable, month(time))] %>% 
+correlacion <- precipitacion %>% 
+  .[, pp_a := pp - mean(pp), by = .(longitude, latitude, month(time))] %>% 
   .[enso, on = "time"] %>% 
-  .[, .(correlacion = cor(value, enso34)), by = .(latitude, longitude, variable)]
+  .[, .(correlacion = cor(pp, enso34)), by = .(longitude, latitude)]
 ```
 
-
-### dplyr 
+### dplyr
 
 ```{r, eval=FALSE}
-correlacion <- datos %>%
-  tidyr::pivot_longer(cols = c(msl, pp), names_to = "variable") %>% 
-  group_by(longitude, latitude, variable, month(time)) %>% 
-  mutate(value = value - mean(value)) %>% 
-  left_join(enso, by = "time") %>% 
-  group_by(latitude, longitude, variable) %>% 
-  summarise(correlacion = cor(value, enso34)) %>% 
-  ungroup()
+correlacion <- precipitacion %>% 
+  group_by(longitude, latitude, month(time)) %>% 
+  mutate(pp_a = pp - mean(pp)) %>% 
+  ungroup() %>% 
+  right_join(enso, by = "time") %>% 
+  group_by(latitude, longitude) %>% 
+  summarise(correlacion = cor(pp_a, enso34)) %>% 
+  ungroup() 
 ```
 
 ## 
 
+Y luego podemos plotear el resultado:
+
+  
 ```{r}
 correlacion %>% 
   ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = correlacion), breaks = AnchorBreaks(exclude = 0)) +
+  geom_contour_fill(aes(z = correlacion),
+                    breaks = AnchorBreaks(exclude = 0)) +
   scale_fill_divergent() +
   mapa(fill = NA, colour = "black") +
-  
   scale_x_longitude() +
   scale_y_latitude() +
-  coord_quickmap() +
-  facet_wrap(~variable, ncol = 2)
+  coord_quickmap(ylim = range(correlacion$latitude),
+                 xlim = range(correlacion$longitude))
 ```
+
+
+Como se ve, el índice de ENSO es un buen predictor de la precipitación en la región al rededor de Uruguay. 
