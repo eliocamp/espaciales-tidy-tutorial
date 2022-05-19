@@ -13,7 +13,7 @@
 
 <title>Lectura de datos</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -373,22 +373,50 @@ div.tocify {
 
 <div id="datos-en-.csv-.txt-etc" class="section level2">
 <h2>Datos en .csv, .txt, etc</h2>
-<p>Si de casualidad los datos que vas a usar están en un formato de texto o excel, podés usar cualquier función para leerlos que te resulte cómoda. Cómo siempre es importante tener presente el tipo de dato de cada columna, sobre todo si son datos desconocidos. ¿Tiene columnas con latitudes y longitudes? ¿Están en formato decimal o en grados y minutos? ¿R leyó estas columnas como número o texto?</p>
-<p>De alguna manera este es un punto en contra para este tipo de formatos, no tienen metadatos asociados o al menos <em>no vienen con el archivo</em>. En la próxima sección presentaremos un tipo de archivo que si cumple con estas cosas.</p>
+<p>Si de casualidad los datos que vas a usar están en un formato de
+texto o excel, podés usar cualquier función para leerlos que te resulte
+cómoda. Cómo siempre es importante tener presente el tipo de dato de
+cada columna, sobre todo si son datos desconocidos. ¿Tiene columnas con
+latitudes y longitudes? ¿Están en formato decimal o en grados y minutos?
+¿R leyó estas columnas como número o texto?</p>
+<p>De alguna manera este es un punto en contra para este tipo de
+formatos, no tienen metadatos asociados o al menos <em>no vienen con el
+archivo</em>. En la próxima sección presentaremos un tipo de archivo que
+si cumple con estas cosas.</p>
 </div>
 <div id="datos-en-netcdf" class="section level2">
 <h2>Datos en netCDF</h2>
-<p>Uno de estos tipos de formatos muy utilizado en ciencias para guardar datos atmosféricos grillados es el netCDF. La página web de unidata describe al formato netCDF como:</p>
+<p>Uno de estos tipos de formatos muy utilizado en ciencias para guardar
+datos atmosféricos grillados es el netCDF. La página web de unidata
+describe al formato netCDF como:</p>
 <ul>
-<li><p>Auto-descriptivo: Un netCDF contiene información sobre los datos que contiene</p></li>
-<li><p>Portable: Un archivo netCDF puede ser accedido por computadoras que almacenan enteros, caracteres y números de punto flotante de forma diferente.</p></li>
-<li><p>Escalable: Se puede acceder eficientemente a pequeños subsets de grandes bases de datos, incluso desde servidores remotos.</p></li>
-<li><p>Anexable: Se pueden añadir nuevos datos pueden añadirse a un archivo netCDF correctamente estructurado sin copiar el conjunto de datos ni redefinir su estructura.</p></li>
-<li><p>Compartible. Un escritor y varios lectores pueden acceder simultáneamente al mismo archivo netCDF.</p></li>
-<li><p>Archivable. El acceso a todas las formas anteriores de datos netCDF será compatible con las versiones actuales y futuras del software.</p></li>
+<li><p>Auto-descriptivo: Un netCDF contiene información sobre los datos
+que contiene</p></li>
+<li><p>Portable: Un archivo netCDF puede ser accedido por computadoras
+que almacenan enteros, caracteres y números de punto flotante de forma
+diferente.</p></li>
+<li><p>Escalable: Se puede acceder eficientemente a pequeños subsets de
+grandes bases de datos, incluso desde servidores remotos.</p></li>
+<li><p>Anexable: Se pueden añadir nuevos datos pueden añadirse a un
+archivo netCDF correctamente estructurado sin copiar el conjunto de
+datos ni redefinir su estructura.</p></li>
+<li><p>Compartible. Un escritor y varios lectores pueden acceder
+simultáneamente al mismo archivo netCDF.</p></li>
+<li><p>Archivable. El acceso a todas las formas anteriores de datos
+netCDF será compatible con las versiones actuales y futuras del
+software.</p></li>
 </ul>
-<p>Todo ese márketing lo que significa en la práctica es que los datos en netCDF son muy cómodos porque tienen los metadatos incluídos y porque es muy fácil leer sólo las partes necesarias. Existen muchos paquetes de R para leer (y escribir) archivos en este formato. En este tutorial vamos a usar <strong>metR</strong>.</p>
-<p>Los datos en archivos NetCDF puede ser bastante grandes y destruir tu sesión de R si tratás de leerlos enteros en memoria. Por eso, siempre es bueno primero fijarse qué tiene un archivo nuevo. Para eso, metR tiene la función GlanceNetCDF que muestra un vistazo de los metadatos del archivo. Vamos a trabajar con un archivo en este formato que contiene datos de reanálisis del NCEP.</p>
+<p>Todo ese márketing lo que significa en la práctica es que los datos
+en netCDF son muy cómodos porque tienen los metadatos incluídos y porque
+es muy fácil leer sólo las partes necesarias. Existen muchos paquetes de
+R para leer (y escribir) archivos en este formato. En este tutorial
+vamos a usar <strong>metR</strong>.</p>
+<p>Los datos en archivos NetCDF puede ser bastante grandes y destruir tu
+sesión de R si tratás de leerlos enteros en memoria. Por eso, siempre es
+bueno primero fijarse qué tiene un archivo nuevo. Para eso, metR tiene
+la función GlanceNetCDF que muestra un vistazo de los metadatos del
+archivo. Vamos a trabajar con un archivo en este formato que contiene
+datos de reanálisis del NCEP.</p>
 <pre class="r"><code>library(metR)
 # Archivo que viene con metR
 archivo &lt;- system.file(&quot;extdata&quot;, &quot;temperature.nc&quot;, package = &quot;metR&quot;)
@@ -405,12 +433,22 @@ metR::GlanceNetCDF(archivo)</code></pre>
 ##   level: 17 values from 10 to 1000 millibar
 ##   lat: 73 values from -90 to 90 degrees_north
 ##   lon: 144 values from 0 to 357.5 degrees_east</code></pre>
-<p>La salida de esta función muestra las variables que tiene el archivo y sus dimensiones.</p>
+<p>La salida de esta función muestra las variables que tiene el archivo
+y sus dimensiones.</p>
 <div class="alert alert-info">
-<p>¿Qué información podés deducir sobre el contenido del archivo a partir de esto?</p>
+<p>¿Qué información podés deducir sobre el contenido del archivo a
+partir de esto?</p>
 </div>
-<p>En este caso, el archivo tiene una sola variable, llamada <code>air</code> que es la temperatura media en Kelvin (un archivo netCDF puede tener muchas variables y no todas en la misma grilla). De las dimensiones del archivo, se ve que tiene dimensiones de tiempo, nivel, longitud y latitud. La latitud va de -90 a 90 y la longitud de 0 a 357.5, por lo que es un campo global. <code>level</code> es la coordenada vertical, que va de 1000 milibares (básicamente la superficie) a 10 millibares (la estratósfera media).</p>
-<p>Podemos hacer la cuenta de cuántas observaciones tiene este archivo:</p>
+<p>En este caso, el archivo tiene una sola variable, llamada
+<code>air</code> que es la temperatura media en Kelvin (un archivo
+netCDF puede tener muchas variables y no todas en la misma grilla). De
+las dimensiones del archivo, se ve que tiene dimensiones de tiempo,
+nivel, longitud y latitud. La latitud va de -90 a 90 y la longitud de 0
+a 357.5, por lo que es un campo global. <code>level</code> es la
+coordenada vertical, que va de 1000 milibares (básicamente la
+superficie) a 10 millibares (la estratósfera media).</p>
+<p>Podemos hacer la cuenta de cuántas observaciones tiene este
+archivo:</p>
 <pre class="r"><code>1*17*73*144</code></pre>
 <pre><code>## [1] 178704</code></pre>
 <p>Que puede leerse sin problema.</p>
@@ -432,7 +470,13 @@ temperatura</code></pre>
 </div>
 <div id="leyendo-variables" class="section level2">
 <h2>Leyendo variables</h2>
-<p>Y ahora podemos leer sin problemas. <code>ReadNetCDF()</code> por default trata de leer todas las variables, una en cada columna. Eso no siempre es posible o deseable, porque distintas variables pueden tener distintas dimensiones; como por ejemplo, si hay variables definidias en 2D mezcladas con variables definidas en 3D. Entonces lo que se puede hacer es elegir qué variables leer con el argumento <code>vars</code>.</p>
+<p>Y ahora podemos leer sin problemas. <code>ReadNetCDF()</code> por
+default trata de leer todas las variables, una en cada columna. Eso no
+siempre es posible o deseable, porque distintas variables pueden tener
+distintas dimensiones; como por ejemplo, si hay variables definidias en
+2D mezcladas con variables definidas en 3D. Entonces lo que se puede
+hacer es elegir qué variables leer con el argumento
+<code>vars</code>.</p>
 <p>Leamos primero la temperatura de la superficie del mar:</p>
 <pre class="r"><code>sst &lt;- ReadNetCDF(archivo, vars = &quot;sst&quot;)
 head(sst)</code></pre>
@@ -443,7 +487,10 @@ head(sst)</code></pre>
 ## 4: 1979-01-01       90       7.5 271.4601
 ## 5: 1979-01-01       90      10.0 271.4601
 ## 6: 1979-01-01       90      12.5 271.4601</code></pre>
-<p>Lo primero que a mí me gusta hacer cuando leo los datos es mirar el primer campo o un par de campos. Va a haber más sobre los detalles para visualizar estos datos con ggplot2 más adelante, pero por ahora usemos el viejo y confiable <code>geom_raster()</code>.</p>
+<p>Lo primero que a mí me gusta hacer cuando leo los datos es mirar el
+primer campo o un par de campos. Va a haber más sobre los detalles para
+visualizar estos datos con ggplot2 más adelante, pero por ahora usemos
+el viejo y confiable <code>geom_raster()</code>.</p>
 <pre class="r"><code># Además, cargo los paquetes necesarios
 library(magrittr)
 library(ggplot2)
@@ -471,11 +518,25 @@ library(data.table)</code></pre>
 </div>
 <div id="section-1" class="section level2">
 <h2></h2>
-<p>En este gráfico ya se ven varias cosas. Se ve que hay una clara estructura de mayores temperaturas cerca del ecuador, lo cual no debería sorprender a nadie. También se ve que, como lo que estamos leyendo es la temperatura de la superficie del mar, tenemos datos faltantes sobre los continentes. Esto puede molestar un poco para algunas operaciones, ¡pero nos viene bárbaro para tener el contorno de los continentes gratis! Finalmente, notar que como las longitudes van de 0º a 360º (en vez de -180º a 180º), el mapa sale centrado en el Océano Pacífico. Esto va a haber que tenerlo en cuenta cuando sea la hora de graficar los continentes con algo mejor que bloques grises.</p>
+<p>En este gráfico ya se ven varias cosas. Se ve que hay una clara
+estructura de mayores temperaturas cerca del ecuador, lo cual no debería
+sorprender a nadie. También se ve que, como lo que estamos leyendo es la
+temperatura de la superficie del mar, tenemos datos faltantes sobre los
+continentes. Esto puede molestar un poco para algunas operaciones, ¡pero
+nos viene bárbaro para tener el contorno de los continentes gratis!
+Finalmente, notar que como las longitudes van de 0º a 360º (en vez de
+-180º a 180º), el mapa sale centrado en el Océano Pacífico. Esto va a
+haber que tenerlo en cuenta cuando sea la hora de graficar los
+continentes con algo mejor que bloques grises.</p>
 </div>
 <div id="leyendo-regiones" class="section level2">
 <h2>Leyendo regiones</h2>
-<p>Es muy común tener muchos datos en unos pocos archivos netCDF pero necesitar sólo una parte. Por ejemplo, me voy a poner en los zapatos de un investigador neozelandés que le interese estudiar la temperatura de la superficie del mar cerca de Nueva Zelanda y sus islas cercanas. En este caso, podría leer sólo una región acotada usando el argumento <code>subset</code> :</p>
+<p>Es muy común tener muchos datos en unos pocos archivos netCDF pero
+necesitar sólo una parte. Por ejemplo, me voy a poner en los zapatos de
+un investigador neozelandés que le interese estudiar la temperatura de
+la superficie del mar cerca de Nueva Zelanda y sus islas cercanas. En
+este caso, podría leer sólo una región acotada usando el argumento
+<code>subset</code> :</p>
 <pre class="r"><code>ReadNetCDF(archivo, vars = &quot;sst&quot;, 
            subset = list(longitude = c(100, 200),
                          latitude = c(0, -90))) %&gt;% 
@@ -483,13 +544,21 @@ library(data.table)</code></pre>
   ggplot(aes(longitude, latitude)) +
   geom_raster(aes(fill = sst)) </code></pre>
 <p><img src="02_lectura_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>El argumento <code>subset</code> tiene que ser una lista cuyos elementos tienen los nombres de las dimensiones a usar para filtrar y cada elemento es un vector cuyo rango define el bloque de datos a leer.</p>
+<p>El argumento <code>subset</code> tiene que ser una lista cuyos
+elementos tienen los nombres de las dimensiones a usar para filtrar y
+cada elemento es un vector cuyo rango define el bloque de datos a
+leer.</p>
 <p>En el código anterior subset es:</p>
 <pre class="r"><code>list(longitude = c(100, 200),
      latitude = c(0, -90))</code></pre>
-<p>Lo que significa que se van a leer los datos con latitud entre -90º y 0º, y con longitud entre 100º y 200º.</p>
+<p>Lo que significa que se van a leer los datos con latitud entre -90º y
+0º, y con longitud entre 100º y 200º.</p>
 <div class="alert alert-info">
-<p>El argumento <code>subset</code> de <code>ReadNetCDF()</code> tiene otros aces bajo la manga, como usar <code>NA</code> para referirse al mínimo o al máximo valor posible en un rango a la hora de hacer un subset o leer regiones discontinuas de datos. Todo eso se puede leer en la ayuda: <code>?ReadNetCDF()</code>.</p>
+<p>El argumento <code>subset</code> de <code>ReadNetCDF()</code> tiene
+otros aces bajo la manga, como usar <code>NA</code> para referirse al
+mínimo o al máximo valor posible en un rango a la hora de hacer un
+subset o leer regiones discontinuas de datos. Todo eso se puede leer en
+la ayuda: <code>?ReadNetCDF()</code>.</p>
 </div>
 </div>
 

@@ -13,7 +13,7 @@
 
 <title>Antes del tutorial</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -371,25 +371,42 @@ div.tocify {
 </div>
 
 
-<p>En el tutorial les propondremos hacer ejercicios en sus propias computadoras, por eso te pedimos que sigas las siguientes instrucciones para tener todo listo ese día.</p>
+<p>En el tutorial les propondremos hacer ejercicios en sus propias
+computadoras, por eso te pedimos que sigas las siguientes instrucciones
+para tener todo listo ese día.</p>
 <div id="paquetes" class="section level1">
 <h1>Paquetes:</h1>
-<p>Durante este tutorial usaremos una serie de paquetes. Es posible que ya tengas algunos instalados, pero es importante que te asegures de tenerlos todos. Te sugerimos que corras las siguientes líneas de código y luego pruebes cargas las librerías.</p>
+<p>Durante este tutorial usaremos una serie de paquetes. Es posible que
+ya tengas algunos instalados, pero es importante que te asegures de
+tenerlos todos. Te sugerimos que corras las siguientes líneas de código
+y luego pruebes cargas las librerías.</p>
 <pre class="r"><code>paquetes &lt;- c(&quot;metR&quot;, &quot;ggplot2&quot;, &quot;data.table&quot;, &quot;ggperiodic&quot;, &quot;ggnewscale&quot;)
 install.packages(paquetes)</code></pre>
-<p>Para manipular los datos tendremos ejemplos usando <strong>dplyr</strong> y <strong>dtplyr</strong> o <strong>data.table</strong> según lo que sepas y te resulte más cómodo. Por eso te pedimos que instales estos paquetes:</p>
+<p>Para manipular los datos tendremos ejemplos usando
+<strong>dplyr</strong> y <strong>dtplyr</strong> o
+<strong>data.table</strong> según lo que sepas y te resulte más cómodo.
+Por eso te pedimos que instales estos paquetes:</p>
 <pre class="r"><code>install.packages(c(&quot;dplyr&quot;, &quot;dtplyr&quot;))</code></pre>
 <p>o si preferís:</p>
 <pre class="r"><code>install.packages(&quot;data.table&quot;)</code></pre>
-<p>Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para leer archivos NetCDF4 es necesario instalar los paquetes <strong>ncdf4</strong> y <strong>udunits2</strong>.</p>
-<p>En linux, estos paquetes dependen de las librerías de sistema netcdf y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar con:</p>
+<p>Vamos a trabajar con un tipo de archivo particular, los NetCDF4. Para
+leer archivos NetCDF4 es necesario instalar los paquetes
+<strong>ncdf4</strong> y <strong>udunits2</strong>.</p>
+<p>En linux, estos paquetes dependen de las librerías de sistema netcdf
+y udunits-2 respectivamente. En Ubuntu y derivados, se pueden instalar
+con:</p>
 <pre class="{·bash}"><code>sudo apt install libnetcdf-dev netcdf-bin libudunits2-dev</code></pre>
-<p>En windows no es necesario que instales ningún programa o librería extra.</p>
+<p>En windows no es necesario que instales ningún programa o librería
+extra.</p>
 <p>Finalmente, podrás instalar los paquetes de R con:</p>
 <pre class="r"><code>install.packages(c(&quot;udunits2&quot;, &quot;ncdf4&quot;))</code></pre>
-<p>Como nuestro planeta es una esfera, es útil poder proyectar los datos a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar el packete <strong>proj4</strong>, que depende de la librería de systema proj. Nuevamente, en ubuntu y derivados se puede instalar con:</p>
+<p>Como nuestro planeta es una esfera, es útil poder proyectar los datos
+a coordenadas que no sean sólo latitud/longitud. Para eso vamos a usar
+el packete <strong>proj4</strong>, que depende de la librería de systema
+proj. Nuevamente, en ubuntu y derivados se puede instalar con:</p>
 <pre class="{·bash}"><code>sudo apt install proj-bin</code></pre>
-<p>(Instrucciones para otros sistemas operativos <a href="https://proj.org/install.html">en la página del proyecto</a>)</p>
+<p>(Instrucciones para otros sistemas operativos <a
+href="https://proj.org/install.html">en la página del proyecto</a>)</p>
 <p>Y luego instalar el paquete de R con:</p>
 <pre class="r"><code>install.packages(&quot;proj4&quot;)</code></pre>
 <p>Finalmente, será necesario instalar:</p>
@@ -397,7 +414,12 @@ install.packages(paquetes)</code></pre>
 </div>
 <div id="plan-b" class="section level1">
 <h1>Plan B</h1>
-<p>Si no lográs que funcione o preferís no instalar los paquetes en tu computadora, podés usar <a href="https://rstudio.cloud/project/xxxxxx">este proyecto de RStudio Cloud</a>, donde dejamos todos los paquetes instalados. Tené encuenta que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene sus limitaciones pero debería ser suficiente para el tutorial).</p>
+<p>Si no lográs que funcione o preferís no instalar los paquetes en tu
+computadora, podés usar <a
+href="https://rstudio.cloud/project/xxxxxx">este proyecto de RStudio
+Cloud</a>, donde dejamos todos los paquetes instalados. Tené encuenta
+que necesitarás una cuenta en RStudio Cloud (la versión gratuita tiene
+sus limitaciones pero debería ser suficiente para el tutorial).</p>
 </div>
 
 
