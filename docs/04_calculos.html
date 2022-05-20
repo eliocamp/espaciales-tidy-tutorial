@@ -396,11 +396,10 @@ sst$sst &lt;- sst$sst - 273.15   # Paso a grados centígrados</code></pre>
 superficie del mar (SST)? Esencialmente es calcular el promedio de
 <code>sst</code> para cada longitud y latitud, una operación que se
 traduce de forma directa a operaciones en grupos.</p>
-</div>
-<div id="section" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">data.table</h3>
+<div id="section" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table" class="section level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered">data.table</h4>
 <pre class="r"><code>sst %&gt;% 
   .[, .(sst = mean(sst)), by = .(longitude, latitude)] %&gt;% 
   ggplot(aes(longitude, latitude)) +
@@ -408,8 +407,8 @@ traduce de forma directa a operaciones en grupos.</p>
   mapa()</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
 </div>
-<div id="dplyr" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">dplyr</h3>
+<div id="dplyr" class="section level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered">dplyr</h4>
 <pre class="r"><code>sst %&gt;% 
   group_by(longitude, latitude) %&gt;% 
   summarise(sst = mean(sst)) %&gt;% 
@@ -420,8 +419,8 @@ traduce de forma directa a operaciones en grupos.</p>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
 </div>
 </div>
-<div id="section-1" class="section level2 unlisted unnumbered">
-<h2 class="unlisted unnumbered"></h2>
+<div id="section-1" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>Veamos ahora series temporales te SST en distintos puntos, para tener
 una idea de algunas características de su variabilidad.</p>
 <p>Definamos tres puntos que representan zonas muy disimiles del
@@ -441,10 +440,10 @@ sur.</p>
 <p>Para filtrar los datos de SST correspondientes a esos puntos, se
 puede hacer un join.</p>
 </div>
-<div id="section-2" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-1" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">data.table</h3>
+<div id="section-2" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-1" class="section level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered">data.table</h4>
 <pre class="r"><code>sst %&gt;% 
   .[puntos, on = .NATURAL] %&gt;% 
   ggplot(aes(time, sst)) +
@@ -452,8 +451,8 @@ puede hacer un join.</p>
   facet_wrap(~ nombre, scales = &quot;free_y&quot;, ncol = 1)</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
 </div>
-<div id="dplyr-1" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr-1" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>sst %&gt;% 
   right_join(puntos) %&gt;% 
   ggplot(aes(time, sst)) +
@@ -463,8 +462,8 @@ puede hacer un join.</p>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
 </div>
 </div>
-<div id="section-3" class="section level2">
-<h2></h2>
+<div id="section-3" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>Se puede ver que las región tropical tiene una variabilidad de
 relativa baja frecuencia y sin un ciclo anual pronunciado. Por otro
 lado, en los puntos extratropicales la variabilidad más fuerte es el
@@ -480,14 +479,14 @@ alejamiento de los datos con respecto a el ciclo anual promedio.</p>
 valor promedio del dato, para cada mes, y cada latitud y longitud.
 Nuevamente esto se traduce directamente en operaciones sobre grupos.</p>
 </div>
-<div id="section-4" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-2" class="section level3">
-<h3>data.table</h3>
+<div id="section-4" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-2" class="section level4">
+<h4>data.table</h4>
 <pre class="r"><code>sst[, sst_a := sst - mean(sst), by = .(longitude, latitude, month(time))] </code></pre>
 </div>
-<div id="dplyr-2" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr-2" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>sst &lt;- sst %&gt;% 
   group_by(longitude, latitude, mes = month(time)) %&gt;% 
   mutate(sst_a = sst - mean(sst)) %&gt;% 
@@ -495,8 +494,8 @@ Nuevamente esto se traduce directamente en operaciones sobre grupos.</p>
   select(-mes)</code></pre>
 </div>
 </div>
-<div id="section-5" class="section level2">
-<h2></h2>
+<div id="section-5" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>Ahora podemos graficar campos de anomalías en vez de de datos crudos.
 Por definición, las anomalías tienen media cero y lo interesante es ver
 cuánto se alejan de ese promedio, lo cual hacer que una escala
@@ -523,10 +522,10 @@ cada punto de grilla. Igual que antes, esto se traduce en una operación
 por grupos: calcular el desvío por cada combinación de longitud y
 latitud.</p>
 </div>
-<div id="section-6" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-3" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">data.table</h3>
+<div id="section-6" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-3" class="section level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered">data.table</h4>
 <pre class="r"><code>sst %&gt;% 
   .[, .(sd = sd(sst_a)), by = .(longitude, latitude)] %&gt;% 
   ggplot(aes(longitude, latitude)) +
@@ -534,8 +533,8 @@ latitud.</p>
   mapa()</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-12-1.png" width="480" /></p>
 </div>
-<div id="dplyr-3" class="section level3 unlisted unnumbered">
-<h3 class="unlisted unnumbered">dplyr</h3>
+<div id="dplyr-3" class="section level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered">dplyr</h4>
 <pre class="r"><code>sst %&gt;% 
   group_by(longitude, latitude) %&gt;% 
   summarise(sd = sd(sst_a)) %&gt;% 
@@ -546,13 +545,14 @@ latitud.</p>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-13-1.png" width="480" /></p>
 </div>
 </div>
-<div id="section-7" class="section level2 unlisted unnumbered">
-<h2 class="unlisted unnumbered"></h2>
+<div id="section-7" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>Acá podemos ver que hay una región del Pacífico central que tiene una
 variabilidad particularmente alta. Esta es la región de <a
 href="https://es.wikipedia.org/wiki/El_Ni%C3%B1o_(fen%C3%B3meno)">El
 Niño</a> o ENSO, y representa una de los fenómenos climáticos de mayor
 influencia a nivel global.</p>
+</div>
 </div>
 <div id="eof" class="section level2">
 <h2>EOF</h2>
@@ -586,26 +586,25 @@ organizados en una grilla regular en longitud y latitud, los puntos en
 altas latitudes representan un área cada vez menor. Para corregir esto
 hay que pesar los datos por <span class="math inline">\(\sqrt{\cos
 (\mathrm{lat})}\)</span></p>
-</div>
-<div id="section-8" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-4" class="section level3">
-<h3>data.table</h3>
+<div id="section-8" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-4" class="section level4">
+<h4>data.table</h4>
 <pre class="r"><code>eofs &lt;- sst %&gt;%
   .[!is.na(sst_a)] %&gt;% 
   .[, sst_a := sst_a*sqrt(cos(latitude*pi/180))] %&gt;% 
   EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)</code></pre>
 </div>
-<div id="dplyr-4" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr-4" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>eofs &lt;- sst %&gt;%
   filter(!is.na(sst_a)) %&gt;% 
   mutate(sst_a = sst_a*sqrt(cos(latitude*pi/180))) %&gt;% 
   EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)</code></pre>
 </div>
 </div>
-<div id="section-9" class="section level2">
-<h2></h2>
+<div id="section-9" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p><code>EOF()</code> devuelve una lista de data.tables con la parte
 izquierda (en este caso, espacial), derecha (en este caso, temporal) y
 la varianza explicada por cada componente.</p>
@@ -667,16 +666,16 @@ datos que están en esa caja y luego calculando el promedio para cada
 tiempo. Nuevamente, estas son operaciones básicas del análisis de datos
 tidy.</p>
 </div>
-<div id="section-10" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-5" class="section level3">
-<h3>data.table</h3>
+<div id="section-10" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-5" class="section level4">
+<h4>data.table</h4>
 <pre class="r"><code>enso &lt;- sst %&gt;% 
   .[abs(latitude) &lt; 5 &amp; ConvertLongitude(longitude) %between% c(-170, -120)] %&gt;% 
   .[, .(enso34 = mean(sst_a)), by = time]</code></pre>
 </div>
-<div id="dplyr-5" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr-5" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>enso &lt;- sst %&gt;% 
   filter(abs(latitude) &lt; 5 &amp; between(ConvertLongitude(longitude), -170, -120)) %&gt;% 
   group_by(time) %&gt;% 
@@ -684,8 +683,8 @@ tidy.</p>
   ungroup()</code></pre>
 </div>
 </div>
-<div id="section-11" class="section level2">
-<h2></h2>
+<div id="section-11" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>El resultado de este índice es muy similar al EOF1 obtenido
 anteriormente.</p>
 <pre class="r"><code>ggplot(enso, aes(time, enso34)) +
@@ -698,6 +697,7 @@ anteriormente.</p>
 <p>Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan
 tradicionalmente para definir eventos de ENSO positivos y negativos
 respectivamente.</p>
+</div>
 </div>
 <div id="regresiones-y-correlaciones" class="section level2">
 <h2>Regresiones y correlaciones</h2>
@@ -713,11 +713,10 @@ porque se toma mucho tiempo tratando de entender la fórmula que es el
 primer argumento. Para acelerar las cosas, metR tiene la función
 <code>FitLm()</code> que sirve para calcular los coeficientes de
 regresiones lineales mucho más rápido.</p>
-</div>
-<div id="section-12" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-6" class="section level3">
-<h3>data.table</h3>
+<div id="section-12" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-6" class="section level4">
+<h4>data.table</h4>
 <pre class="r"><code>sst %&gt;% 
   .[enso, on = &quot;time&quot;] %&gt;% 
   .[, FitLm(sst_a, enso34), by = .(longitude, latitude)] %&gt;% 
@@ -728,8 +727,8 @@ regresiones lineales mucho más rápido.</p>
   scale_fill_divergent()</code></pre>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-23-1.png" width="480" /></p>
 </div>
-<div id="dplyr-6" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr-6" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>sst %&gt;% 
   right_join(enso, by = &quot;time&quot;) %&gt;% 
   group_by(latitude, longitude) %&gt;% 
@@ -743,8 +742,8 @@ regresiones lineales mucho más rápido.</p>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
 </div>
 </div>
-<div id="section-13" class="section level2">
-<h2></h2>
+<div id="section-13" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>Se puede ver que este patrón es muy similar al obtenido mediante
 EOF.</p>
 <p>Lo mismo pondemos hacer si queremos explorar si hay relación entre
@@ -756,17 +755,17 @@ latitud.</p>
 <pre class="r"><code>precipitacion &lt;- ReadNetCDF(&quot;datos/precipitación.nc&quot;, 
                             vars = c(pp = &quot;tp&quot;))</code></pre>
 </div>
-<div id="section-14" class="section level2 tabset unlisted unnumbered">
-<h2 class="tabset unlisted unnumbered"></h2>
-<div id="data.table-7" class="section level3">
-<h3>data.table</h3>
+<div id="section-14" class="section level3 tabset unlisted unnumbered">
+<h3 class="tabset unlisted unnumbered"></h3>
+<div id="data.table-7" class="section level4">
+<h4>data.table</h4>
 <pre class="r"><code>correlacion &lt;- precipitacion %&gt;% 
   .[, pp_a := pp - mean(pp), by = .(longitude, latitude, month(time))] %&gt;% 
   .[enso, on = &quot;time&quot;] %&gt;% 
   .[, .(correlacion = cor(pp, enso34)), by = .(longitude, latitude)]</code></pre>
 </div>
-<div id="dplyr-7" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr-7" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>correlacion &lt;- precipitacion %&gt;% 
   group_by(longitude, latitude, month(time)) %&gt;% 
   mutate(pp_a = pp - mean(pp)) %&gt;% 
@@ -777,8 +776,8 @@ latitud.</p>
   ungroup() </code></pre>
 </div>
 </div>
-<div id="section-15" class="section level2">
-<h2></h2>
+<div id="section-15" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>Y luego podemos plotear el resultado:</p>
 <pre class="r"><code>correlacion %&gt;% 
   ggplot(aes(longitude, latitude)) +
@@ -793,6 +792,7 @@ latitud.</p>
 <p><img src="04_calculos_files/figure-html/unnamed-chunk-28-1.png" width="480" /></p>
 <p>Como se ve, el índice de ENSO es un buen predictor de la
 precipitación en la región al rededor de Uruguay.</p>
+</div>
 </div>
 
 

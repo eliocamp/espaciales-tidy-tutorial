@@ -496,19 +496,18 @@ library(magrittr)
 library(ggplot2)
 library(dplyr)
 library(data.table)</code></pre>
-</div>
-<div id="section" class="section level2 tabset">
-<h2 class="tabset"></h2>
-<div id="data.table" class="section level3">
-<h3>data.table</h3>
+<div id="section" class="section level3 tabset">
+<h3 class="tabset"></h3>
+<div id="data.table" class="section level4">
+<h4>data.table</h4>
 <pre class="r"><code>sst %&gt;% 
   .[time == time[1]] %&gt;%  
   ggplot(aes(longitude, latitude)) +
   geom_raster(aes(fill = sst)) </code></pre>
 <p><img src="02_lectura_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
-<div id="dplyr" class="section level3">
-<h3>dplyr</h3>
+<div id="dplyr" class="section level4">
+<h4>dplyr</h4>
 <pre class="r"><code>sst %&gt;% 
   filter(time == time[1]) %&gt;% 
   ggplot(aes(longitude, latitude)) +
@@ -516,8 +515,8 @@ library(data.table)</code></pre>
 <p><img src="02_lectura_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
-<div id="section-1" class="section level2">
-<h2></h2>
+<div id="section-1" class="section level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered"></h3>
 <p>En este gráfico ya se ven varias cosas. Se ve que hay una clara
 estructura de mayores temperaturas cerca del ecuador, lo cual no debería
 sorprender a nadie. También se ve que, como lo que estamos leyendo es la
@@ -528,6 +527,7 @@ Finalmente, notar que como las longitudes van de 0º a 360º (en vez de
 -180º a 180º), el mapa sale centrado en el Océano Pacífico. Esto va a
 haber que tenerlo en cuenta cuando sea la hora de graficar los
 continentes con algo mejor que bloques grises.</p>
+</div>
 </div>
 <div id="leyendo-regiones" class="section level2">
 <h2>Leyendo regiones</h2>
