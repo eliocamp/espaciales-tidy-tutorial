@@ -319,22 +319,26 @@ library(ggplot2)
 library(dplyr)
 library(data.table)
 library(metR)</code></pre>
-<p>Voy leer los datos de temperatura de la superficie del mar y de
-presión a nivel del mar.</p>
+<p>Primero hay que leer los datos de temperatura del mar (SST) y de
+presión al nivel del mar (MSL).</p>
 <pre class="r"><code>datos &lt;- ReadNetCDF(&quot;datos/temperatura_mar.nc&quot;, vars = c(&quot;sst&quot;, presion = &quot;msl&quot;))</code></pre>
-<p>Y también voy a armarme una función para plotear un mapa</p>
+<p>Como ayuda, también</p>
 <pre class="r"><code>mapa &lt;- function(fill = &quot;white&quot;, colour = NA) {
   geom_polygon(data = map_data(&quot;world2&quot;), aes(long, lat, group = group), 
                fill = fill, colour = colour, inherit.aes = FALSE, size = 0.2)
 }</code></pre>
-<p>Primero, calculo anomalías mensuales de temperatura de superficie del
-mar.</p>
+<p>La principal variación de SST y de la presión suele ser el ciclo
+anual, que es predecible y no es interesante. Entonces, lo primero que
+hacemos es crear dos variables nuevas, <code>sst_a</code> y
+<code>presion_a</code> con las anomalías de temperatura y presión con
+respecto al ciclo anual. Esto es, el valor de cada variable menos el
+valor medio para cada mes y cada punto de grilla.</p>
 <div id="section" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table" class="section level3">
 <h3>data.table</h3>
-<pre class="r"><code>datos[, c(&quot;sst_a&quot;, &quot;presion_a&quot;) := list(sst - mean(sst), 
-                                        presion - mean(presion)),
+<pre class="r"><code>datos[, `:=`(sst_a = sst - mean(sst), 
+             presion_a = presion - mean(presion)),
       by = .(longitude, latitude, month(time))]</code></pre>
 </div>
 <div id="dplyr" class="section level3">
@@ -349,8 +353,28 @@ mar.</p>
 </div>
 <div id="section-1" class="section level2">
 <h2></h2>
-<p>Con esto, defino el índice ENSO como la anomalía media en una caja
-entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
+<p>El Niño, o ENSO por El Niño Southern Oscillation, es una de los
+principales modos de variabilidad del océano. Se trata de variaciones de
+baja frecuencia en la temperatura de la superficie del mar en el
+Pacífico Ecuatorial. Durante los eventos positivos (El Niño) la
+temperatura de la superficie del mar en el la región oriental del
+Pacífico ecuatorial es más alta de lo normal, y en los eventos negativos
+(La Niña), la temperatura es más fría de lo normal. Esta oscilación
+tiene impactos globales, afectando la temperatura y la precipitación de
+regiones muy alejadas, algo conocido como teleconexiones.</p>
+<p>Una de las formas más comunes de medir el ENSO es con el índice
+oceánico, que es la anomalía media estandarizada en una caja entre 170ºE
+y 120ºE y 5ºS y 5ºN, que se muestra en la siguiente figura.</p>
+<pre class="r"><code>datos %&gt;% 
+  filter(time == unique(time)[225]) %&gt;% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_a), na.fill = TRUE) +
+  mapa() +
+  annotate(&quot;rect&quot;, xmax = 240, xmin = 190, ymin = -5, ymax = 5, fill = NA, color = &quot;black&quot;) +
+  scale_fill_divergent()</code></pre>
+<p><img src="ejemplo_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Entonces, antes que nada calculamos el índice de El Niño oceánico
+(ONI por la siglas de Oceanic Niño Index).</p>
 </div>
 <div id="section-2" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
@@ -358,41 +382,51 @@ entre 170ºE y 120ºE y 5ºS y 5ºN.</p>
 <h3>data.table</h3>
 <pre class="r"><code>enso &lt;- datos %&gt;% 
   .[abs(latitude) &lt; 5 &amp; ConvertLongitude(longitude) %between% c(-170, -120)] %&gt;% 
-  .[, .(enso34 = mean(sst_a)), by = time]</code></pre>
+  .[, .(oni = mean(sst_a)), by = time] %&gt;% 
+  .[, oni := oni/sd(oni)]</code></pre>
 </div>
 <div id="dplyr-1" class="section level3">
 <h3>dplyr</h3>
 <pre class="r"><code>enso &lt;- datos %&gt;% 
   filter(abs(latitude) &lt; 5 &amp; between(ConvertLongitude(longitude), -170, -120)) %&gt;% 
   group_by(time) %&gt;% 
-  summarise(enso34 = mean(sst_a)) %&gt;% 
-  ungroup()</code></pre>
-</div>
-</div>
-<div id="section-3" class="section level2">
-<h2></h2>
-<p>¿Cómo evolucionó este índice a lo largo del tiempo?</p>
-<pre class="r"><code>ggplot(enso, aes(time, enso34)) +
+  summarise(oni = mean(sst_a)) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(oni = oni/sd(oni))</code></pre>
+<p>(Técnicamente el ONI tiene también un promedio móvil de 3 meses, pero
+) ##</p>
+<p>¿Cómo evolucionó este índice a lo largo del tiempo? Podemos hacer un
+gráfico con el índice, marcando los valores de <span
+class="math inline">\(\pm0.5\)</span>, que definen los eventos Niño y
+Niña.</p>
+<pre class="r"><code>ggplot(enso, aes(time, oni)) +
   geom_line() +
-  geom_hline(yintercept = c(-0.5, 0.5)) + 
+  geom_hline(yintercept = c(-0.5, 0.5), color = &quot;gray50&quot;) + 
   annotate(&quot;label&quot;, y = c(0.5, -0.5), x = lubridate::as_datetime(&quot;1979-01-01&quot;),
-           label = c(&quot;NIÑO&quot;, &quot;NIÑA&quot;), vjust = c(-0.2, 1.2), label.size = grid::unit(0,&quot;lines&quot;)) +
+           label = c(&quot;NIÑO&quot;, &quot;NIÑA&quot;), vjust = c(-0.2, 1.2), 
+           label.size = grid::unit(0,&quot;lines&quot;), color = &quot;gray50&quot;) +
   scale_x_datetime(name = NULL) +
   scale_y_continuous(name = NULL) +
   labs(title = &quot;Índice ENSO34&quot;, 
        caption = &quot;Fuente: ERA5 (1979–2020)&quot;) +
   theme_minimal()</code></pre>
-<p><img src="ejemplo_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel
-global?</p>
+<p><img src="ejemplo_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Se ven claramente algunos eventos niño particularmente fuertes, como
+el de 1983, 1998 o 2015, así como algunos eventos Niña también intensos,
+como en 1989.</p>
+<p>Ahora podemos calcular los campos de regresión entre este índice y
+otras variables, presión a nivel del mar en este caso. Para eso hay que
+primero unir la tabla <code>enso</code> a los datos y luego calcular la
+regresión para cada punto de grilla.</p>
 </div>
-<div id="section-4" class="section level2 tabset unlisted unnumbered">
+</div>
+<div id="section-3" class="section level2 tabset unlisted unnumbered">
 <h2 class="tabset unlisted unnumbered"></h2>
 <div id="data.table-2" class="section level3">
 <h3>data.table</h3>
 <pre class="r"><code>enso_regresion &lt;- datos %&gt;% 
   .[enso, on = &quot;time&quot;] %&gt;% 
-  .[, FitLm(presion_a, enso34), by = .(longitude, latitude)] %&gt;% 
+  .[, FitLm(presion_a, oni), by = .(longitude, latitude)] %&gt;% 
   .[term != &quot;(Intercept)&quot;] </code></pre>
 </div>
 <div id="dplyr-2" class="section level3">
@@ -400,13 +434,14 @@ global?</p>
 <pre class="r"><code>enso_regresion &lt;- sst %&gt;% 
   right_join(enso, by = &quot;time&quot;) %&gt;% 
   group_by(latitude, longitude) %&gt;% 
-  summarise(as.data.frame(FitLm(presion_a, enso34))) %&gt;% 
+  summarise(as.data.frame(FitLm(presion_a, oni))) %&gt;% 
   ungroup() %&gt;% 
   filter(term != &quot;(Intercept)&quot;) </code></pre>
 </div>
 </div>
-<div id="section-5" class="section level2">
+<div id="section-4" class="section level2">
 <h2></h2>
+<p>Y ahora que tenemos esto, podemos graficarlo.</p>
 <pre class="r"><code>enso_regresion %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_contour_fill(aes(z = estimate, fill = ..level..), na.fill = 0, 
@@ -414,6 +449,8 @@ global?</p>
   geom_contour_tanaka(aes(z = estimate), na.fill = 0, 
                       breaks = AnchorBreaks(binwidth = 25, exclude = 0)) +
   mapa(fill = NA, colour = &quot;black&quot;)  +
+  annotate(&quot;rect&quot;, xmax = 240, xmin = 190, ymin = -5, ymax = 5, 
+           fill = NA, color = &quot;black&quot;) +
   scale_fill_divergent_discretised(name = &quot;hPa&quot;) +
   scale_x_longitude() +
   scale_y_latitude() +
@@ -421,10 +458,15 @@ global?</p>
   theme_minimal() +
   labs(title = &quot;Regresíon presión a nivel del mar con ENSO&quot;, 
        caption = &quot;Fuente: ERA5 (1979–2020)&quot;)</code></pre>
-<p><img src="ejemplo_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="ejemplo_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>En esta figura podemos ver las teleconexiones en acción. Los valores
+máximos de regresión entre la temperatura del mar y la presión al nivel
+del mar se da en la costa de la Antártica (el mar de Amundsen) e el
+hemisferio sur y en la región de las Aleutianas en el hemisferio
+norte.</p>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVsYWNpw7NuIGVudHJlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hciB5IEVOU08iCm91dHB1dDogCiAgaHRtbF9kb2N1bWVudDoKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogZmFsc2UKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGNhY2hlID0gVFJVRSwKICBlY2hvID0gVFJVRSwKICBtZXNzYWdlID0gRkFMU0UsCiAgd2FybmluZyA9IEZBTFNFCikKYGBgCgoKCmBgYHtyfQojIENhcmdvIGxvcyBwYXF1ZXRlcyBuZWNlc2FyaW9zCmxpYnJhcnkobWFncml0dHIpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKbGlicmFyeShkYXRhLnRhYmxlKQpsaWJyYXJ5KG1ldFIpCmBgYAoKVm95IGxlZXIgbG9zIGRhdG9zIGRlIHRlbXBlcmF0dXJhIGRlIGxhIHN1cGVyZmljaWUgZGVsIG1hciB5IGRlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hci4KCmBgYHtyfQpkYXRvcyA8LSBSZWFkTmV0Q0RGKCJkYXRvcy90ZW1wZXJhdHVyYV9tYXIubmMiLCB2YXJzID0gYygic3N0IiwgcHJlc2lvbiA9ICJtc2wiKSkKYGBgCgpZIHRhbWJpw6luIHZveSBhIGFybWFybWUgdW5hIGZ1bmNpw7NuIHBhcmEgcGxvdGVhciB1biBtYXBhCgpgYGB7cn0KbWFwYSA8LSBmdW5jdGlvbihmaWxsID0gIndoaXRlIiwgY29sb3VyID0gTkEpIHsKICBnZW9tX3BvbHlnb24oZGF0YSA9IG1hcF9kYXRhKCJ3b3JsZDIiKSwgYWVzKGxvbmcsIGxhdCwgZ3JvdXAgPSBncm91cCksIAogICAgICAgICAgICAgICBmaWxsID0gZmlsbCwgY29sb3VyID0gY29sb3VyLCBpbmhlcml0LmFlcyA9IEZBTFNFLCBzaXplID0gMC4yKQp9CmBgYAoKUHJpbWVybywgY2FsY3VsbyBhbm9tYWzDrWFzIG1lbnN1YWxlcyBkZSB0ZW1wZXJhdHVyYSBkZSBzdXBlcmZpY2llIGRlbCBtYXIuIAoKIyMgey50YWJzZXQgLnVubGlzdGVkIC51bm51bWJlcmVkfQoKIyMjIGRhdGEudGFibGUKCmBgYHtyfQpkYXRvc1ssIGMoInNzdF9hIiwgInByZXNpb25fYSIpIDo9IGxpc3Qoc3N0IC0gbWVhbihzc3QpLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZXNpb24gLSBtZWFuKHByZXNpb24pKSwKICAgICAgYnkgPSAuKGxvbmdpdHVkZSwgbGF0aXR1ZGUsIG1vbnRoKHRpbWUpKV0KYGBgCgoKIyMjIGRwbHlyCgpgYGB7ciwgZXZhbCA9IEZBTFNFfQpkYXRvcyA8LSBkYXRvcyAlPiUgCiAgZ3JvdXBfYnkobG9uZ2l0dWRlLCBsYXRpdHVkZSwgbWVzID0gbW9udGgodGltZSkpICU+JSAKICBtdXRhdGUoc3N0X2EgPSBzc3QgLSBtZWFuKHNzdCksIAogICAgICAgICBwcmVzaW9uX2EgPSBwcmVzaW9uIC0gbWVhbihwcmVzaW9uKSkgJT4lIAogIHVuZ3JvdXAoKSAlPiUgCiAgc2VsZWN0KC1tZXMpCmBgYAoKIyMKCkNvbiBlc3RvLCBkZWZpbm8gZWwgw61uZGljZSBFTlNPIGNvbW8gbGEgYW5vbWFsw61hIG1lZGlhIGVuIHVuYSBjYWphIGVudHJlIDE3MMK6RSB5IDEyMMK6RSB5IDXCulMgeSA1wrpOLiAKCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc28gPC0gZGF0b3MgJT4lIAogIC5bYWJzKGxhdGl0dWRlKSA8IDUgJiBDb252ZXJ0TG9uZ2l0dWRlKGxvbmdpdHVkZSkgJWJldHdlZW4lIGMoLTE3MCwgLTEyMCldICU+JSAKICAuWywgLihlbnNvMzQgPSBtZWFuKHNzdF9hKSksIGJ5ID0gdGltZV0KYGBgCgojIyMgZHBseXIKCmBgYHtyLCBldmFsID0gRkFMU0V9CmVuc28gPC0gZGF0b3MgJT4lIAogIGZpbHRlcihhYnMobGF0aXR1ZGUpIDwgNSAmIGJldHdlZW4oQ29udmVydExvbmdpdHVkZShsb25naXR1ZGUpLCAtMTcwLCAtMTIwKSkgJT4lIAogIGdyb3VwX2J5KHRpbWUpICU+JSAKICBzdW1tYXJpc2UoZW5zbzM0ID0gbWVhbihzc3RfYSkpICU+JSAKICB1bmdyb3VwKCkKYGBgCgoKIyMgCgrCv0PDs21vIGV2b2x1Y2lvbsOzIGVzdGUgw61uZGljZSBhIGxvIGxhcmdvIGRlbCB0aWVtcG8/CgpgYGB7cn0KZ2dwbG90KGVuc28sIGFlcyh0aW1lLCBlbnNvMzQpKSArCiAgZ2VvbV9saW5lKCkgKwogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IGMoLTAuNSwgMC41KSkgKyAKICBhbm5vdGF0ZSgibGFiZWwiLCB5ID0gYygwLjUsIC0wLjUpLCB4ID0gbHVicmlkYXRlOjphc19kYXRldGltZSgiMTk3OS0wMS0wMSIpLAogICAgICAgICAgIGxhYmVsID0gYygiTknDkU8iLCAiTknDkUEiKSwgdmp1c3QgPSBjKC0wLjIsIDEuMiksIGxhYmVsLnNpemUgPSBncmlkOjp1bml0KDAsImxpbmVzIikpICsKICBzY2FsZV94X2RhdGV0aW1lKG5hbWUgPSBOVUxMKSArCiAgc2NhbGVfeV9jb250aW51b3VzKG5hbWUgPSBOVUxMKSArCiAgbGFicyh0aXRsZSA9ICLDjW5kaWNlIEVOU08zNCIsIAogICAgICAgY2FwdGlvbiA9ICJGdWVudGU6IEVSQTUgKDE5NznigJMyMDIwKSIpICsKICB0aGVtZV9taW5pbWFsKCkKYGBgCgoKwr9DdcOhbCBlcyBsYSByZWxhY2nDs24gZW50cmUgcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIHkgRU5TTyBhIG5pdmVsIGdsb2JhbD8KCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc29fcmVncmVzaW9uIDwtIGRhdG9zICU+JSAKICAuW2Vuc28sIG9uID0gInRpbWUiXSAlPiUgCiAgLlssIEZpdExtKHByZXNpb25fYSwgZW5zbzM0KSwgYnkgPSAuKGxvbmdpdHVkZSwgbGF0aXR1ZGUpXSAlPiUgCiAgLlt0ZXJtICE9ICIoSW50ZXJjZXB0KSJdIApgYGAKCiMjIyBkcGx5cgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KZW5zb19yZWdyZXNpb24gPC0gc3N0ICU+JSAKICByaWdodF9qb2luKGVuc28sIGJ5ID0gInRpbWUiKSAlPiUgCiAgZ3JvdXBfYnkobGF0aXR1ZGUsIGxvbmdpdHVkZSkgJT4lIAogIHN1bW1hcmlzZShhcy5kYXRhLmZyYW1lKEZpdExtKHByZXNpb25fYSwgZW5zbzM0KSkpICU+JSAKICB1bmdyb3VwKCkgJT4lIAogIGZpbHRlcih0ZXJtICE9ICIoSW50ZXJjZXB0KSIpIApgYGAKCiMjIAoKYGBge3J9CmVuc29fcmVncmVzaW9uICU+JSAKICBnZ3Bsb3QoYWVzKGxvbmdpdHVkZSwgbGF0aXR1ZGUpKSArCiAgZ2VvbV9jb250b3VyX2ZpbGwoYWVzKHogPSBlc3RpbWF0ZSwgZmlsbCA9IC4ubGV2ZWwuLiksIG5hLmZpbGwgPSAwLCAKICAgICAgICAgICAgICAgICAgICBicmVha3MgPSBBbmNob3JCcmVha3MoYmlud2lkdGggPSAyNSwgZXhjbHVkZSA9IDApKSArCiAgZ2VvbV9jb250b3VyX3RhbmFrYShhZXMoeiA9IGVzdGltYXRlKSwgbmEuZmlsbCA9IDAsIAogICAgICAgICAgICAgICAgICAgICAgYnJlYWtzID0gQW5jaG9yQnJlYWtzKGJpbndpZHRoID0gMjUsIGV4Y2x1ZGUgPSAwKSkgKwogIG1hcGEoZmlsbCA9IE5BLCBjb2xvdXIgPSAiYmxhY2siKSAgKwogIHNjYWxlX2ZpbGxfZGl2ZXJnZW50X2Rpc2NyZXRpc2VkKG5hbWUgPSAiaFBhIikgKwogIHNjYWxlX3hfbG9uZ2l0dWRlKCkgKwogIHNjYWxlX3lfbGF0aXR1ZGUoKSArCiAgY29vcmRfcXVpY2ttYXAoKSArCiAgdGhlbWVfbWluaW1hbCgpICsKICBsYWJzKHRpdGxlID0gIlJlZ3Jlc8Otb24gcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIGNvbiBFTlNPIiwgCiAgICAgICBjYXB0aW9uID0gIkZ1ZW50ZTogRVJBNSAoMTk3OeKAkzIwMjApIikKYGBgCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVsYWNpw7NuIGVudHJlIHByZXNpw7NuIGEgbml2ZWwgZGVsIG1hciB5IEVOU08iCm91dHB1dDogCiAgaHRtbF9kb2N1bWVudDoKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogZmFsc2UKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGNhY2hlID0gVFJVRSwKICBlY2hvID0gVFJVRSwKICBtZXNzYWdlID0gRkFMU0UsCiAgd2FybmluZyA9IEZBTFNFCikKYGBgCgoKCgoKYGBge3J9CiMgQ2FyZ28gbG9zIHBhcXVldGVzIG5lY2VzYXJpb3MKbGlicmFyeShtYWdyaXR0cikKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KGRhdGEudGFibGUpCmxpYnJhcnkobWV0UikKYGBgCgpQcmltZXJvIGhheSBxdWUgbGVlciBsb3MgZGF0b3MgZGUgdGVtcGVyYXR1cmEgZGVsIG1hciAoU1NUKSB5IGRlIHByZXNpw7NuIGFsIG5pdmVsIGRlbCBtYXIgKE1TTCkuIAoKYGBge3J9CmRhdG9zIDwtIFJlYWROZXRDREYoImRhdG9zL3RlbXBlcmF0dXJhX21hci5uYyIsIHZhcnMgPSBjKCJzc3QiLCBwcmVzaW9uID0gIm1zbCIpKQpgYGAKCkNvbW8gYXl1ZGEsIHRhbWJpw6luIAoKYGBge3J9Cm1hcGEgPC0gZnVuY3Rpb24oZmlsbCA9ICJ3aGl0ZSIsIGNvbG91ciA9IE5BKSB7CiAgZ2VvbV9wb2x5Z29uKGRhdGEgPSBtYXBfZGF0YSgid29ybGQyIiksIGFlcyhsb25nLCBsYXQsIGdyb3VwID0gZ3JvdXApLCAKICAgICAgICAgICAgICAgZmlsbCA9IGZpbGwsIGNvbG91ciA9IGNvbG91ciwgaW5oZXJpdC5hZXMgPSBGQUxTRSwgc2l6ZSA9IDAuMikKfQpgYGAKCkxhIHByaW5jaXBhbCB2YXJpYWNpw7NuIGRlIFNTVCB5IGRlIGxhIHByZXNpw7NuIHN1ZWxlIHNlciBlbCBjaWNsbyBhbnVhbCwgcXVlIGVzIHByZWRlY2libGUgeSBubyBlcyBpbnRlcmVzYW50ZS4KRW50b25jZXMsIGxvIHByaW1lcm8gcXVlIGhhY2Vtb3MgZXMgY3JlYXIgZG9zIHZhcmlhYmxlcyBudWV2YXMsIGBzc3RfYWAgeSBgcHJlc2lvbl9hYCBjb24gbGFzIGFub21hbMOtYXMgZGUgdGVtcGVyYXR1cmEgeSBwcmVzacOzbiBjb24gcmVzcGVjdG8gYWwgY2ljbG8gYW51YWwuIApFc3RvIGVzLCBlbCB2YWxvciBkZSBjYWRhIHZhcmlhYmxlIG1lbm9zIGVsIHZhbG9yIG1lZGlvIHBhcmEgY2FkYSBtZXMgeSBjYWRhIHB1bnRvIGRlIGdyaWxsYS4gCgojIyB7LnRhYnNldCAudW5saXN0ZWQgLnVubnVtYmVyZWR9CgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmRhdG9zWywgYDo9YChzc3RfYSA9IHNzdCAtIG1lYW4oc3N0KSwgCiAgICAgICAgICAgICBwcmVzaW9uX2EgPSBwcmVzaW9uIC0gbWVhbihwcmVzaW9uKSksCiAgICAgIGJ5ID0gLihsb25naXR1ZGUsIGxhdGl0dWRlLCBtb250aCh0aW1lKSldCmBgYAoKCiMjIyBkcGx5cgoKYGBge3IsIGV2YWwgPSBGQUxTRX0KZGF0b3MgPC0gZGF0b3MgJT4lIAogIGdyb3VwX2J5KGxvbmdpdHVkZSwgbGF0aXR1ZGUsIG1lcyA9IG1vbnRoKHRpbWUpKSAlPiUgCiAgbXV0YXRlKHNzdF9hID0gc3N0IC0gbWVhbihzc3QpLCAKICAgICAgICAgcHJlc2lvbl9hID0gcHJlc2lvbiAtIG1lYW4ocHJlc2lvbikpICU+JSAKICB1bmdyb3VwKCkgJT4lIAogIHNlbGVjdCgtbWVzKQpgYGAKCiMjCgpFbCBOacOxbywgbyBFTlNPIHBvciBFbCBOacOxbyBTb3V0aGVybiBPc2NpbGxhdGlvbiwgZXMgdW5hIGRlIGxvcyBwcmluY2lwYWxlcyBtb2RvcyBkZSB2YXJpYWJpbGlkYWQgZGVsIG9jw6lhbm8uIApTZSB0cmF0YSBkZSB2YXJpYWNpb25lcyBkZSBiYWphIGZyZWN1ZW5jaWEgZW4gbGEgdGVtcGVyYXR1cmEgZGUgbGEgc3VwZXJmaWNpZSBkZWwgbWFyIGVuIGVsIFBhY8OtZmljbyBFY3VhdG9yaWFsLiAKRHVyYW50ZSBsb3MgZXZlbnRvcyBwb3NpdGl2b3MgKEVsIE5pw7FvKSBsYSB0ZW1wZXJhdHVyYSBkZSBsYSBzdXBlcmZpY2llIGRlbCBtYXIgZW4gZWwgbGEgcmVnacOzbiBvcmllbnRhbCBkZWwgUGFjw61maWNvIGVjdWF0b3JpYWwgZXMgbcOhcyBhbHRhIGRlIGxvIG5vcm1hbCwgeSBlbiBsb3MgZXZlbnRvcyBuZWdhdGl2b3MgKExhIE5pw7FhKSwgbGEgdGVtcGVyYXR1cmEgZXMgbcOhcyBmcsOtYSBkZSBsbyBub3JtYWwuIApFc3RhIG9zY2lsYWNpw7NuIHRpZW5lIGltcGFjdG9zIGdsb2JhbGVzLCBhZmVjdGFuZG8gbGEgdGVtcGVyYXR1cmEgeSBsYSBwcmVjaXBpdGFjacOzbiBkZSByZWdpb25lcyBtdXkgYWxlamFkYXMsIGFsZ28gY29ub2NpZG8gY29tbyB0ZWxlY29uZXhpb25lcy4gCgpVbmEgZGUgbGFzIGZvcm1hcyBtw6FzIGNvbXVuZXMgZGUgbWVkaXIgZWwgRU5TTyBlcyBjb24gZWwgw61uZGljZSBvY2XDoW5pY28sIHF1ZSBlcyBsYSBhbm9tYWzDrWEgbWVkaWEgZXN0YW5kYXJpemFkYSBlbiB1bmEgY2FqYSBlbnRyZSAxNzDCukUgeSAxMjDCukUgeSA1wrpTIHkgNcK6TiwgcXVlIHNlIG11ZXN0cmEgZW4gbGEgc2lndWllbnRlIGZpZ3VyYS4gCgpgYGB7cn0KZGF0b3MgJT4lIAogIGZpbHRlcih0aW1lID09IHVuaXF1ZSh0aW1lKVsyMjVdKSAlPiUgCiAgZ2dwbG90KGFlcyhsb25naXR1ZGUsIGxhdGl0dWRlKSkgKwogIGdlb21fY29udG91cl9maWxsKGFlcyh6ID0gc3N0X2EpLCBuYS5maWxsID0gVFJVRSkgKwogIG1hcGEoKSArCiAgYW5ub3RhdGUoInJlY3QiLCB4bWF4ID0gMjQwLCB4bWluID0gMTkwLCB5bWluID0gLTUsIHltYXggPSA1LCBmaWxsID0gTkEsIGNvbG9yID0gImJsYWNrIikgKwogIHNjYWxlX2ZpbGxfZGl2ZXJnZW50KCkKYGBgCgoKRW50b25jZXMsIGFudGVzIHF1ZSBuYWRhIGNhbGN1bGFtb3MgZWwgw61uZGljZSBkZSBFbCBOacOxbyBvY2XDoW5pY28gKE9OSSBwb3IgbGEgc2lnbGFzIGRlIE9jZWFuaWMgTmnDsW8gSW5kZXgpLiAKCiMjIHsudGFic2V0IC51bmxpc3RlZCAudW5udW1iZXJlZH0KCgojIyMgZGF0YS50YWJsZQoKYGBge3J9CmVuc28gPC0gZGF0b3MgJT4lIAogIC5bYWJzKGxhdGl0dWRlKSA8IDUgJiBDb252ZXJ0TG9uZ2l0dWRlKGxvbmdpdHVkZSkgJWJldHdlZW4lIGMoLTE3MCwgLTEyMCldICU+JSAKICAuWywgLihvbmkgPSBtZWFuKHNzdF9hKSksIGJ5ID0gdGltZV0gJT4lIAogIC5bLCBvbmkgOj0gb25pL3NkKG9uaSldCmBgYAoKIyMjIGRwbHlyCgpgYGB7ciwgZXZhbCA9IEZBTFNFfQplbnNvIDwtIGRhdG9zICU+JSAKICBmaWx0ZXIoYWJzKGxhdGl0dWRlKSA8IDUgJiBiZXR3ZWVuKENvbnZlcnRMb25naXR1ZGUobG9uZ2l0dWRlKSwgLTE3MCwgLTEyMCkpICU+JSAKICBncm91cF9ieSh0aW1lKSAlPiUgCiAgc3VtbWFyaXNlKG9uaSA9IG1lYW4oc3N0X2EpKSAlPiUgCiAgdW5ncm91cCgpICU+JSAKICBtdXRhdGUob25pID0gb25pL3NkKG9uaSkpCmBgYAoKKFTDqWNuaWNhbWVudGUgZWwgT05JIHRpZW5lIHRhbWJpw6luIHVuIHByb21lZGlvIG3Ds3ZpbCBkZSAzIG1lc2VzLCBwZXJvICkKIyMgCgrCv0PDs21vIGV2b2x1Y2lvbsOzIGVzdGUgw61uZGljZSBhIGxvIGxhcmdvIGRlbCB0aWVtcG8/IApQb2RlbW9zIGhhY2VyIHVuIGdyw6FmaWNvIGNvbiBlbCDDrW5kaWNlLCBtYXJjYW5kbyBsb3MgdmFsb3JlcyBkZSAkXHBtMC41JCwgcXVlIGRlZmluZW4gbG9zIGV2ZW50b3MgTmnDsW8geSBOacOxYS4KCmBgYHtyfQpnZ3Bsb3QoZW5zbywgYWVzKHRpbWUsIG9uaSkpICsKICBnZW9tX2xpbmUoKSArCiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gYygtMC41LCAwLjUpLCBjb2xvciA9ICJncmF5NTAiKSArIAogIGFubm90YXRlKCJsYWJlbCIsIHkgPSBjKDAuNSwgLTAuNSksIHggPSBsdWJyaWRhdGU6OmFzX2RhdGV0aW1lKCIxOTc5LTAxLTAxIiksCiAgICAgICAgICAgbGFiZWwgPSBjKCJOScORTyIsICJOScORQSIpLCB2anVzdCA9IGMoLTAuMiwgMS4yKSwgCiAgICAgICAgICAgbGFiZWwuc2l6ZSA9IGdyaWQ6OnVuaXQoMCwibGluZXMiKSwgY29sb3IgPSAiZ3JheTUwIikgKwogIHNjYWxlX3hfZGF0ZXRpbWUobmFtZSA9IE5VTEwpICsKICBzY2FsZV95X2NvbnRpbnVvdXMobmFtZSA9IE5VTEwpICsKICBsYWJzKHRpdGxlID0gIsONbmRpY2UgRU5TTzM0IiwgCiAgICAgICBjYXB0aW9uID0gIkZ1ZW50ZTogRVJBNSAoMTk3OeKAkzIwMjApIikgKwogIHRoZW1lX21pbmltYWwoKQpgYGAKClNlIHZlbiBjbGFyYW1lbnRlIGFsZ3Vub3MgZXZlbnRvcyBuacOxbyBwYXJ0aWN1bGFybWVudGUgZnVlcnRlcywgY29tbyBlbCBkZSAxOTgzLCAxOTk4IG8gMjAxNSwgYXPDrSBjb21vIGFsZ3Vub3MgZXZlbnRvcyBOacOxYSB0YW1iacOpbiBpbnRlbnNvcywgY29tbyBlbiAxOTg5LiAKCkFob3JhIHBvZGVtb3MgY2FsY3VsYXIgbG9zIGNhbXBvcyBkZSByZWdyZXNpw7NuIGVudHJlIGVzdGUgw61uZGljZSB5IG90cmFzIHZhcmlhYmxlcywgcHJlc2nDs24gYSBuaXZlbCBkZWwgbWFyIGVuIGVzdGUgY2Fzby4gClBhcmEgZXNvIGhheSBxdWUgcHJpbWVybyB1bmlyIGxhIHRhYmxhIGBlbnNvYCBhIGxvcyBkYXRvcyB5IGx1ZWdvIGNhbGN1bGFyIGxhIHJlZ3Jlc2nDs24gcGFyYSBjYWRhIHB1bnRvIGRlIGdyaWxsYS4gCgojIyB7LnRhYnNldCAudW5saXN0ZWQgLnVubnVtYmVyZWR9CgoKIyMjIGRhdGEudGFibGUKCmBgYHtyfQplbnNvX3JlZ3Jlc2lvbiA8LSBkYXRvcyAlPiUgCiAgLltlbnNvLCBvbiA9ICJ0aW1lIl0gJT4lIAogIC5bLCBGaXRMbShwcmVzaW9uX2EsIG9uaSksIGJ5ID0gLihsb25naXR1ZGUsIGxhdGl0dWRlKV0gJT4lIAogIC5bdGVybSAhPSAiKEludGVyY2VwdCkiXSAKYGBgCgojIyMgZHBseXIKCmBgYHtyLCBldmFsID0gRkFMU0V9CmVuc29fcmVncmVzaW9uIDwtIHNzdCAlPiUgCiAgcmlnaHRfam9pbihlbnNvLCBieSA9ICJ0aW1lIikgJT4lIAogIGdyb3VwX2J5KGxhdGl0dWRlLCBsb25naXR1ZGUpICU+JSAKICBzdW1tYXJpc2UoYXMuZGF0YS5mcmFtZShGaXRMbShwcmVzaW9uX2EsIG9uaSkpKSAlPiUgCiAgdW5ncm91cCgpICU+JSAKICBmaWx0ZXIodGVybSAhPSAiKEludGVyY2VwdCkiKSAKYGBgCgojIyAKClkgYWhvcmEgcXVlIHRlbmVtb3MgZXN0bywgcG9kZW1vcyBncmFmaWNhcmxvLiAKCmBgYHtyfQplbnNvX3JlZ3Jlc2lvbiAlPiUgCiAgZ2dwbG90KGFlcyhsb25naXR1ZGUsIGxhdGl0dWRlKSkgKwogIGdlb21fY29udG91cl9maWxsKGFlcyh6ID0gZXN0aW1hdGUsIGZpbGwgPSAuLmxldmVsLi4pLCBuYS5maWxsID0gMCwgCiAgICAgICAgICAgICAgICAgICAgYnJlYWtzID0gQW5jaG9yQnJlYWtzKGJpbndpZHRoID0gMjUsIGV4Y2x1ZGUgPSAwKSkgKwogIGdlb21fY29udG91cl90YW5ha2EoYWVzKHogPSBlc3RpbWF0ZSksIG5hLmZpbGwgPSAwLCAKICAgICAgICAgICAgICAgICAgICAgIGJyZWFrcyA9IEFuY2hvckJyZWFrcyhiaW53aWR0aCA9IDI1LCBleGNsdWRlID0gMCkpICsKICBtYXBhKGZpbGwgPSBOQSwgY29sb3VyID0gImJsYWNrIikgICsKICBhbm5vdGF0ZSgicmVjdCIsIHhtYXggPSAyNDAsIHhtaW4gPSAxOTAsIHltaW4gPSAtNSwgeW1heCA9IDUsIAogICAgICAgICAgIGZpbGwgPSBOQSwgY29sb3IgPSAiYmxhY2siKSArCiAgc2NhbGVfZmlsbF9kaXZlcmdlbnRfZGlzY3JldGlzZWQobmFtZSA9ICJoUGEiKSArCiAgc2NhbGVfeF9sb25naXR1ZGUoKSArCiAgc2NhbGVfeV9sYXRpdHVkZSgpICsKICBjb29yZF9xdWlja21hcCgpICsKICB0aGVtZV9taW5pbWFsKCkgKwogIGxhYnModGl0bGUgPSAiUmVncmVzw61vbiBwcmVzacOzbiBhIG5pdmVsIGRlbCBtYXIgY29uIEVOU08iLCAKICAgICAgIGNhcHRpb24gPSAiRnVlbnRlOiBFUkE1ICgxOTc54oCTMjAyMCkiKQpgYGAKCkVuIGVzdGEgZmlndXJhIHBvZGVtb3MgdmVyIGxhcyB0ZWxlY29uZXhpb25lcyBlbiBhY2Npw7NuLiBMb3MgdmFsb3JlcyBtw6F4aW1vcyBkZSByZWdyZXNpw7NuIGVudHJlIGxhIHRlbXBlcmF0dXJhIGRlbCBtYXIgeSBsYSBwcmVzacOzbiBhbCBuaXZlbCBkZWwgbWFyIHNlIGRhIGVuIGxhIGNvc3RhIGRlIGxhIEFudMOhcnRpY2EgKGVsIG1hciBkZSBBbXVuZHNlbikgZSBlbCBoZW1pc2ZlcmlvIHN1ciB5IGVuIGxhIHJlZ2nDs24gZGUgbGFzIEFsZXV0aWFuYXMgZW4gZWwgaGVtaXNmZXJpbyBub3J0ZS4gCg==</div>
 
 
 
