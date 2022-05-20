@@ -344,7 +344,8 @@ Las líneas horizontales marcan los valores de +0.5 y -0.5 que se usan tradicion
 
 ## Regresiones y correlaciones
 
-Para asegurarnos de que este índice realmente representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice.
+Para asegurarnos de que este índice realmente representa lo que creemos que representa, podemos calcular la regresión de la SST en cada punto con este índice. 
+Esto, es calcular la regresión lineal entre la serie temporal de SST y el índice de ENSO en cada punto de la grilla y mostrar, en colores, el valor del coeficiente.
 Para eso primero hay que unir los datos de SST con el índice que calculamos y luego calcular la regresión en cada punto.
 
 Un problema acá es que `lm()` es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento.
