@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 
 
+
+
 ```{r}
 # Cargo los paquetes necesarios
 library(magrittr)
@@ -26,13 +28,13 @@ library(data.table)
 library(metR)
 ```
 
-Voy leer los datos de temperatura de la superficie del mar y de presión a nivel del mar.
+Primero hay que leer los datos de temperatura del mar (SST) y de presión al nivel del mar (MSL). 
 
 ```{r}
 datos <- ReadNetCDF("datos/temperatura_mar.nc", vars = c("sst", presion = "msl"))
 ```
 
-Y también voy a armarme una función para plotear un mapa
+Como ayuda, también 
 
 ```{r}
 mapa <- function(fill = "white", colour = NA) {
@@ -41,15 +43,17 @@ mapa <- function(fill = "white", colour = NA) {
 }
 ```
 
-Primero, calculo anomalías mensuales de temperatura de superficie del mar. 
+La principal variación de SST y de la presión suele ser el ciclo anual, que es predecible y no es interesante.
+Entonces, lo primero que hacemos es crear dos variables nuevas, `sst_a` y `presion_a` con las anomalías de temperatura y presión con respecto al ciclo anual. 
+Esto es, el valor de cada variable menos el valor medio para cada mes y cada punto de grilla. 
 
 ## {.tabset .unlisted .unnumbered}
 
 ### data.table
 
 ```{r}
-datos[, c("sst_a", "presion_a") := list(sst - mean(sst), 
-                                        presion - mean(presion)),
+datos[, `:=`(sst_a = sst - mean(sst), 
+             presion_a = presion - mean(presion)),
       by = .(longitude, latitude, month(time))]
 ```
 
@@ -67,7 +71,25 @@ datos <- datos %>%
 
 ##
 
-Con esto, defino el índice ENSO como la anomalía media en una caja entre 170ºE y 120ºE y 5ºS y 5ºN. 
+El Niño, o ENSO por El Niño Southern Oscillation, es una de los principales modos de variabilidad del océano. 
+Se trata de variaciones de baja frecuencia en la temperatura de la superficie del mar en el Pacífico Ecuatorial. 
+Durante los eventos positivos (El Niño) la temperatura de la superficie del mar en el la región oriental del Pacífico ecuatorial es más alta de lo normal, y en los eventos negativos (La Niña), la temperatura es más fría de lo normal. 
+Esta oscilación tiene impactos globales, afectando la temperatura y la precipitación de regiones muy alejadas, algo conocido como teleconexiones. 
+
+Una de las formas más comunes de medir el ENSO es con el índice oceánico, que es la anomalía media estandarizada en una caja entre 170ºE y 120ºE y 5ºS y 5ºN, que se muestra en la siguiente figura. 
+
+```{r}
+datos %>% 
+  filter(time == unique(time)[225]) %>% 
+  ggplot(aes(longitude, latitude)) +
+  geom_contour_fill(aes(z = sst_a), na.fill = TRUE) +
+  mapa() +
+  annotate("rect", xmax = 240, xmin = 190, ymin = -5, ymax = 5, fill = NA, color = "black") +
+  scale_fill_divergent()
+```
+
+
+Entonces, antes que nada calculamos el índice de El Niño oceánico (ONI por la siglas de Oceanic Niño Index). 
 
 ## {.tabset .unlisted .unnumbered}
 
@@ -77,7 +99,8 @@ Con esto, defino el índice ENSO como la anomalía media en una caja entre 170º
 ```{r}
 enso <- datos %>% 
   .[abs(latitude) < 5 & ConvertLongitude(longitude) %between% c(-170, -120)] %>% 
-  .[, .(enso34 = mean(sst_a)), by = time]
+  .[, .(oni = mean(sst_a)), by = time] %>% 
+  .[, oni := oni/sd(oni)]
 ```
 
 ### dplyr
@@ -86,21 +109,24 @@ enso <- datos %>%
 enso <- datos %>% 
   filter(abs(latitude) < 5 & between(ConvertLongitude(longitude), -170, -120)) %>% 
   group_by(time) %>% 
-  summarise(enso34 = mean(sst_a)) %>% 
-  ungroup()
+  summarise(oni = mean(sst_a)) %>% 
+  ungroup() %>% 
+  mutate(oni = oni/sd(oni))
 ```
 
-
+(Técnicamente el ONI tiene también un promedio móvil de 3 meses, pero )
 ## 
 
-¿Cómo evolucionó este índice a lo largo del tiempo?
+¿Cómo evolucionó este índice a lo largo del tiempo? 
+Podemos hacer un gráfico con el índice, marcando los valores de $\pm0.5$, que definen los eventos Niño y Niña.
 
 ```{r}
-ggplot(enso, aes(time, enso34)) +
+ggplot(enso, aes(time, oni)) +
   geom_line() +
-  geom_hline(yintercept = c(-0.5, 0.5)) + 
+  geom_hline(yintercept = c(-0.5, 0.5), color = "gray50") + 
   annotate("label", y = c(0.5, -0.5), x = lubridate::as_datetime("1979-01-01"),
-           label = c("NIÑO", "NIÑA"), vjust = c(-0.2, 1.2), label.size = grid::unit(0,"lines")) +
+           label = c("NIÑO", "NIÑA"), vjust = c(-0.2, 1.2), 
+           label.size = grid::unit(0,"lines"), color = "gray50") +
   scale_x_datetime(name = NULL) +
   scale_y_continuous(name = NULL) +
   labs(title = "Índice ENSO34", 
@@ -108,8 +134,10 @@ ggplot(enso, aes(time, enso34)) +
   theme_minimal()
 ```
 
+Se ven claramente algunos eventos niño particularmente fuertes, como el de 1983, 1998 o 2015, así como algunos eventos Niña también intensos, como en 1989. 
 
-¿Cuál es la relación entre presión a nivel del mar y ENSO a nivel global?
+Ahora podemos calcular los campos de regresión entre este índice y otras variables, presión a nivel del mar en este caso. 
+Para eso hay que primero unir la tabla `enso` a los datos y luego calcular la regresión para cada punto de grilla. 
 
 ## {.tabset .unlisted .unnumbered}
 
@@ -119,7 +147,7 @@ ggplot(enso, aes(time, enso34)) +
 ```{r}
 enso_regresion <- datos %>% 
   .[enso, on = "time"] %>% 
-  .[, FitLm(presion_a, enso34), by = .(longitude, latitude)] %>% 
+  .[, FitLm(presion_a, oni), by = .(longitude, latitude)] %>% 
   .[term != "(Intercept)"] 
 ```
 
@@ -129,12 +157,14 @@ enso_regresion <- datos %>%
 enso_regresion <- sst %>% 
   right_join(enso, by = "time") %>% 
   group_by(latitude, longitude) %>% 
-  summarise(as.data.frame(FitLm(presion_a, enso34))) %>% 
+  summarise(as.data.frame(FitLm(presion_a, oni))) %>% 
   ungroup() %>% 
   filter(term != "(Intercept)") 
 ```
 
 ## 
+
+Y ahora que tenemos esto, podemos graficarlo. 
 
 ```{r}
 enso_regresion %>% 
@@ -144,6 +174,8 @@ enso_regresion %>%
   geom_contour_tanaka(aes(z = estimate), na.fill = 0, 
                       breaks = AnchorBreaks(binwidth = 25, exclude = 0)) +
   mapa(fill = NA, colour = "black")  +
+  annotate("rect", xmax = 240, xmin = 190, ymin = -5, ymax = 5, 
+           fill = NA, color = "black") +
   scale_fill_divergent_discretised(name = "hPa") +
   scale_x_longitude() +
   scale_y_latitude() +
@@ -153,3 +185,4 @@ enso_regresion %>%
        caption = "Fuente: ERA5 (1979–2020)")
 ```
 
+En esta figura podemos ver las teleconexiones en acción. Los valores máximos de regresión entre la temperatura del mar y la presión al nivel del mar se da en la costa de la Antártica (el mar de Amundsen) e el hemisferio sur y en la región de las Aleutianas en el hemisferio norte. 
