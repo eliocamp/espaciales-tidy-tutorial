@@ -47,9 +47,9 @@ La principal variación de SST y de la presión suele ser el ciclo anual, que es
 Entonces, lo primero que hacemos es crear dos variables nuevas, `sst_a` y `presion_a` con las anomalías de temperatura y presión con respecto al ciclo anual. 
 Esto es, el valor de cada variable menos el valor medio para cada mes y cada punto de grilla. 
 
-## {.tabset .unlisted .unnumbered}
+### {.tabset .unlisted .unnumbered}
 
-### data.table
+#### data.table
 
 ```{r}
 datos[, `:=`(sst_a = sst - mean(sst), 
@@ -57,8 +57,7 @@ datos[, `:=`(sst_a = sst - mean(sst),
       by = .(longitude, latitude, month(time))]
 ```
 
-
-### dplyr
+#### dplyr
 
 ```{r, eval = FALSE}
 datos <- datos %>% 
@@ -69,7 +68,7 @@ datos <- datos %>%
   select(-mes)
 ```
 
-##
+### {.unlisted .unnumbered}
 
 El Niño, o ENSO por El Niño Southern Oscillation, es una de los principales modos de variabilidad del océano. 
 Se trata de variaciones de baja frecuencia en la temperatura de la superficie del mar en el Pacífico Ecuatorial. 
@@ -91,10 +90,9 @@ datos %>%
 
 Entonces, antes que nada calculamos el índice de El Niño oceánico (ONI por la siglas de Oceanic Niño Index). 
 
-## {.tabset .unlisted .unnumbered}
+### {.tabset .unlisted .unnumbered}
 
-
-### data.table
+#### data.table
 
 ```{r}
 enso <- datos %>% 
@@ -103,7 +101,7 @@ enso <- datos %>%
   .[, oni := oni/sd(oni)]
 ```
 
-### dplyr
+#### dplyr
 
 ```{r, eval = FALSE}
 enso <- datos %>% 
@@ -114,8 +112,9 @@ enso <- datos %>%
   mutate(oni = oni/sd(oni))
 ```
 
-(Técnicamente el ONI tiene también un promedio móvil de 3 meses, pero )
-## 
+### {.tabset .unlisted .unnumbered}
+
+(Técnicamente el ONI tiene también un promedio móvil de 3 meses, pero no hace tanta diferencia.)
 
 ¿Cómo evolucionó este índice a lo largo del tiempo? 
 Podemos hacer un gráfico con el índice, marcando los valores de $\pm0.5$, que definen los eventos Niño y Niña.
@@ -139,10 +138,9 @@ Se ven claramente algunos eventos niño particularmente fuertes, como el de 1983
 Ahora podemos calcular los campos de regresión entre este índice y otras variables, presión a nivel del mar en este caso. 
 Para eso hay que primero unir la tabla `enso` a los datos y luego calcular la regresión para cada punto de grilla. 
 
-## {.tabset .unlisted .unnumbered}
+### {.tabset .unlisted .unnumbered}
 
-
-### data.table
+#### data.table
 
 ```{r}
 enso_regresion <- datos %>% 
@@ -151,7 +149,7 @@ enso_regresion <- datos %>%
   .[term != "(Intercept)"] 
 ```
 
-### dplyr
+#### dplyr
 
 ```{r, eval = FALSE}
 enso_regresion <- sst %>% 
@@ -162,7 +160,7 @@ enso_regresion <- sst %>%
   filter(term != "(Intercept)") 
 ```
 
-## 
+### {.tabset .unlisted .unnumbered}
 
 Y ahora que tenemos esto, podemos graficarlo. 
 

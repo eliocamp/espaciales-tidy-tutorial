@@ -40,9 +40,9 @@ sst$sst <- sst$sst - 273.15   # Paso a grados centígrados
 Por ejemplo, ¿cómo calcularías un el campo medio de temperatura de la superficie del mar (SST)?
 Esencialmente es calcular el promedio de `sst` para cada longitud y latitud, una operación que se traduce de forma directa a operaciones en grupos.
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table {.unlisted .unnumbered}
+#### data.table {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -52,7 +52,7 @@ sst %>%
   mapa()
 ```
 
-### dplyr {.unlisted .unnumbered}
+#### dplyr {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -64,7 +64,7 @@ sst %>%
   mapa() 
 ```
 
-##  {.unlisted .unnumbered}
+###  {.unlisted .unnumbered}
 
 Veamos ahora series temporales te SST en distintos puntos, para tener una idea de algunas características de su variabilidad.
 
@@ -88,9 +88,9 @@ Como se ve, tenemos un punto en el Pacífico ecuatorial, otro en altas latitudes
 
 Para filtrar los datos de SST correspondientes a esos puntos, se puede hacer un join.
 
-##  {.tabset .unlisted .unnumbered}
+### {.tabset .unlisted .unnumbered}
 
-### data.table {.unlisted .unnumbered}
+#### data.table {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -100,7 +100,7 @@ sst %>%
   facet_wrap(~ nombre, scales = "free_y", ncol = 1)
 ```
 
-### dplyr
+#### dplyr
 
 ```{r}
 sst %>% 
@@ -111,7 +111,7 @@ sst %>%
              labeller = label_both, ncol = 1)
 ```
 
-## 
+###  {.unlisted .unnumbered}
 
 Se puede ver que las región tropical tiene una variabilidad de relativa baja frecuencia y sin un ciclo anual pronunciado.
 Por otro lado, en los puntos extratropicales la variabilidad más fuerte es el ciclo anual, que naturalmente se invierte entre el hemisferio norte y el hemisferio sur.
@@ -124,15 +124,15 @@ Para esto se calculan las anomalías: el alejamiento de los datos con respecto a
 Para calcular anomalías, hay que calcular el valor del dato menos el valor promedio del dato, para cada mes, y cada latitud y longitud.
 Nuevamente esto se traduce directamente en operaciones sobre grupos.
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table
+#### data.table
 
 ```{r}
 sst[, sst_a := sst - mean(sst), by = .(longitude, latitude, month(time))] 
 ```
 
-### dplyr
+#### dplyr
 
 ```{r, eval = FALSE}
 sst <- sst %>% 
@@ -142,7 +142,7 @@ sst <- sst %>%
   select(-mes)
 ```
 
-## 
+###   {.unlisted .unnumbered}
 
 Ahora podemos graficar campos de anomalías en vez de de datos crudos.
 Por definición, las anomalías tienen media cero y lo interesante es ver cuánto se alejan de ese promedio, lo cual hacer que una escala divergente sea la elección natural para visualizarlas.
@@ -171,9 +171,9 @@ En este gráfico se puede ver que la variabilidad de la temperatura con respecto
 Podríamos querer cuantificar esto calculando el desvío estándar de cada punto de grilla.
 Igual que antes, esto se traduce en una operación por grupos: calcular el desvío por cada combinación de longitud y latitud.
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table {.unlisted .unnumbered}
+#### data.table {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -183,7 +183,7 @@ sst %>%
   mapa()
 ```
 
-### dplyr {.unlisted .unnumbered}
+#### dplyr {.unlisted .unnumbered}
 
 ```{r}
 sst %>% 
@@ -195,7 +195,7 @@ sst %>%
   mapa() 
 ```
 
-##  {.unlisted .unnumbered}
+###  {.unlisted .unnumbered}
 
 Acá podemos ver que hay una región del Pacífico central que tiene una variabilidad particularmente alta.
 Esta es la región de [El Niño](https://es.wikipedia.org/wiki/El_Ni%C3%B1o_(fen%C3%B3meno)) o ENSO, y representa una de los fenómenos climáticos de mayor influencia a nivel global.
@@ -226,9 +226,9 @@ Entonces, vamos a calcular los primeros dos EOFs del campo de anomalías de SST.
 Un detalle con los datos grillados es que, como están organizados en una grilla regular en longitud y latitud, los puntos en altas latitudes representan un área cada vez menor.
 Para corregir esto hay que pesar los datos por $\sqrt{\cos (\mathrm{lat})}$
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table
+#### data.table
 
 ```{r include=FALSE}
 # Hacemos un poco de trampa para asegurarnos de que el signo sea más fácil de interpretar
@@ -251,7 +251,7 @@ eofs <- sst %>%
   EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)
 ```
 
-### dplyr
+#### dplyr
 
 ```{r, eval = FALSE}
 eofs <- sst %>%
@@ -260,7 +260,7 @@ eofs <- sst %>%
   EOF(sst_a ~ longitude + latitude | time, n = 1:2, data = .)
 ```
 
-## 
+### {.unlisted .unnumbered}
 
 `EOF()` devuelve una lista de data.tables con la parte izquierda (en este caso, espacial), derecha (en este caso, temporal) y la varianza explicada por cada componente.
 
@@ -307,9 +307,9 @@ Una forma de calcular un índice de esta oscilación que no requiere cálculos "
 Podemos calcular este índice con nuestros datos filtrando primero los datos que están en esa caja y luego calculando el promedio para cada tiempo.
 Nuevamente, estas son operaciones básicas del análisis de datos tidy.
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table
+#### data.table
 
 ```{r}
 enso <- sst %>% 
@@ -317,7 +317,7 @@ enso <- sst %>%
   .[, .(enso34 = mean(sst_a)), by = time]
 ```
 
-### dplyr
+#### dplyr
 
 ```{r, eval = FALSE}
 enso <- sst %>% 
@@ -327,7 +327,7 @@ enso <- sst %>%
   ungroup()
 ```
 
-## 
+###   {.unlisted .unnumbered}
 
 El resultado de este índice es muy similar al EOF1 obtenido anteriormente.
 
@@ -351,9 +351,9 @@ Para eso primero hay que unir los datos de SST con el índice que calculamos y l
 Un problema acá es que `lm()` es muy lento principalmente porque se toma mucho tiempo tratando de entender la fórmula que es el primer argumento.
 Para acelerar las cosas, metR tiene la función `FitLm()` que sirve para calcular los coeficientes de regresiones lineales mucho más rápido.
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table
+#### data.table
 
 ```{r}
 sst %>% 
@@ -366,7 +366,7 @@ sst %>%
   scale_fill_divergent()
 ```
 
-### dplyr
+#### dplyr
 
 ```{r}
 sst %>% 
@@ -381,7 +381,7 @@ sst %>%
   scale_fill_divergent()
 ```
 
-## 
+###   {.unlisted .unnumbered} 
 
 Se puede ver que este patrón es muy similar al obtenido mediante EOF.  
 
@@ -394,9 +394,9 @@ precipitacion <- ReadNetCDF("datos/precipitación.nc",
                             vars = c(pp = "tp"))
 ```
 
-##  {.tabset .unlisted .unnumbered}
+###  {.tabset .unlisted .unnumbered}
 
-### data.table
+#### data.table
 
 ```{r}
 correlacion <- precipitacion %>% 
@@ -405,7 +405,7 @@ correlacion <- precipitacion %>%
   .[, .(correlacion = cor(pp, enso34)), by = .(longitude, latitude)]
 ```
 
-### dplyr
+#### dplyr
 
 ```{r, eval=FALSE}
 correlacion <- precipitacion %>% 
@@ -418,7 +418,7 @@ correlacion <- precipitacion %>%
   ungroup() 
 ```
 
-## 
+###   {.unlisted .unnumbered}
 
 Y luego podemos plotear el resultado:
 
