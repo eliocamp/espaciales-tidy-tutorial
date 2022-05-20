@@ -703,9 +703,11 @@ respectivamente.</p>
 <h2>Regresiones y correlaciones</h2>
 <p>Para asegurarnos de que este índice realmente representa lo que
 creemos que representa, podemos calcular la regresión de la SST en cada
-punto con este índice. Para eso primero hay que unir los datos de SST
-con el índice que calculamos y luego calcular la regresión en cada
-punto.</p>
+punto con este índice. Esto, es calcular la regresión lineal entre la
+serie temporal de SST y el índice de ENSO en cada punto de la grilla y
+mostrar, en colores, el valor del coeficiente. Para eso primero hay que
+unir los datos de SST con el índice que calculamos y luego calcular la
+regresión en cada punto.</p>
 <p>Un problema acá es que <code>lm()</code> es muy lento principalmente
 porque se toma mucho tiempo tratando de entender la fórmula que es el
 primer argumento. Para acelerar las cosas, metR tiene la función
