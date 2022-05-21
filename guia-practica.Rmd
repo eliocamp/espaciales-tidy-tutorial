@@ -13,94 +13,44 @@ Te propongo tres posibilidades.
 ## Opción 1
 
 Si nunca trabajaste con este tipo de variables, podés replicar al pie de la letra (o con poca variación) el código que ya viste.
-Esta es una opción recomendable para practicar lo que viste y no perder tanto tiempo en pensar en qué variables bajar o cómo procesarlas.
+Esta es una opción recomendable para practicar lo que viste y perderse pensando como analizar datos desconocidos.
 
 ### Primera parte
 
-Para replicar lo que hicimos en vivo podés seguir el paso a paso en la sección de lectura de datos a partir de la sección [Consiguiendo Datos](02_lectura.html#consiguiendo-datos). 
+Para replicar lo que hicimos en vivo podés seguir el paso a paso en la sección de lectura de datos [en netCDF](02_lectura.html#Datos_en_netCDF). 
 
-Si tenés tiempo, podés probar con otras variables. 
+Si tenés tiempo, podés probar leyendo partes del archivo (distintas regiones o tiempos). 
 
 ### Segunda parte
 
-Ahora es el turno de graficar, podés seguir el paso a pasdo de los gráficos que ya hicimos [acá](03_graficado.html) pero también chequear el [ejemplo](ejemplo.html). Por supuesto, siempre podés explorar un poco más y hacer otras pruebas!
+Ahora es el turno de graficar, podés seguir el paso a paso de los gráficos que ya hicimos [acá](03_graficado.html) pero también chequear el [ejemplo](ejemplo.html). Por supuesto, siempre podés explorar un poco más y hacer otras pruebas!
 
 ### Tercera parte
 
-La propuesta es que repliques los cálculos y estadística que charlamos. Si no te resultan familiares, elegí una para concentrarte en eso y tener tiempo de hacer las cuentas, revisar el resultado y hacer un gráfico para ver que pinta tiene.
+La propuesta es que repliques los cálculos y estadística que charlamos. Elegí una para concentrarte en eso y tener tiempo de hacer las cuentas, revisar el resultado y hacer un gráfico para ver que pinta tiene.
 
 ## Opción 2
 
-Si seguiste el código en vivo y/o estas variables ya te resultan familiares, te proponemos algunas preguntas específicas:
+Si seguiste el código en vivo y/o estas variables ya te resultan familiares, te proponemos intentar responder a la siguiente pregunta:
 
-1. ¿Cómo varió la temperatura media global a lo largo del tiempo?
-1. ¿De qué depende la precipitación en alguna región que se te ocurra?
-1. ¿Cómo varía la superficie del mar cubierta por hielo a lo largo del año?
+* ¿Cómo varió la temperatura media global a lo largo del tiempo?
 
 ### Primera parte
 
-En esta primera parte deberías descargar y leer los datos relevante a cada pregunta. Te sugerimos las siguientes variables:
+En esta primera parte deberías descargar y leer los datos relevantes para esta pregunta. Podés leer los datos de la temperatura del aire para todo el globo, todos los meses hasta 2020 en 950hPa y 100hPa desde:
 
-Pregunta 1
+XXXXXXXXXXXXXXX
 
-: Temperatura del aire para todo el globo, todos los meses hasta 2020 en 950hPa y 100hPa de [ERA5 (Variables volumétricas)](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=form).
-
-Pregunta 2
-
-: Total precipitation, temperatura a 2 metros, "Total column water vapour" de [ERA (variables 2D)](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form)
-
-Pregunta 3
-
-: Sea-ice cover de [ERA (variables 2D)](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form). 
+[Fuente: ERA5 (Variables volumétricas)](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=form).
 
 ### Segunda parte
 
-Pregunta 1
-
-: Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la temperatura en uno o más puntos a lo largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?
-
-Pregunta 2
-
-: Nuestra sugerencia es que grafiques campos de las variables para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar las variables en uno o más puntos a lo largo del tiempo. ¿Ves alguan relación entre ellas?
-
-Pregunta 3
-
-: Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la variable en uno o más puntos a lo largo del tiempo.
+Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la temperatura en uno o más puntos a lo largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?
 
 ### Tercera parte
 
-Pregunta 1
 
-: Para responder esta pregunta, la media y las anomalías te van a venir muy bien.
-
-Pregunta 2
-
-: Para esta pregunta, te sugerimos calcular correlaciones!
-
-Pregunta 3
-
-: Para responder esta pregunta, la media y las anomalías te van a venir muy bien. Tené en cuenta la variable temporal para poder responder lo que pasa "a lo largo del año".
-
-## Opción 3
-
-¡Hacé la tuya!
-
-Si ya trabajaste con este tipo de variables y ya tenés preguntas propias, podés salirte de guión y descargar cualquier variable y hacer cualquier análisis.
-Tené en cuenta que en el contexto del tutorial tenés que hacer tiempo para pensar el análisis y ejercitar el código.
-Podés inspirarte en las preguntas de la opción 2 pero cambiarlas ligeramente.
-
-### Primera parte
-
-En [este link](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=overview) tenés un listado de las variables 2D de ERA5 y [acá](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=overview) el listado de variables 3D. 
-
-Tené en cuenta que si tratás de bajar muchas variables en muchos niveles verticales y muchos tiempos, el tiempo de procesamiento puede ser muy largo (incluso más que los 10 miuntos que dura el ejercicio). 
-Para que tengas una idea, los datos que bajamos durante la primera parte, que eran 3 variables 2D (1 nivel), 40 años mensuales y dominio global a 2.5º de resolución tardaron 5 minutos en descargarse. 
+Para responder esta pregunta, la media y las anomalías que vimos en [Haciendo cálculos](04_calculos.html#Haciendo_cálculos) te van a venir muy bien.
 
 
-### Segunda parte
 
-Acá dependerá de lo que hayas decidido hacer, pero aprovechá para probar los contornos! 
-
-### Tercera parte
-
-Si llegaste hasta acá, seguro ya tenés alguna idea de que cuentas querrías hacer. Cualquier cosa nos avisas!
