@@ -9,13 +9,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Datos en .csv, .txt, etc
 
-Si de casualidad los datos que vas a usar están en un formato de texto o excel, podés usar cualquier función para leerlos que te resulte cómoda.
+Si de casualidad los datos que vas a usar están en un formato de texto o excel, podés usar cualquier función para leerlos que te resulte cómoda. R base tiene `read.csv()`, si vivís en el mundo de Tidyverse podés usar `read_csv()`.
+
+Leamos la temperatura máxima para distintas estaciones meteorológicas del país:
+
+```{r}
+observaciones <- read.csv("datos/tmax_20220520.csv") #  Ó read_csv()
+```
+
 Cómo siempre es importante tener presente el tipo de dato de cada columna, sobre todo si son datos desconocidos.
 ¿Tiene columnas con latitudes y longitudes?
 ¿Están en formato decimal o en grados y minutos?
 ¿R leyó estas columnas como número o texto?
 
-De alguna manera este es un punto en contra para este tipo de formatos, no tienen metadatos asociados o al menos *no vienen con el archivo*.
+En los casos donde esto no ocurre podés aprovechar las opciones de las funciones para definir por ejemplo el tipo de dato de cada columna al momento de leer los datos. Veamos que pinta tienen, luego podemos revisar en detalle como generar el gráfico. 
+
+```{r}
+mapa <- mapa <- rnaturalearth::ne_countries(country = c("argentina", "falkland islands"), 
+                                    returnclass = "sf")
+
+ggplot(observaciones, aes(lon, lat)) +
+  geom_point(aes(color = tmax_media)) +
+  geom_sf(data = mapa, inherit.aes = FALSE, fill = NA, color = "black", size = 0.2) +
+  coord_sf(ylim = c(-55, -20), xlim = c(-80, -50))
+
+```
+
+Muchos datos vienen en este formato, sobre todo cuando se trata de datos puntuales. Sin embargo, tienen una desventaja, no tienen metadatos asociados o al menos *no vienen con el archivo*.
 En la próxima sección presentaremos un tipo de archivo que si cumple con estas cosas.
 
 ## Datos en netCDF
