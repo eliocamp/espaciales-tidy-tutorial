@@ -4,8 +4,7 @@ En este tutorial vas a aprender a descargar, leer, analizar y visualizar datos e
 
 Al final del taller vas a haber aprendido como: 
 
-- descargar datos meteorológicos y climáticos programáticamente desde R, 
-- leerlos en un formato tidy, 
+- leer datos meteorológicos y climáticos en un formato tidy, 
 - computar estadísicas espaciales y temporales, 
 - graficar los resultados usando ggplot2 y extensiones.
 

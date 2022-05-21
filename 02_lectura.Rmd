@@ -130,9 +130,9 @@ library(dplyr)
 library(data.table)
 ```
 
-##  {.tabset}
+###  {.tabset}
 
-### data.table
+#### data.table
 
 ```{r}
 sst %>% 
@@ -141,7 +141,7 @@ sst %>%
   geom_raster(aes(fill = sst)) 
 ```
 
-### dplyr
+#### dplyr
 
 ```{r}
 sst %>% 
@@ -150,7 +150,7 @@ sst %>%
   geom_raster(aes(fill = sst)) 
 ```
 
-## 
+### {.unlisted .unnumbered}
 
 En este gráfico ya se ven varias cosas.
 Se ve que hay una clara estructura de mayores temperaturas cerca del ecuador, lo cual no debería sorprender a nadie.
