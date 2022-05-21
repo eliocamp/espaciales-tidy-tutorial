@@ -58,7 +58,7 @@ sst1 %>%
 ```
 
 
-El problema es que ahora perdemos los contienentes gratis y no tenemos información sobre que valores representa cada línea. 
+El problema es que ahora perdemos los continentes gratis y no tenemos información sobre que valores representa cada línea. 
 Podemos obtener un resultado intermedio usando contornos llenos con `metR::geom_contour_fill()` (de nuevo, ggplot2 tiene un `geom_contour_filled()` pero yo prefiero los defaults y otras funcionalidades de `geom_contour_fill()`).
 
 ```{r}
@@ -111,7 +111,7 @@ sst1 %>%
 
 ## Usando proyecciones
 
-Hasta ahora usamos datos grillados en una grilla regular en longitud y latitude, pero no todos los datos son así. 
+Hasta ahora usamos datos grillados en una grilla regular en longitud y latitud, pero no todos los datos son así. 
 Por ejemplo el dataset de ejemplo `surface` tiene datos de topografía del centro de Argentina.
 
 
@@ -167,34 +167,16 @@ surface %>%
   geom_contour_fill(aes(z = height), proj = proj_string)
 ```
 
-Y ahora se puede superponer estos datos de topografía a los datos de temperatura de la superficie del mar:
+## Graficando más de una variable
 
-```{r}
-sst1 %>%  
-  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
-  mapa +
-  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface) +
-  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
-```
+Muchas veces (al menos en meteorología!) queremos comparar varias variables al mismo tiempo y haces 2 gráficos no suele ser suficiente, queremos superponer las variables. ggplot2 tiene algunas limitaciones no podemos mapear el color a 2 variables distintas, al menos no directamente. 
 
-Pero ahí hay un problema, que es que estamos graficando dos variables muy distintas usando la misma escala de colores. 
-Una forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete [ggnewscale](https://eliocamp.github.io/ggnewscale/). 
+Una solución sería usar contornos vacíos y etiquetas para identificar valores (o aplicando color) sobre contornos llenos que usa el relleno o fill para definir los valores. De esa manera tendremos leyendas distintas (color -o etiquetas- y fill) para analizar las 2 variables. 
 
 
-```{r}
-sst1 %>%  
-  .[longitude %between% c(270, 320) & latitude %between% c(-60, -20)] %>% 
-  ggplot(aes(longitude, latitude)) +
-  geom_contour_fill(aes(z = sst), na.fill = TRUE) +
-  mapa +
-  ggnewscale::new_scale_fill() +
-  geom_contour_fill(aes(x, y, z = height), proj = proj_string, data = surface, 
-                    breaks = seq(1, 6000, by = 500)) +
-  scale_fill_gradientn(colours = terrain.colors(4), guide = "none") +
-  coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
-```
+Otra forma de plotear varias escalas de colores en un mismo ggplot es usando el paquete [ggnewscale](https://eliocamp.github.io/ggnewscale/). En este ejemplo estamos graficando la topografía de la superficie de los continentes y del fondo del mar. Si bien podríamos trabajar con los datos como una única variable, suele ser útil diferenciarla. 
+
+Primero graficamos los datos donde h (la altura) es positiva (los continentes) y luego agregamos `ggnewscale::new_scale_fill()` para *habilitar*  una nueva escala de relleno y usarla para los datos con valor negativo (el fondo del océano).
 
 
 ```{r}
@@ -229,6 +211,7 @@ sst1 %>%
   mapa +
   coord_quickmap(xlim = c(270, 320), ylim = c(-60, -20)) 
 ```
+
 El problema con esta escala es que no reconoce que si bien los datos ahora son discretos, ¡éstos representan números continuos!
 Para ilustrar el problema, veamos qué pasa si usamos breaks que no son equidistantes.
 
