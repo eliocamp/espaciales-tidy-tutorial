@@ -26,7 +26,7 @@ Cómo siempre es importante tener presente el tipo de dato de cada columna, sobr
 En los casos donde esto no ocurre podés aprovechar las opciones de las funciones para definir por ejemplo el tipo de dato de cada columna al momento de leer los datos. Veamos que pinta tienen, luego podemos revisar en detalle como generar el gráfico. 
 
 ```{r}
-mapa <- mapa <- rnaturalearth::ne_countries(country = c("argentina", "falkland islands"), 
+mapa <- rnaturalearth::ne_countries(country = c("argentina", "falkland islands"), 
                                     returnclass = "sf")
 
 ggplot(observaciones, aes(lon, lat)) +
