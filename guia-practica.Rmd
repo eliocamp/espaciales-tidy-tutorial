@@ -39,7 +39,7 @@ Si seguiste el código en vivo y/o estas variables ya te resultan familiares, te
 
 En esta primera parte deberías descargar y leer los datos relevantes para esta pregunta. Podés leer los datos de la temperatura del aire para todo el globo, todos los meses hasta 2020 en 950hPa y 100hPa desde:
 
-XXXXXXXXXXXXXXX
+https://github.com/eliocamp/espaciales-tidy-tutorial/raw/main/datos/temperatura_aire.nc
 
 [Fuente: ERA5 (Variables volumétricas)](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels-monthly-means?tab=form).
 
