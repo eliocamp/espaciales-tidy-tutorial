@@ -216,7 +216,7 @@ Su primer argumento es una fórmula que define la estructura de la matriz de ent
 
 Esta fórmula tiene la forma general:
 
-variable ~ x + y | a + b
+`variable ~ x + y | a + b`
 
 La idea es leer esto como
 
