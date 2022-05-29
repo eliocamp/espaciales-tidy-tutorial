@@ -45,7 +45,7 @@ https://github.com/eliocamp/espaciales-tidy-tutorial/raw/main/datos/temperatura_
 
 ### Segunda parte
 
-Nuestra sugerencia es que grafiques campos de la variable en distintos momentos para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la temperatura en uno o más puntos a lo largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?
+Nuestra sugerencia es que grafiques campos de la variable en distintos momentos y para cada nivel para agarrarle la vuelta a los contornos. Si te queda tiempo también podés graficar la temperatura en uno o más puntos a lo largo del tiempo. ¿Ves alguna diferencia entre los dos niveles?
 
 ### Tercera parte
 
