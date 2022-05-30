@@ -496,7 +496,8 @@ distintas dimensiones; como por ejemplo, si hay variables definidias en
 hacer es elegir qué variables leer con el argumento
 <code>vars</code>.</p>
 <p>Leamos primero la temperatura de la superficie del mar:</p>
-<pre class="r"><code>sst &lt;- ReadNetCDF(archivo, vars = &quot;sst&quot;)
+<pre class="r"><code>archivo &lt;- &quot;datos/temperatura_mar.nc&quot;
+sst &lt;- ReadNetCDF(archivo, vars = &quot;sst&quot;)
 head(sst)</code></pre>
 <pre><code>##          time latitude longitude      sst
 ## 1: 1979-01-01       90       0.0 271.4601
@@ -522,7 +523,7 @@ library(data.table)</code></pre>
   .[time == time[1]] %&gt;%  
   ggplot(aes(longitude, latitude)) +
   geom_raster(aes(fill = sst)) </code></pre>
-<p><img src="02_lectura_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="02_lectura_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="dplyr" class="section level4">
 <h4>dplyr</h4>
@@ -530,7 +531,7 @@ library(data.table)</code></pre>
   filter(time == time[1]) %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_raster(aes(fill = sst)) </code></pre>
-<p><img src="02_lectura_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="02_lectura_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 </div>
 <div id="section-1" class="section level3 unlisted unnumbered">
@@ -561,7 +562,7 @@ este caso, podría leer sólo una región acotada usando el argumento
   .[time == time[1]] %&gt;% 
   ggplot(aes(longitude, latitude)) +
   geom_raster(aes(fill = sst)) </code></pre>
-<p><img src="02_lectura_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="02_lectura_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>El argumento <code>subset</code> tiene que ser una lista cuyos
 elementos tienen los nombres de las dimensiones a usar para filtrar y
 cada elemento es un vector cuyo rango define el bloque de datos a
