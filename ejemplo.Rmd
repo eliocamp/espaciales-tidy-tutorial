@@ -16,9 +16,6 @@ knitr::opts_chunk$set(
 ```
 
 
-
-
-
 ```{r}
 # Cargo los paquetes necesarios
 library(magrittr)

@@ -103,10 +103,6 @@ temperatura
 
 ## Leyendo variables
 
-```{r include=FALSE}
-archivo <- "datos/temperatura_mar.nc"
-```
-
 
 Y ahora podemos leer sin problemas.
 `ReadNetCDF()` por default trata de leer todas las variables, una en cada columna.
@@ -116,6 +112,7 @@ Entonces lo que se puede hacer es elegir qué variables leer con el argumento `v
 Leamos primero la temperatura de la superficie del mar:
 
 ```{r}
+archivo <- "datos/temperatura_mar.nc"
 sst <- ReadNetCDF(archivo, vars = "sst")
 head(sst)
 ```
